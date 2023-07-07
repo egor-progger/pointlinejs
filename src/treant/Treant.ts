@@ -32,6 +32,7 @@ export type nodeType = { HTMLclass: string, drawLineThrough: boolean, collapsabl
 
 export type animationType = {
   nodeSpeed: number,
+  nodeAnimation: string;
   connectorsSpeed: number,
   connectorsAnimation: string
 };
