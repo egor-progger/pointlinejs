@@ -10,7 +10,7 @@
 </pre>
 
 Graph-js is an SVG based JS library for drawing tree diagrams.
-It relies on Treant-JS, Raphael for handling SVG and animations, Jqeury.
+It relies on Treant-JS, Raphael for handling SVG and animations, JQuery.
 
 For Docs, Examples, and everything else see:
 
@@ -28,4 +28,4 @@ For Docs, Examples, and everything else see:
 # Dev-server
 
 1. `npx webpack serve --open`
-2. open `http://localhost:9000` in browser
+2. open `http://localhost:9000/documentation` in browser

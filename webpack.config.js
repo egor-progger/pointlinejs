@@ -4,46 +4,61 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require('webpack');
 const CopyPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const entries = ['examples/basic-example/basic-example', 'examples/collapsable/collapsable',
-'examples/comments/comments', 'examples/connectors/connectors',
-'examples/custom-color-plus-scrollbar/custom-color-plus-scrollbar',
-'examples/custom-colored/custom-colored', 'examples/evolution-tree/evolution-tree',
-'examples/no-parent/no-parent', 'examples/simple-scrollbar/simple-scrollbar',
-'examples/super-simple/super-simple', 'examples/tennis-draw/tennis-draw',
-'examples/test_ground/test_ground', 'examples/timeline/timeline'];
+const HtmlWebpackInjector = require('html-webpack-injector');
+
+const entryType = {'withTypescript': 'withTypescript'};
+const entries = [{name: 'examples/basic-example/basic-example', type: entryType.withTypescript}, 
+{name: 'examples/collapsable/collapsable', type: entryType.withTypescript},
+{name: 'examples/comments/comments', type: entryType.withTypescript},
+{name: 'examples/connectors/connectors', type: entryType.withTypescript},
+{name: 'examples/custom-color-plus-scrollbar/custom-color-plus-scrollbar', type: entryType.withTypescript},
+{name: 'examples/custom-colored/custom-colored', type: entryType.withTypescript},
+{name: 'examples/evolution-tree/evolution-tree', type: entryType.withTypescript},
+{name: 'examples/no-parent/no-parent', type: entryType.withTypescript},
+{name: 'examples/simple-scrollbar/simple-scrollbar', type: entryType.withTypescript},
+{name: 'examples/super-simple/super-simple', type: entryType.withTypescript},
+{name: 'examples/tennis-draw/tennis-draw', type: entryType.withTypescript},
+{name: 'examples/test_ground/test_ground', type: entryType.withTypescript},
+{name: 'examples/timeline/timeline', type: entryType.withTypescript},
+{name: 'documentation/documentation', type: entryType.withTypescript}
+]
+;
 
 /**
  * 
- * @param {string[]} entries 
+ * @param {{name:string, type: entryType}[]} entries 
  * @returns 
  */
 function generateEntries(entries) {
   const result = {};
   for(const entry of entries) {
-    result[entry] = path.resolve(__dirname, `src/${entry}.ts`);
+    if (entry.type === entryType.withTypescript) {
+        result[entry.name] = path.resolve(__dirname, `./src/${entry.name}.ts`);
+    }
   }
   return result;
 }
 
 /**
  * 
- * @param {string[]} entries 
+ * @param {{name:string, type: entryType}[]} entries 
  * @returns 
  */
 function generateHtmlPlugin(entries) {
   const result = [];
   for(const entry of entries) {
-    const excludeChunks = entries.filter((item) => item !== entry);
-    const htmlDirectoryArray = entry.split('/');
-    const htmlDirectory = htmlDirectoryArray.slice(0, htmlDirectoryArray.length-1).join('/');
+    const excludeChunks = entries.filter((item) => item !== entry.name).map((item) => item.name);
+    const htmlDirectoryArray = entry.name.split('/');
+    const htmlDirectory = htmlDirectoryArray.splice(0, htmlDirectoryArray.length-1).join('/');
+    const htmlPlugin = new HtmlWebpackPlugin({
+      inject: true, 
+      template: `src/${htmlDirectory}/index.html`,
+      filename: `${htmlDirectory}/index.html`,
+      chunks: entry.name,
+      excludeChunks: excludeChunks
+    });
     result.push(
-      new HtmlWebpackPlugin({
-        inject: true,
-        template: `src/${htmlDirectory}/index.html`,
-        filename: `${htmlDirectory}/index.html`,
-        chunks: entry,
-        excludeChunks: excludeChunks  
-      })
+      htmlPlugin
     );
   }
   return result;
@@ -51,7 +66,7 @@ function generateHtmlPlugin(entries) {
 
 const generatedEntries = generateEntries(entries);
 const htmlPlugins = generateHtmlPlugin(entries);
-
+// return;
 module.exports = {
   mode: 'development',
   target: "web",
@@ -62,29 +77,6 @@ module.exports = {
   entry: generatedEntries,
   module: {
     rules: [
-      // {
-      //   test: require.resolve("Treant"),
-      //   use: [
-      //     { loader: "expose-loader"},
-      //     {
-      //       loader: "ts-loader",
-      //       // options: {
-      //       //   compilerOptions: {
-      //       //     noEmit: false, // this option will solve the issue
-      //       //     noImplicitAny: false
-      //       //   },
-      //       // },
-      //     },
-      //   ],
-      //   options: {
-      //     exposes: [
-      //       {
-      //         globalName: "Treant",
-      //         moduleLocalName: "Treant",
-      //       }
-      //     ],
-      //   }
-      // },
       {
         test: /\.(png|jp(e*)g|svg|gif)$/, use: {
           loader: 'url-loader', // this need file-loader
@@ -101,12 +93,6 @@ module.exports = {
             options: {
               configFile: "tsconfig.json"
             }
-            // options: {
-            //   compilerOptions: {
-            //     noEmit: false, // this option will solve the issue
-            //     noImplicitAny: false
-            //   },
-            // },
           },
         ],
       },
@@ -127,13 +113,13 @@ module.exports = {
     }
   },
   plugins: [
+    new HtmlWebpackInjector(),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // all options are optional
       filename: "[name].css",
       chunkFilename: "[id].css",
-      // ignoreOrder: false, // Enable to remove warnings about conflicting order
     }),
     ...htmlPlugins,
     new webpack.HotModuleReplacementPlugin(),
@@ -152,11 +138,15 @@ module.exports = {
   ],
   output: {
     filename: "[name].js",
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "dist")
   },
   devServer: {
     compress: true,
     port: 9000,
     hot: true,
+    open: ['/documentation'],
+    static: {
+      serveIndex: true
+    }
   },
 };
