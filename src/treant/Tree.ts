@@ -5,6 +5,7 @@ import Raphael from "../../vendor/raphael.no-deps";
 import { DI_LIST } from "./InjectableList";
 import { inject, injectable } from "inversify";
 import { TreeNode } from "./TreeNode";
+import $ from 'jquery';
 
 /**
  * Tree constructor.

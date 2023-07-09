@@ -4,6 +4,50 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require('webpack');
 const CopyPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const entries = ['examples/basic-example/basic-example', 'examples/collapsable/collapsable',
+'examples/comments/comments', 'examples/connectors/connectors',
+'examples/custom-color-plus-scrollbar/custom-color-plus-scrollbar',
+'examples/custom-colored/custom-colored'];
+
+/**
+ * 
+ * @param {string[]} entries 
+ * @returns 
+ */
+function generateEntries(entries) {
+  const result = {};
+  for(const entry of entries) {
+    result[entry] = path.resolve(__dirname, `src/${entry}.ts`);
+  }
+  return result;
+}
+
+/**
+ * 
+ * @param {string[]} entries 
+ * @returns 
+ */
+function generateHtmlPlugin(entries) {
+  const result = [];
+  for(const entry of entries) {
+    const excludeChunks = entries.filter((item) => item !== entry);
+    const htmlDirectoryArray = entry.split('/');
+    const htmlDirectory = htmlDirectoryArray.slice(0, htmlDirectoryArray.length-1).join('/');
+    result.push(
+      new HtmlWebpackPlugin({
+        inject: true,
+        template: `src/${htmlDirectory}/index.html`,
+        filename: `${htmlDirectory}/index.html`,
+        chunks: entry,
+        excludeChunks: excludeChunks  
+      })
+    );
+  }
+  return result;
+}
+
+const generatedEntries = generateEntries(entries);
+const htmlPlugins = generateHtmlPlugin(entries);
 
 module.exports = {
   mode: 'development',
@@ -12,11 +56,7 @@ module.exports = {
     errorDetails: true,
     children: true,
   },
-  entry: {
-    "examples/basic-example/basic-example": path.resolve(__dirname, 'src/examples/basic-example/basic-example.ts'),
-    "examples/collapsable/collapsable": path.resolve(__dirname, 'src/examples/collapsable/collapsable.ts'),
-    "examples/comments/comments": path.resolve(__dirname, 'src/examples/comments/comments.ts'),
-  },
+  entry: generatedEntries,
   module: {
     rules: [
       // {
@@ -42,17 +82,22 @@ module.exports = {
       //     ],
       //   }
       // },
-      { test: /\.(png|jp(e*)g|svg|gif)$/, use: {
-        loader: 'url-loader', // this need file-loader
-        options: {
-        limit: 50000
-    } }
-  },
+      {
+        test: /\.(png|jp(e*)g|svg|gif)$/, use: {
+          loader: 'url-loader', // this need file-loader
+          options: {
+            limit: 50000
+          }
+        }
+      },
       {
         test: /\.ts?$/,
         use: [
           {
             loader: "ts-loader",
+            options: {
+              configFile: "tsconfig.json"
+            }
             // options: {
             //   compilerOptions: {
             //     noEmit: false, // this option will solve the issue
@@ -74,6 +119,8 @@ module.exports = {
       eve: "eve-raphael/eve",
       jQuery: "jquery/src/jquery",
       $: "jquery/src/jquery",
+      "@treantjs": path.resolve(__dirname, './src/treant'),
+      "@graphjs": path.resolve(__dirname, './src/graphjs')
     }
   },
   plugins: [
@@ -85,28 +132,7 @@ module.exports = {
       chunkFilename: "[id].css",
       // ignoreOrder: false, // Enable to remove warnings about conflicting order
     }),
-    new HtmlWebpackPlugin({
-      inject: true,
-      template: "src/examples/basic-example/index.html",
-      filename: "examples/basic-example/index.html",
-      chunks: 'examples/basic-example/basic-example',
-      
-      excludeChunks: ['examples/basic-example/collapsable']
-    }),
-    new HtmlWebpackPlugin({
-      inject: true,
-      template: "src/examples/collapsable/index.html",
-      filename: "examples/collapsable/index.html",
-      chunks: 'examples/collapsable/collapsable',
-      excludeChunks: ['examples/basic-example/basic-example']
-    }),
-    new HtmlWebpackPlugin({
-      inject: true,
-      template: "src/examples/comments/index.html",
-      filename: "examples/comments/index.html",
-      chunks: 'examples/comments/comments',
-      excludeChunks: ['examples/basic-example/basic-example', 'examples/basic-example/collapsable']
-    }),
+    ...htmlPlugins,
     new webpack.HotModuleReplacementPlugin(),
     new CopyPlugin({
       patterns: [

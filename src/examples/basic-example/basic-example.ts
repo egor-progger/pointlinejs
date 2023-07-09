@@ -1,4 +1,3 @@
-import { ChartConfigType } from "../../treant/Treant";
 import "./styles/main.scss";
 import image1 from '../headshots/1.jpg';
 import image2 from '../headshots/2.jpg';
@@ -11,18 +10,18 @@ import image8 from '../headshots/8.jpg';
 import image9 from '../headshots/9.jpg';
 import image10 from '../headshots/10.jpg';
 import image11 from '../headshots/11.jpg';
-import { GraphJS } from "../../graphjs/graphjs";
+import { GraphJS } from "@graphjs/graphjs";
+import { ChartConfigType } from "@treantjs/Treant";
 
-
-const config = {
+var config = {
     container: "#basic-example",
 
     connectors: {
-        type: "step",
+        type: 'step'
     },
     node: {
-        HTMLclass: "nodeExample1",
-    },
+        HTMLclass: 'nodeExample1'
+    }
 },
     ceo = {
         text: {
@@ -30,8 +29,9 @@ const config = {
             title: "Chief executive officer",
             contact: "Tel: 01 213 123 134",
         },
-        image: "../headshots/2.jpg",
+        image: "../headshots/2.jpg"
     },
+
     cto = {
         parent: ceo,
         text: {
@@ -39,7 +39,7 @@ const config = {
             title: "Chief Technology Officer",
         },
         stackChildren: true,
-        image: "../headshots/1.jpg",
+        image: "../headshots/1.jpg"
     },
     cbo = {
         parent: ceo,
@@ -48,7 +48,7 @@ const config = {
             name: "Linda May",
             title: "Chief Business Officer",
         },
-        image: "../headshots/5.jpg",
+        image: "../headshots/5.jpg"
     },
     cdo = {
         parent: ceo,
@@ -57,177 +57,179 @@ const config = {
             title: "Chief accounting officer",
             contact: "Tel: 01 213 123 134",
         },
-        image: "../headshots/6.jpg",
+        image: "../headshots/6.jpg"
     },
     cio = {
         parent: cto,
         text: {
             name: "Ron Blomquist",
-            title: "Chief Information Security Officer",
+            title: "Chief Information Security Officer"
         },
-        image: "../headshots/8.jpg",
+        image: "../headshots/8.jpg"
     },
     ciso = {
         parent: cto,
         text: {
             name: "Michael Rubin",
             title: "Chief Innovation Officer",
-            contact: { val: "we@aregreat.com", href: "mailto:we@aregreat.com" },
+            contact: { val: "we@aregreat.com", href: "mailto:we@aregreat.com" }
         },
-        image: "../headshots/9.jpg",
+        image: "../headshots/9.jpg"
     },
     cio2 = {
         parent: cdo,
         text: {
             name: "Erica Reel",
-            title: "Chief Customer Officer",
+            title: "Chief Customer Officer"
         },
         link: {
-            href: "http://www.google.com",
+            href: "http://www.google.com"
         },
-        image: "../headshots/10.jpg",
+        image: "../headshots/10.jpg"
     },
     ciso2 = {
         parent: cbo,
         text: {
             name: "Alice Lopez",
-            title: "Chief Communications Officer",
+            title: "Chief Communications Officer"
         },
-        image: "../headshots/7.jpg",
+        image: "../headshots/7.jpg"
     },
     ciso3 = {
         parent: cbo,
         text: {
             name: "Mary Johnson",
-            title: "Chief Brand Officer",
+            title: "Chief Brand Officer"
         },
-        image: "../headshots/4.jpg",
+        image: "../headshots/4.jpg"
     },
     ciso4 = {
         parent: cbo,
         text: {
             name: "Kirk Douglas",
-            title: "Chief Business Development Officer",
+            title: "Chief Business Development Officer"
         },
-        image: "../headshots/11.jpg",
-    };
+        image: "../headshots/11.jpg"
+    },
+    chart_config = [
+        config,
+        ceo,
+        cto,
+        cbo,
+        cdo,
+        cio,
+        ciso,
+        cio2,
+        ciso2,
+        ciso3,
+        ciso4
+    ];
 
-const chart_config = [
-    config,
-    ceo,
-    cto,
-    cbo,
-    cdo,
-    cio,
-    ciso,
-    cio2,
-    ciso2,
-    ciso3,
-    ciso4,
-];
+// Antoher approach, same result
+// JSON approach
 
-// // Another approach, same result
-// // JSON approach
+/*
+var chart_config = {
+    chart: {
+        container: "#basic-example",
+        
+        connectors: {
+            type: 'step'
+        },
+        node: {
+            HTMLclass: 'nodeExample1'
+        }
+    },
+    nodeStructure: {
+        text: {
+            name: "Mark Hill",
+            title: "Chief executive officer",
+            contact: "Tel: 01 213 123 134",
+        },
+        image: "../headshots/2.jpg",
+        children: [
+            {
+                text:{
+                    name: "Joe Linux",
+                    title: "Chief Technology Officer",
+                },
+                stackChildren: true,
+                image: "../headshots/1.jpg",
+                children: [
+                    {
+                        text:{
+                            name: "Ron Blomquist",
+                            title: "Chief Information Security Officer"
+                        },
+                        image: "../headshots/8.jpg"
+                    },
+                    {
+                        text:{
+                            name: "Michael Rubin",
+                            title: "Chief Innovation Officer",
+                            contact: "we@aregreat.com"
+                        },
+                        image: "../headshots/9.jpg"
+                    }
+                ]
+            },
+            {
+                stackChildren: true,
+                text:{
+                    name: "Linda May",
+                    title: "Chief Business Officer",
+                },
+                image: "../headshots/5.jpg",
+                children: [
+                    {
+                        parent: cbo,
+                        text:{
+                            name: "Alice Lopez",
+                            title: "Chief Communications Officer"
+                        },
+                        image: "../headshots/7.jpg"
+                    },
+                    {
+                        text:{
+                            name: "Mary Johnson",
+                            title: "Chief Brand Officer"
+                        },
+                        image: "../headshots/4.jpg"
+                    },
+                    {
+                        text:{
+                            name: "Kirk Douglas",
+                            title: "Chief Business Development Officer"
+                        },
+                        image: "../headshots/11.jpg"
+                    }
+                ]
+            },
+            {
+                text:{
+                    name: "John Green",
+                    title: "Chief accounting officer",
+                    contact: "Tel: 01 213 123 134",
+                },
+                image: "../headshots/6.jpg",
+                children: [
+                    {
+                        text:{
+                            name: "Erica Reel",
+                            title: "Chief Customer Officer"
+                        },
+                        link: {
+                            href: "http://www.google.com"
+                        },
+                        image: "../headshots/10.jpg"
+                    }
+                ]
+            }
+        ]
+    }
+};
 
-// /*
-// var chart_config: ChartStructure = {
-//     chart: {
-//         container: "#basic-example",
-
-//         connectors: {
-//             type: 'step'
-//         },
-//         node: {
-//             HTMLclass: 'nodeExample1'
-//         }
-//     },
-//     nodeStructure: {
-//         text: {
-//             name: "Mark Hill",
-//             title: "Chief executive officer",
-//             contact: "Tel: 01 213 123 134",
-//         },
-//         image: image2,
-//         children: [
-//             {
-//                 text: {
-//                     name: "Joe Linux",
-//                     title: "Chief Technology Officer",
-//                 },
-//                 stackChildren: true,
-//                 image: image1,
-//                 children: [
-//                     {
-//                         text: {
-//                             name: "Ron Blomquist",
-//                             title: "Chief Information Security Officer"
-//                         },
-//                         image: image8,
-//                     },
-//                     {
-//                         text: {
-//                             name: "Michael Rubin",
-//                             title: "Chief Innovation Officer",
-//                             contact: "we@aregreat.com"
-//                         },
-//                         image: image9
-//                     }
-//                 ]
-//             },
-//             {
-//                 stackChildren: true,
-//                 text: {
-//                     name: "Linda May",
-//                     title: "Chief Business Officer",
-//                 },
-//                 image: image5,
-//                 children: [
-//                     {
-//                         text: {
-//                             name: "Alice Lopez",
-//                             title: "Chief Communications Officer"
-//                         },
-//                         image: image7
-//                     },
-//                     {
-//                         text: {
-//                             name: "Mary Johnson",
-//                             title: "Chief Brand Officer"
-//                         },
-//                         image: image4
-//                     },
-//                     {
-//                         text: {
-//                             name: "Kirk Douglas",
-//                             title: "Chief Business Development Officer"
-//                         },
-//                         image: image11
-//                     }
-//                 ]
-//             },
-//             {
-//                 text: {
-//                     name: "John Green",
-//                     title: "Chief accounting officer",
-//                     contact: "Tel: 01 213 123 134",
-//                 },
-//                 image: image6,
-//                 children: [
-//                     {
-//                         text: {
-//                             name: "Erica Reel",
-//                             title: "Chief Customer Officer"
-//                         },
-//                         link: {
-//                             href: "http://www.google.com"
-//                         },
-//                         image: image10
-//                     }
-//                 ]
-//             }
-//         ]
-//     }
-// };
+*/
 
 const graphJS = new GraphJS(chart_config as unknown as ChartConfigType);
 graphJS.draw();

@@ -1,9 +1,8 @@
-// import { UTIL } from "./Util";
-
 import { inject, injectable } from "inversify";
 import { TreeNode } from "./TreeNode";
 import { DI_LIST } from "./InjectableList";
 import { UTIL } from "./Util";
+import "reflect-metadata";
 
 /**
  * ImageLoader is used for determining if all the images from the Tree are loaded.

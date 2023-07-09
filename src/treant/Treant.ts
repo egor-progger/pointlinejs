@@ -1,4 +1,4 @@
-import "./Treant.css";
+import "./styles/Treant.css";
 import { JSONconfig } from "./JSONConfig";
 import { TreeStore } from "./TreeStore";
 import { inject, injectable } from "inversify";
@@ -118,8 +118,8 @@ export class Treant {
     jQuery?: any
   ) {
     console.log('jsonConfig instanceof Array');
-    console.log(jsonConfig instanceof Array);
-    if (jsonConfig instanceof Array) {
+    console.log(Array.isArray(jsonConfig));
+    if (Array.isArray(jsonConfig)) {
       this.jsonConfig = this.jsonConfigService.make(jsonConfig);
     } else {
       this.jsonConfig = jsonConfig;

@@ -1,13 +1,13 @@
+import { ImageLoader } from "@treantjs/ImageLoader";
+import { DI_LIST } from "@treantjs/InjectableList";
+import { NodeDB, NodeDBState } from "@treantjs/NodeDB";
+import { ChartConfigType, Treant } from "@treantjs/Treant";
+import { Tree } from "@treantjs/Tree";
+import { TreeNode } from "@treantjs/TreeNode";
+import { TreeStore } from "@treantjs/TreeStore";
+import { UTIL } from "@treantjs/Util";
 import { Container } from "inversify";
 import "reflect-metadata";
-import { ImageLoader } from "../treant/ImageLoader";
-import { DI_LIST } from "../treant/InjectableList";
-import { NodeDB, NodeDBState } from "../treant/NodeDB";
-import { ChartConfigType, Treant } from "../treant/Treant";
-import { Tree } from "../treant/Tree";
-import { TreeNode } from "../treant/TreeNode";
-import { TreeStore } from "../treant/TreeStore";
-import { UTIL } from "../treant/Util";
 
 export class GraphJS {
     private treant: Treant;

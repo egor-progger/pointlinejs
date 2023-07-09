@@ -1,4 +1,4 @@
-;( function() {
+( function() {
 	// init options begin
 	var options = {
 		selectedElBackgroundColor: "grey"
