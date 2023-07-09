@@ -7,7 +7,10 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const entries = ['examples/basic-example/basic-example', 'examples/collapsable/collapsable',
 'examples/comments/comments', 'examples/connectors/connectors',
 'examples/custom-color-plus-scrollbar/custom-color-plus-scrollbar',
-'examples/custom-colored/custom-colored'];
+'examples/custom-colored/custom-colored', 'examples/evolution-tree/evolution-tree',
+'examples/no-parent/no-parent', 'examples/simple-scrollbar/simple-scrollbar',
+'examples/super-simple/super-simple', 'examples/tennis-draw/tennis-draw',
+'examples/test_ground/test_ground', 'examples/timeline/timeline'];
 
 /**
  * 
@@ -138,7 +141,12 @@ module.exports = {
       patterns: [
         { from: "src/examples/headshots", to: "examples/headshots" },
         { from: "src/examples/collapsable/img", to: "examples/collapsable/img" },
-        { from: "src/examples/comments/avatar.jpg", to: "examples/comments/avatar.jpg" }
+        { from: "src/examples/comments/avatar.jpg", to: "examples/comments/avatar.jpg" },
+        { from: "src/examples/evolution-tree/img", to: "examples/evolution-tree/img" },
+        { from: "src/examples/tennis-draw/flags", to: "examples/tennis-draw/flags" },
+        { from: "src/examples/tennis-draw/trophy.png", to: "examples/tennis-draw/trophy.png" },
+        { from: "src/examples/test_ground/image.png", to: "examples/test_ground/image.png" },
+        { from: "src/examples/test_ground/slika-manja.jpg", to: "examples/test_ground/slika-manja.jpg" }
       ],
     }),
   ],
