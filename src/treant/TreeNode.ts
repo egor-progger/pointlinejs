@@ -8,12 +8,10 @@
  * @constructor
  */
 
-import { inject, injectable } from "inversify";
-import { TreeStore } from "./TreeStore";
+import { injectable } from "inversify";
 import { UTIL } from "./Util";
-import { DI_LIST } from "./InjectableList";
-import $ from 'jquery';
 import { Tree } from "./Tree";
+import $ from "jquery";
 
 @injectable()
 export class TreeNode {
@@ -61,7 +59,9 @@ export class TreeNode {
     public tree: Tree
   ) {
     console.log('TreeNode constructor');
-    console.log(this.tree);
+    // console.log(this.tree);
+    // console.log(new jQuery().instance);
+    // console.log($);
   }
 
   init(

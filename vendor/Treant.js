@@ -2193,9 +2193,16 @@
      * Chart constructor.
      */
     var Treant = function( jsonConfig, callback, jQuery ) {
+        console.log(`jsonConfig instanceof Array`);
+        console.log(jsonConfig instanceof Array);
         if ( jsonConfig instanceof Array ) {
             jsonConfig = JSONconfig.make( jsonConfig );
+            console.log('jsonConfig');
+            console.log(jsonConfig);
         }
+
+        console.log(`jsonConfig`);
+        console.log(jsonConfig);
 
         // optional
         if ( jQuery ) {

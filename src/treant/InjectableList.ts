@@ -7,6 +7,7 @@ const DI_LIST = {
   util: Symbol.for("Util"),
   imageLoader: Symbol.for("ImageLoader"),
   nodeDBState: Symbol.for("NodeDBState"),
+  jsonConfig: Symbol.for("JSONconfig")
 };
 
 export { DI_LIST };

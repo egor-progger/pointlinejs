@@ -97,12 +97,12 @@ export type ChartConfigType = Array<Partial<ChartInterface> | Partial<NodeInterf
  */
 @injectable()
 export class Treant {
-  protected jsonConfigService: JSONconfig = new JSONconfig();
   jsonConfig: ChartConfigType;
 
   tree: Promise<Tree> | null = null;
 
   constructor(
+    @inject(DI_LIST.jsonConfig) public jsonConfigService: JSONconfig,
     @inject(DI_LIST.treeStore) public treeStore: TreeStore,
     @inject(DI_LIST.nodeDB) public nodeDB: NodeDB) { }
 
@@ -124,6 +124,8 @@ export class Treant {
     } else {
       this.jsonConfig = jsonConfig;
     }
+    console.log(`this.jsonConfig`);
+    console.log(this.jsonConfig);
     // optional
     if (jQuery) {
       $ = jQuery;
