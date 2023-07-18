@@ -17,36 +17,36 @@ import $ from "jquery";
 export class TreeNode {
   protected util: UTIL = new UTIL();
 
-  id: number = 0;
-  parentId: number = 0;
-  treeId: number = 0;
-  prelim: number = 0;
-  modifier: number = 0;
-  leftNeighborId: number | null = null;
-  rightNeighborId: number | null = null;
-  stackParentId: any = 0;
-  stackParent: boolean = false;
+  id: number;
+  parentId: number;
+  treeId: number;
+  prelim: number;
+  modifier: number;
+  leftNeighborId: number | null;
+  rightNeighborId: number | null;
+  stackParentId: any;
+  stackParent: boolean = undefined;
   pseudo: any;
-  meta: string = "";
-  image: string = "";
+  meta: string;
+  image: string;
   link: any;
   connStyle: any;
   connector: any;
   drawLineThrough: any;
-  collapsable: boolean = false;
-  collapsed: boolean = false;
+  collapsable: boolean;
+  collapsed: boolean;
   text: any;
   nodeInnerHTML: any;
-  nodeHTMLclass = "";
-  nodeHTMLid = 0;
+  nodeHTMLclass: string;
+  nodeHTMLid: number;
   children: any;
-  width: number = 0;
-  height: number = 0;
-  X: number = 0;
-  Y: number = 0;
+  width: number;
+  height: number;
+  X: number;
+  Y: number;
   lineThroughMe: any;
   nodeDOM: any;
-  hidden: boolean = false;
+  hidden: boolean;
   positioned: any;
   style: any;
   stackChildren: any;
@@ -159,7 +159,7 @@ export class TreeNode {
    * @param {number} nodeId
    * @returns {TreeNode}
    */
-  lookupNode(nodeId: any) {
+  lookupNode(nodeId: number) {
     return this.getTreeNodeDb().get(nodeId);
   }
 
@@ -183,18 +183,27 @@ export class TreeNode {
    * @returns {float}
    */
   size() {
-    var orientation = this.getTreeConfig().rootOrientation;
+    console.log('size begin');
+    const orientation = this.getTreeConfig().rootOrientation;
 
     if (this.pseudo) {
       // prevents separating the subtrees
-      return -this.getTreeConfig().subTeeSeparation;
+      console.log(-1 * this.getTreeConfig().subTeeSeparation);
+      console.log('size end');
+      return -1 * this.getTreeConfig().subTeeSeparation;
     }
 
     if (orientation === "NORTH" || orientation === "SOUTH") {
+      console.log(this.width);
+      console.log('size end');
       return this.width;
     } else if (orientation === "WEST" || orientation === "EAST") {
+      console.log(this.height);
+      console.log('size end');
       return this.height;
     }
+    console.log(0);
+    console.log('size end');
     return 0;
   }
 
@@ -256,8 +265,7 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   leftSibling() {
-    var leftNeighbor = this.leftNeighbor();
-
+    const leftNeighbor = this.leftNeighbor();
     if (leftNeighbor && leftNeighbor.parentId === this.parentId) {
       return leftNeighbor;
     }
@@ -281,8 +289,13 @@ export class TreeNode {
     console.log('childrenCenter begin');
     var first = this.firstChild(),
       last = this.lastChild();
+    console.log(`first.prelim ${first.prelim}`);
+    console.log(`first`);
     console.log(first);
+    console.log(`last`);
     console.log(last);
+    console.log(`last.prelim ${last.prelim}`);
+    console.log(`last.size() ${last.size()}`);
     console.log('childrenCenter end');
     return first.prelim + (last.prelim - first.prelim + last.size()) / 2;
   }
@@ -308,12 +321,12 @@ export class TreeNode {
    * @param depth
    * @returns {*}
    */
-  leftMost(level: number, depth: number): TreeNode | void {
+  leftMost(level: number, depth: number): TreeNode | null {
     if (level >= depth) {
       return this;
     }
     if (this.childrenCount() === 0) {
-      return;
+      return null;
     }
 
     for (var i = 0, n = this.childrenCount(); i < n; i++) {
@@ -448,7 +461,10 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   toggleCollapse() {
+    console.log(`toggleCollapse begin`);
     var oTree = this.getTree();
+    console.log('oTree');
+    console.log(oTree);
 
     if (!oTree.inAnimation) {
       oTree.inAnimation = true;
@@ -475,6 +491,7 @@ export class TreeNode {
           : oTree.CONFIG.animation.connectorsSpeed
       );
     }
+    console.log(`toggleCollapse end`);
     return this;
   }
 
@@ -551,6 +568,7 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   hideConnector() {
+    console.log('hideConnector begin');
     var oTree = this.getTree();
     var oPath = oTree.connectionStore[this.id];
     if (oPath) {
@@ -560,6 +578,7 @@ export class TreeNode {
         oTree.CONFIG.animation.connectorsAnimation
       );
     }
+    console.log('hideConnector end');
     return this;
   }
 
@@ -609,6 +628,7 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   showConnector() {
+    console.log(`showConnector begin`);
     var oTree = this.getTree();
     var oPath = oTree.connectionStore[this.id];
     if (oPath) {
@@ -618,6 +638,7 @@ export class TreeNode {
         oTree.CONFIG.animation.connectorsAnimation
       );
     }
+    console.log(`showConnector end`);
     return this;
   }
 
@@ -716,7 +737,7 @@ export class TreeNode {
    * @param {Tree} tree
    */
   createGeometry(tree: any) {
-    // console.log('createGeometry begin');
+    console.log('createGeometry begin');
     if (this.id === 0 && tree.CONFIG.hideRootNode) {
       this.width = 0;
       this.height = 0;
@@ -770,10 +791,11 @@ export class TreeNode {
     /////////// APPEND all //////////////
     drawArea.appendChild(node);
 
-    // console.log(node);
+    console.log(`node`);
+    console.log(node);
 
-    // console.log(node.offsetHeight);
-    // console.log(node.offsetWidth);
+    console.log(`node.offsetHeight ${node.offsetHeight}`);
+    console.log(`node.offsetWidth ${node.offsetWidth}`);
 
     this.width = node.offsetWidth;
     this.height = node.offsetHeight;
@@ -781,7 +803,7 @@ export class TreeNode {
     this.nodeDOM = node;
 
     tree.imageLoader.processNode(this);
-    // console.log('createGeometry end');
+    console.log('createGeometry end');
   }
 
   /**

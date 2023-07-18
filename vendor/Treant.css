@@ -2,7 +2,7 @@
 /* .Treant se automatski dodaje na svaki chart conatiner */
 .Treant { position: relative; overflow: hidden; padding: 0 !important; }
 .Treant > .node,
-.Treant > .pseudo { position: absolute; display: block; visibility: hidden; }
+.Treant > .pseudo { position: absolute; display: block; visibility: visible; }
 .Treant.Treant-loaded .node,
 .Treant.Treant-loaded .pseudo { visibility: visible; }
 .Treant > .pseudo { width: 0; height: 0; border: none; padding: 0; }
