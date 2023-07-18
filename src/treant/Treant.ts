@@ -117,15 +117,15 @@ export class Treant {
     callback?: any,
     jQuery?: any
   ) {
-    console.log('jsonConfig instanceof Array');
-    console.log(Array.isArray(jsonConfig));
+    // console.log('jsonConfig instanceof Array');
+    // console.log(Array.isArray(jsonConfig));
     if (Array.isArray(jsonConfig)) {
       this.jsonConfig = this.jsonConfigService.make(jsonConfig);
     } else {
       this.jsonConfig = jsonConfig;
     }
-    console.log(`this.jsonConfig`);
-    console.log(this.jsonConfig);
+    // console.log(`this.jsonConfig`);
+    // console.log(this.jsonConfig);
     // optional
     if (jQuery) {
       $ = jQuery;
@@ -135,9 +135,16 @@ export class Treant {
     );
     Promise.all([this.tree, this.nodeDB.nodeDBState.dbReady]).then(
       ([tree, dbReady]) => {
+        console.log(`dbReady ${dbReady}`);
         if (dbReady) {
           tree.positionTree(callback);
         }
+      }
+    );
+    Promise.race([this.nodeDB.nodeDBState.dbReady]).then(
+      (value) => {
+        console.log(`treant init value`);
+        console.log(value);
       }
     );
   }

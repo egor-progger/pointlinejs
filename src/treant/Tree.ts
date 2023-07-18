@@ -116,12 +116,15 @@ export class Tree {
    * @returns {Tree}
    */
   reset(jsonConfig: any, treeId: number) {
-    this.initJsonConfig = jsonConfig;
+    console.log(jsonConfig);
+    this.initJsonConfig = { ...this.initJsonConfig, ...jsonConfig };
+    console.log(this.initJsonConfig);
     this.initTreeId = treeId;
 
     this.id = treeId;
 
     this.CONFIG = this.util.extend(this.CONFIG, jsonConfig.chart);
+    console.log(this.CONFIG);
     this.drawArea = this.util.findEl(this.CONFIG.container, true);
     if (!this.drawArea) {
       throw new Error(
@@ -175,6 +178,7 @@ export class Tree {
    * @returns {Tree}
    */
   positionTree(callback?: any) {
+    console.log('positionTree begin');
     var self = this;
 
     if (this.imageLoader.isNotLoading() === true) {
@@ -186,6 +190,7 @@ export class Tree {
       this.secondWalk(root, 0, 0, 0);
 
       this.positionNodes();
+      console.log(this.CONFIG.animateOnInit);
 
       if (this.CONFIG.animateOnInit) {
         setTimeout(function () {
@@ -219,11 +224,11 @@ export class Tree {
    * @returns {Tree}
    */
   firstWalk(node: TreeNode, level: number) {
-    console.log('firstWalk begin');
+    // console.log('firstWalk begin');
     node.prelim = null;
     node.modifier = null;
-    console.log(node);
-    console.log(level);
+    // console.log(node);
+    // console.log(level);
     // if (level === 1) {
     //   return;
     // }
@@ -235,8 +240,8 @@ export class Tree {
 
     if (node.childrenCount() === 0 || level === this.CONFIG.maxDepth) {
       // set preliminary x-coordinate
-      console.log('set preliminary x-coordinate begin');
-      console.log(`leftSibling.size() ${leftSibling?.size()}`);
+      // console.log('set preliminary x-coordinate begin');
+      // console.log(`leftSibling.size() ${leftSibling?.size()}`);
       if (leftSibling) {
         node.prelim =
           leftSibling.prelim +
@@ -245,25 +250,25 @@ export class Tree {
       } else {
         node.prelim = 0;
       }
-      console.log('set preliminary x-coordinate end');
+      // console.log('set preliminary x-coordinate end');
     } else {
       //node is not a leaf,  firstWalk for each child
       for (var i = 0, n = node.childrenCount(); i < n; i++) {
-        console.log('node is not a leaf,  firstWalk for each child begin');
+        // console.log('node is not a leaf,  firstWalk for each child begin');
         this.firstWalk(node.childAt(i), level + 1);
-        console.log('node is not a leaf,  firstWalk for each child end');
+        // console.log('node is not a leaf,  firstWalk for each child end');
       }
 
       var midPoint = node.childrenCenter() - node.size() / 2;
 
       if (leftSibling) {
-        console.log(`midPoint ${midPoint}`);
-        console.log(`leftSibling`);
-        console.log(leftSibling);
-        console.log(`leftSibling.prelim`);
-        console.log(leftSibling?.size());
-        console.log(`this.CONFIG.siblingSeparation`);
-        console.log(this.CONFIG.siblingSeparation);
+        // console.log(`midPoint ${midPoint}`);
+        // console.log(`leftSibling`);
+        // console.log(leftSibling);
+        // console.log(`leftSibling.prelim`);
+        // console.log(leftSibling?.size());
+        // console.log(`this.CONFIG.siblingSeparation`);
+        // console.log(this.CONFIG.siblingSeparation);
 
         node.prelim =
           leftSibling.prelim +
@@ -278,20 +283,20 @@ export class Tree {
       // handle stacked children positioning
       if (node.stackParent) {
         // handle the parent of stacked children
-        console.log('// handle the parent of stacked children begin');
-        console.log(`this.nodeDB.get(node.stackChildren[0]).size() ${this.nodeDB.get(node.stackChildren[0]).size()}`);
-        console.log(`node.connStyle.stackIndent ${node.connStyle.stackIndent}`);
+        // console.log('// handle the parent of stacked children begin');
+        // console.log(`this.nodeDB.get(node.stackChildren[0]).size() ${this.nodeDB.get(node.stackChildren[0]).size()}`);
+        // console.log(`node.connStyle.stackIndent ${node.connStyle.stackIndent}`);
         node.modifier +=
           this.nodeDB.get(node.stackChildren[0]).size() / 2 +
           node.connStyle.stackIndent;
-        console.log('// handle the parent of stacked children end');
+        // console.log('// handle the parent of stacked children end');
       } else if (node.stackParentId) {
         // handle stacked children
         node.prelim = 0;
       }
-      console.log('node is not a leaf,  firstWalk for each child end');
+      // console.log('node is not a leaf,  firstWalk for each child end');
     }
-    console.log('firstWalk end');
+    // console.log('firstWalk end');
     return this;
   }
 
@@ -304,7 +309,7 @@ export class Tree {
    * accrue from positioning nodes rather than subtrees.
    */
   apportion(node: TreeNode, level: number) {
-    console.log('apportion begin');
+    // console.log('apportion begin');
     let firstChild: TreeNode | null = node.firstChild();
     var firstChildLeftNeighbor = firstChild.leftNeighbor(),
       compareDepth = 1,
@@ -312,7 +317,7 @@ export class Tree {
 
     let loopIndex = 0;
 
-    console.log(`depthToStop ${depthToStop}`);
+    // console.log(`depthToStop ${depthToStop}`);
 
     while (
       firstChild &&
@@ -334,10 +339,10 @@ export class Tree {
         modifierSumRight += rightAncestor.modifier;
 
         // all the stacked children are oriented towards right so use right variables
-        console.log(`rightAncestor`);
-        console.log(rightAncestor);
+        // console.log(`rightAncestor`);
+        // console.log(rightAncestor);
         if (rightAncestor.stackParent !== undefined) {
-          console.log(`rightAncestor.stackParent !== undefined`);
+          // console.log(`rightAncestor.stackParent !== undefined`);
           modifierSumRight += rightAncestor.size() / 2;
         }
       }
@@ -351,7 +356,7 @@ export class Tree {
         firstChildLeftNeighbor.size() +
         this.CONFIG.subTeeSeparation -
         (firstChild.prelim + modifierSumRight);
-      console.log(`totalGap ${totalGap}`);
+      // console.log(`totalGap ${totalGap}`);
 
       if (totalGap > 0) {
         var subtreeAux = node,
@@ -388,8 +393,8 @@ export class Tree {
         firstChildLeftNeighbor = firstChild.leftNeighbor();
       }
     }
-    console.log(`loopIndex ${loopIndex}`);
-    console.log('apportion end');
+    // console.log(`loopIndex ${loopIndex}`);
+    // console.log('apportion end');
   }
 
   /*
@@ -401,15 +406,15 @@ export class Tree {
    * RootOrientations of EAST or WEST.)
    */
   secondWalk(node: any, level: number, X: number, Y: number) {
-    console.log('secondWalk begin');
+    // console.log('secondWalk begin');
     if (level > this.CONFIG.maxDepth) {
       return;
     }
 
-    console.log(node);
-    console.log(node.prelim);
-    console.log(node);
-    console.log(node.prelim);
+    // console.log(node);
+    // console.log(node.prelim);
+    // console.log(node);
+    // console.log(node.prelim);
 
     var xTmp = node.prelim + X,
       yTmp = Y,
@@ -480,7 +485,7 @@ export class Tree {
       this.secondWalk(node.rightSibling(), level, X, Y);
     }
 
-    console.log('secondWalk end');
+    // console.log('secondWalk end');
   }
 
   /**
@@ -489,7 +494,7 @@ export class Tree {
    * @returns {Tree}
    */
   positionNodes() {
-    console.log('positionNodes begin');
+    // console.log('positionNodes begin');
     var self = this,
       treeSize = {
         x: self.nodeDB.getMinMaxCoord("X", null, null),
@@ -502,8 +507,8 @@ export class Tree {
         y: treeSize.y.max - treeHeight / 2,
       };
 
-    console.log(`treeSize`);
-    console.log(treeSize);
+    // console.log(`treeSize`);
+    // console.log(treeSize);
 
     this.handleOverflow(treeWidth, treeHeight);
 
@@ -585,7 +590,7 @@ export class Tree {
         treeCenter,
       ]);
     }
-    console.log('positionNodes end');
+    // console.log('positionNodes end');
     return this;
   }
   /**
@@ -844,9 +849,9 @@ export class Tree {
    * @returns {Tree}
    */
   calcLevelDim(node: any, level: number) {
-    console.log('calcLevelDim begin');
-    console.log(node.height);
-    console.log(node.width);
+    // console.log('calcLevelDim begin');
+    // console.log(node.height);
+    // console.log(node.width);
     // root node is on level 0
     this.levelMaxDim[level] = {
       width: Math.max(
@@ -858,8 +863,8 @@ export class Tree {
         node.height
       ),
     };
-    console.log(this.levelMaxDim[level]);
-    console.log('calcLevelDim end');
+    // console.log(this.levelMaxDim[level]);
+    // console.log('calcLevelDim end');
   }
 
   /**

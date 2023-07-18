@@ -80,11 +80,11 @@ export class ImageLoader {
       node.height = node.nodeDOM.offsetHeight;
     }
 
-    console.log('image loader create');
-    console.log(node);
+    // console.log('image loader create');
+    // console.log(node);
 
-    console.log(image.src);
-    console.log(image.src.indexOf("data:"));
+    // console.log(image.src);
+    // console.log(image.src.indexOf("data:"));
 
     if (image.src.indexOf("data:") !== 0) {
       this.loading.push(source);
@@ -100,18 +100,18 @@ export class ImageLoader {
       image.src +=
         (image.src.indexOf("?") > 0 ? "&" : "?") + new Date().getTime();
     } else {
-      console.log((image.complete))
+      // console.log((image.complete))
       imgTrigger();
     }
-    console.log('image loader end');
+    // console.log('image loader end');
   }
 
   /**
    * @returns {boolean}
    */
   isNotLoading() {
-    console.log('image loader isNotLoading');
-    console.log(this.loading.length);
+    // console.log('image loader isNotLoading');
+    // console.log(this.loading.length);
     return this.loading.length === 0;
   }
 }

@@ -90,6 +90,8 @@ export class NodeDB {
     }
 
     this.iterateChildren(nodeStructure, -1, tree); // root node
+    console.log(`after iterateChildren`);
+    console.log(this.db);
 
     // this.dbReady = new Promise((resolve, reject) => {
     this.createGeometries(tree);
@@ -106,28 +108,36 @@ export class NodeDB {
    * @returns {NodeDB}
    */
   createGeometries(tree: any) {
-    console.log('createGeometries nodeDB begin');
+    // console.log('createGeometries nodeDB begin');
+    console.log(`this.db.length ${this.db.length}`);
     var i = this.db.length;
     this.nodeDBState.totalNodes = this.db.length;
+    const logTimeout = (nodeDb: TreeNode, nodeDBState: NodeDBState) => {
+      // console.log(nodeDb.nodeDOM.offsetWidth);
+      // console.log(nodeDb.nodeDOM.offsetHeight);
+      // console.log(nodeDb.width);
+      // console.log(nodeDb.height);
+      // console.log(`nodeDb.width`);
+      // console.log(nodeDb.width);
+      // console.log(`nodeDb`);
+      // console.log(nodeDb.collapsed);
+      // if (nodeDb.width && nodeDb.height) {
+      nodeDBState.nodesWithHeightAndWidth.add(nodeDb.id);
+      // } else if (nodeDb.collapsed === true) {
+      //   nodeDBState.nodesWithHeightAndWidth.add(nodeDb.id);
+      // }
+      if (nodeDBState.totalNodes === nodeDBState.nodesWithHeightAndWidth.size) {
+        this.nodeDBState.dbReadyResolve(true);
+      }
+      console.log(`this.nodeDBState.nodesWithHeightAndWidth.size`);
+      console.log(this.nodeDBState.nodesWithHeightAndWidth.size);
+    };
 
     while (i--) {
       this.get(i).createGeometry(tree);
-      const logTimeout = (nodeDb, i, nodeDBState: NodeDBState) => {
-        console.log(`i ${i}`);
-        console.log(nodeDb.nodeDOM.offsetWidth);
-        console.log(nodeDb.nodeDOM.offsetHeight);
-        console.log(nodeDb.width);
-        console.log(nodeDb.height);
-        if (nodeDb.width && nodeDb.height) {
-          nodeDBState.nodesWithHeightAndWidth.add(nodeDb.id);
-        }
-        if (nodeDBState.totalNodes === nodeDBState.nodesWithHeightAndWidth.size) {
-          this.nodeDBState.dbReadyResolve(true);
-        }
-      };
-      setTimeout(logTimeout, 500, this.get(i), i, this.nodeDBState);
+      setTimeout(logTimeout, 100, this.get(i), this.nodeDBState);
     }
-    console.log('createGeometries nodeDB end');
+    // console.log('createGeometries nodeDB end');
     return this;
   }
 
@@ -136,7 +146,7 @@ export class NodeDB {
    * @returns {TreeNode}
    */
   get(nodeId: number): TreeNode {
-    return this.db[nodeId] as TreeNode; // get TreeNode by ID
+    return this.db[nodeId]; // get TreeNode by ID
   }
 
   /**
@@ -166,13 +176,15 @@ export class NodeDB {
     tree: any,
     stackParentId: number | null
   ) {
-    var node = new TreeNode(tree).init(
+    const node = new TreeNode(tree).init(
       nodeStructure,
       this.db.length,
       parentId,
       tree,
       stackParentId
     );
+    console.log(`createNode`);
+    console.log(node);
 
     this.db.push(node);
 
@@ -219,8 +231,8 @@ export class NodeDB {
   }
 
   getMinMaxCoord(dim: any, parent: any, MinMax: any) {
-    console.log('getMinMaxCoord begin');
-    console.log(parent);
+    // console.log('getMinMaxCoord begin');
+    // console.log(parent);
     // used for getting the dimensions of the tree, dim = 'X' || 'Y'
     // looks for min and max (X and Y) within the set of nodes
     parent = parent || this.get(0);
@@ -247,7 +259,7 @@ export class NodeDB {
 
       this.getMinMaxCoord(dim, node, MinMax);
     }
-    console.log('getMinMaxCoord end');
+    // console.log('getMinMaxCoord end');
     return MinMax;
   }
 

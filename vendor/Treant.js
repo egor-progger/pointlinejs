@@ -309,11 +309,11 @@
                 node.height = node.nodeDOM.offsetHeight;
             }
 
-            console.log('image loader create');
-    console.log(node);
+    //         console.log('image loader create');
+    // console.log(node);
 
-    console.log(image.src);
-    console.log(image.src.indexOf("data:"));
+    // console.log(image.src);
+    // console.log(image.src.indexOf("data:"));
 
             if ( image.src.indexOf( 'data:' ) !== 0 ) {
                 this.loading.push( source );
@@ -337,7 +337,7 @@
          * @returns {boolean}
          */
         isNotLoading: function() {
-            console.log(this.loading.length);
+            // console.log(this.loading.length);
             return ( this.loading.length === 0 );
         }
     };
@@ -552,11 +552,11 @@
          * @returns {Tree}
          */
         firstWalk(node, level) {
-            console.log('firstWalk begin');
+            // console.log('firstWalk begin');
             node.prelim = null;
             node.modifier = null;
-            console.log(node);
-            console.log(level);
+            // console.log(node);
+            // console.log(level);
             // if (level === 1) {
             //   return;
             // }
@@ -568,8 +568,8 @@
         
             if (node.childrenCount() === 0 || level === this.CONFIG.maxDepth) {
               // set preliminary x-coordinate
-              console.log('set preliminary x-coordinate begin');
-              console.log(`leftSibling.size() ${leftSibling?.size()}`);
+            //   console.log('set preliminary x-coordinate begin');
+            //   console.log(`leftSibling.size() ${leftSibling?.size()}`);
               if (leftSibling) {
                 node.prelim =
                   leftSibling.prelim +
@@ -578,22 +578,22 @@
               } else {
                 node.prelim = 0;
               }
-              console.log('set preliminary x-coordinate end');
+            //   console.log('set preliminary x-coordinate end');
             } else {
               //node is not a leaf,  firstWalk for each child
-              console.log('node is not a leaf,  firstWalk for each child begin');
+            //   console.log('node is not a leaf,  firstWalk for each child begin');
               for (var i = 0, n = node.childrenCount(); i < n; i++) {
                 this.firstWalk(node.childAt(i), level + 1);
               }
         
               var midPoint = node.childrenCenter() - node.size() / 2;
-              console.log(`midPoint ${midPoint}`);
-              console.log(`leftSibling`);
-              console.log(leftSibling);
-              console.log(`leftSibling.prelim`);
-              console.log(leftSibling?.size());
-              console.log(`this.CONFIG.siblingSeparation`);
-              console.log(this.CONFIG.siblingSeparation);
+            //   console.log(`midPoint ${midPoint}`);
+            //   console.log(`leftSibling`);
+            //   console.log(leftSibling);
+            //   console.log(`leftSibling.prelim`);
+            //   console.log(leftSibling?.size());
+            //   console.log(`this.CONFIG.siblingSeparation`);
+            //   console.log(this.CONFIG.siblingSeparation);
         
               if (leftSibling) {
                 node.prelim =
@@ -609,20 +609,20 @@
               // handle stacked children positioning
               if (node.stackParent) {
                 // handle the parent of stacked children
-                console.log('// handle the parent of stacked children begin');
-                console.log(`this.nodeDB.get(node.stackChildren[0]).size() ${this.nodeDB.get(node.stackChildren[0]).size()}`);
-                console.log(`node.connStyle.stackIndent ${node.connStyle.stackIndent}`);
+                // console.log('// handle the parent of stacked children begin');
+                // console.log(`this.nodeDB.get(node.stackChildren[0]).size() ${this.nodeDB.get(node.stackChildren[0]).size()}`);
+                // console.log(`node.connStyle.stackIndent ${node.connStyle.stackIndent}`);
                 node.modifier +=
                 this.nodeDB.get(node.stackChildren[0]).size() / 2 +
                 node.connStyle.stackIndent;
-                console.log('// handle the parent of stacked children end');
+                // console.log('// handle the parent of stacked children end');
               } else if (node.stackParentId) {
                 // handle stacked children
                 node.prelim = 0;
               }
-              console.log('node is not a leaf,  firstWalk for each child end');
+            //   console.log('node is not a leaf,  firstWalk for each child end');
             }
-            console.log('firstWalk end');
+            // console.log('firstWalk end');
             return this;
           },
 
@@ -635,7 +635,7 @@
          * accrue from positioning nodes rather than subtrees.
          */
         apportion: function (node, level) {
-            console.log('apportion begin');
+            // console.log('apportion begin');
     let firstChild = node.firstChild();
     var firstChildLeftNeighbor = firstChild.leftNeighbor(),
       compareDepth = 1,
@@ -643,7 +643,7 @@
 
       let loopIndex = 0;
 
-    console.log(`depthToStop ${depthToStop}`);
+    // console.log(`depthToStop ${depthToStop}`);
 
     while (
       firstChild &&
@@ -665,10 +665,10 @@
         modifierSumRight += rightAncestor.modifier;
 
         // all the stacked children are oriented towards right so use right variables
-        console.log(`rightAncestor`);
-        console.log(rightAncestor);
+        // console.log(`rightAncestor`);
+        // console.log(rightAncestor);
         if (rightAncestor.stackParent !== undefined) {
-            console.log(`rightAncestor.stackParent !== undefined`);
+            // console.log(`rightAncestor.stackParent !== undefined`);
           modifierSumRight += rightAncestor.size() / 2;
         }
       }
@@ -682,7 +682,7 @@
         firstChildLeftNeighbor.size() +
         this.CONFIG.subTeeSeparation -
         (firstChild.prelim + modifierSumRight);
-      console.log(`totalGap ${totalGap}`);
+    //   console.log(`totalGap ${totalGap}`);
 
       if (totalGap > 0) {
         var subtreeAux = node,
@@ -719,8 +719,8 @@
         firstChildLeftNeighbor = firstChild.leftNeighbor();
       }
     }
-    console.log(`loopIndex ${loopIndex}`);
-    console.log('apportion end');
+    // console.log(`loopIndex ${loopIndex}`);
+    // console.log('apportion end');
         },
 
         /*
@@ -806,7 +806,7 @@
          * @returns {Tree}
          */
         positionNodes() {
-            console.log('positionNodes begin');
+            // console.log('positionNodes begin');
             var self = this,
               treeSize = {
                 x: self.nodeDB.getMinMaxCoord("X", null, null),
@@ -819,8 +819,8 @@
                 y: treeSize.y.max - treeHeight / 2,
               };
         
-              console.log(`treeSize`);
-              console.log(treeSize);
+            //   console.log(`treeSize`);
+            //   console.log(treeSize);
         
             this.handleOverflow(treeWidth, treeHeight);
         
@@ -902,7 +902,7 @@
                 treeCenter,
               ]);
             }
-            console.log('positionNodes end');
+            // console.log('positionNodes end');
             return this;
           },
 
@@ -1142,9 +1142,9 @@
          * @returns {Tree}
          */
         calcLevelDim: function( node, level ) { // root node is on level 0
-            console.log('calcLevelDim begin');
-    console.log(node.height);
-    console.log(node.width);
+    //         console.log('calcLevelDim begin');
+    // console.log(node.height);
+    // console.log(node.width);
     // root node is on level 0
     this.levelMaxDim[level] = {
       width: Math.max(
@@ -1156,8 +1156,8 @@
         node.height
       ),
     };
-    console.log(this.levelMaxDim[level]);
-    console.log('calcLevelDim end')
+    // console.log(this.levelMaxDim[level]);
+    // console.log('calcLevelDim end')
         },
 
         /**
@@ -1342,8 +1342,8 @@
         },
 
         getMinMaxCoord(dim, parent, MinMax) {
-            console.log('getMinMaxCoord begin');
-            console.log(parent);
+            // console.log('getMinMaxCoord begin');
+            // console.log(parent);
             // used for getting the dimensions of the tree, dim = 'X' || 'Y'
             // looks for min and max (X and Y) within the set of nodes
             parent = parent || this.get(0);
@@ -1370,7 +1370,7 @@
         
               this.getMinMaxCoord(dim, node, MinMax);
             }
-            console.log('getMinMaxCoord end');
+            // console.log('getMinMaxCoord end');
             return MinMax;
           },
 
@@ -1502,27 +1502,27 @@
          * @returns {float}
          */
         size() {
-            console.log('size begin');
+            // console.log('size begin');
             const orientation = this.getTreeConfig().rootOrientation;
         
             if (this.pseudo) {
               // prevents separating the subtrees
-              console.log(-1 * this.getTreeConfig().subTeeSeparation);
-              console.log('size end');
+            //   console.log(-1 * this.getTreeConfig().subTeeSeparation);
+            //   console.log('size end');
               return -1 * this.getTreeConfig().subTeeSeparation;
             }
         
             if (orientation === "NORTH" || orientation === "SOUTH") {
-              console.log(this.width);
-              console.log('size end');
+            //   console.log(this.width);
+            //   console.log('size end');
               return this.width;
             } else if (orientation === "WEST" || orientation === "EAST") {
-              console.log(this.height);
-              console.log('size end');
+            //   console.log(this.height);
+            //   console.log('size end');
               return this.height;
             }
-            console.log(0);
-            console.log('size end');
+            // console.log(0);
+            // console.log('size end');
             return 0;
           },
 
@@ -1606,17 +1606,17 @@
          * @returns {number}
          */
         childrenCenter() {
-            console.log('childrenCenter begin');
+            // console.log('childrenCenter begin');
     var first = this.firstChild(),
       last = this.lastChild();
-    console.log(`first.prelim ${first.prelim}`);
-    console.log(`first`);
-    console.log(first);
-    console.log(`last`);
-    console.log(last);
-    console.log(`last.prelim ${last.prelim}`);
-    console.log(`last.size() ${last.size()}`);
-    console.log('childrenCenter end');
+    // console.log(`first.prelim ${first.prelim}`);
+    // console.log(`first`);
+    // console.log(first);
+    // console.log(`last`);
+    // console.log(last);
+    // console.log(`last.prelim ${last.prelim}`);
+    // console.log(`last.size() ${last.size()}`);
+    // console.log('childrenCenter end');
             return first.prelim + (last.prelim - first.prelim + last.size()) / 2;
           },
 
@@ -1763,6 +1763,7 @@
          * @returns {TreeNode}
          */
         toggleCollapse: function() {
+            console.log('toggleCollapse begin');
             var oTree = this.getTree();
 
             if ( !oTree.inAnimation ) {
@@ -1785,6 +1786,7 @@
                         oTree.CONFIG.animation.connectorsSpeed
                 );
             }
+            console.log('toggleCollapse end');
             return this;
         },
 
@@ -2022,7 +2024,7 @@
      * @param {Tree} tree
      */
     TreeNode.prototype.createGeometry = function( tree ) {
-        console.log('createGeometry begin');
+        // console.log('createGeometry begin');
         if ( this.id === 0 && tree.CONFIG.hideRootNode ) {
             this.width = 0;
             this.height = 0;
@@ -2073,11 +2075,11 @@
         /////////// APPEND all //////////////
         drawArea.appendChild(node);
 
-        console.log(`node`);
-        console.log(node);
+        // console.log(`node`);
+        // console.log(node);
     
-        console.log(`node.offsetHeight ${node.offsetHeight}`);
-        console.log(`node.offsetWidth ${node.offsetWidth}`);
+        // console.log(`node.offsetHeight ${node.offsetHeight}`);
+        // console.log(`node.offsetWidth ${node.offsetWidth}`);
 
         this.width = node.offsetWidth;
         this.height = node.offsetHeight;
@@ -2086,7 +2088,7 @@
 
         tree.imageLoader.processNode(this);
         
-        console.log('createGeometry end');
+        // console.log('createGeometry end');
     };
 
     /**
@@ -2269,16 +2271,16 @@
      * Chart constructor.
      */
     var Treant = function( jsonConfig, callback, jQuery ) {
-        console.log(`jsonConfig instanceof Array`);
-        console.log(jsonConfig instanceof Array);
+        // console.log(`jsonConfig instanceof Array`);
+        // console.log(jsonConfig instanceof Array);
         if ( jsonConfig instanceof Array ) {
             jsonConfig = JSONconfig.make( jsonConfig );
-            console.log('jsonConfig');
-            console.log(jsonConfig);
+            // console.log('jsonConfig');
+            // console.log(jsonConfig);
         }
 
-        console.log(`jsonConfig`);
-        console.log(jsonConfig);
+        // console.log(`jsonConfig`);
+        // console.log(jsonConfig);
 
         // optional
         if ( jQuery ) {

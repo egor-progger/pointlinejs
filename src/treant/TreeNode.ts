@@ -58,7 +58,7 @@ export class TreeNode {
   constructor(
     public tree: Tree
   ) {
-    console.log('TreeNode constructor');
+    // console.log('TreeNode constructor');
     // console.log(this.tree);
     // console.log(new jQuery().instance);
     // console.log($);
@@ -137,6 +137,10 @@ export class TreeNode {
     this.nodeHTMLid = nodeStructure.HTMLid;
 
     this.children = [];
+    console.log(`this.image === 'img/lana.png'`);
+    console.log(this.image === 'img/lana.png');
+    console.log(`this.collapsed`);
+    console.log(this.collapsed);
 
     return this;
   }
@@ -183,27 +187,27 @@ export class TreeNode {
    * @returns {float}
    */
   size() {
-    console.log('size begin');
+    // console.log('size begin');
     const orientation = this.getTreeConfig().rootOrientation;
 
     if (this.pseudo) {
       // prevents separating the subtrees
-      console.log(-1 * this.getTreeConfig().subTeeSeparation);
-      console.log('size end');
+      // console.log(-1 * this.getTreeConfig().subTeeSeparation);
+      // console.log('size end');
       return -1 * this.getTreeConfig().subTeeSeparation;
     }
 
     if (orientation === "NORTH" || orientation === "SOUTH") {
-      console.log(this.width);
-      console.log('size end');
+      // console.log(this.width);
+      // console.log('size end');
       return this.width;
     } else if (orientation === "WEST" || orientation === "EAST") {
-      console.log(this.height);
-      console.log('size end');
+      // console.log(this.height);
+      // console.log('size end');
       return this.height;
     }
-    console.log(0);
-    console.log('size end');
+    // console.log(0);
+    // console.log('size end');
     return 0;
   }
 
@@ -286,17 +290,17 @@ export class TreeNode {
    * @returns {number}
    */
   childrenCenter() {
-    console.log('childrenCenter begin');
+    // console.log('childrenCenter begin');
     var first = this.firstChild(),
       last = this.lastChild();
-    console.log(`first.prelim ${first.prelim}`);
-    console.log(`first`);
-    console.log(first);
-    console.log(`last`);
-    console.log(last);
-    console.log(`last.prelim ${last.prelim}`);
-    console.log(`last.size() ${last.size()}`);
-    console.log('childrenCenter end');
+    // console.log(`first.prelim ${first.prelim}`);
+    // console.log(`first`);
+    // console.log(first);
+    // console.log(`last`);
+    // console.log(last);
+    // console.log(`last.prelim ${last.prelim}`);
+    // console.log(`last.size() ${last.size()}`);
+    // console.log('childrenCenter end');
     return first.prelim + (last.prelim - first.prelim + last.size()) / 2;
   }
 
@@ -462,7 +466,7 @@ export class TreeNode {
    */
   toggleCollapse() {
     console.log(`toggleCollapse begin`);
-    var oTree = this.getTree();
+    const oTree = this.getTree();
     console.log('oTree');
     console.log(oTree);
 
@@ -489,6 +493,7 @@ export class TreeNode {
           oTree.CONFIG.animation.connectorsSpeed
           ? oTree.CONFIG.animation.nodeSpeed
           : oTree.CONFIG.animation.connectorsSpeed
+        , oTree
       );
     }
     console.log(`toggleCollapse end`);
@@ -531,7 +536,7 @@ export class TreeNode {
           oNewState,
           config.animation.nodeSpeed,
           config.animation.nodeAnimation,
-          () => {
+          function () {
             this.style.visibility = "hidden";
           }
         );
@@ -568,7 +573,7 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   hideConnector() {
-    console.log('hideConnector begin');
+    // console.log('hideConnector begin');
     var oTree = this.getTree();
     var oPath = oTree.connectionStore[this.id];
     if (oPath) {
@@ -578,7 +583,7 @@ export class TreeNode {
         oTree.CONFIG.animation.connectorsAnimation
       );
     }
-    console.log('hideConnector end');
+    // console.log('hideConnector end');
     return this;
   }
 
@@ -596,13 +601,13 @@ export class TreeNode {
     };
     const config = this.getTreeConfig();
 
-    // if the node was hidden, update opacity and position
+    // // if the node was hidden, update opacity and position
     if ($) {
       $(this.nodeDOM).animate(
         oNewState,
         config.animation.nodeSpeed,
         config.animation.nodeAnimation,
-        () => {
+        function () {
           // $.animate applies "overflow:hidden" to the node, remove it to avoid visual problems
           this.style.overflow = "";
         }
@@ -628,7 +633,7 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   showConnector() {
-    console.log(`showConnector begin`);
+    // console.log(`showConnector begin`);
     var oTree = this.getTree();
     var oPath = oTree.connectionStore[this.id];
     if (oPath) {
@@ -638,7 +643,7 @@ export class TreeNode {
         oTree.CONFIG.animation.connectorsAnimation
       );
     }
-    console.log(`showConnector end`);
+    // console.log(`showConnector end`);
     return this;
   }
 
@@ -737,7 +742,7 @@ export class TreeNode {
    * @param {Tree} tree
    */
   createGeometry(tree: any) {
-    console.log('createGeometry begin');
+    // console.log('createGeometry begin');
     if (this.id === 0 && tree.CONFIG.hideRootNode) {
       this.width = 0;
       this.height = 0;
@@ -791,11 +796,11 @@ export class TreeNode {
     /////////// APPEND all //////////////
     drawArea.appendChild(node);
 
-    console.log(`node`);
-    console.log(node);
+    // console.log(`node`);
+    // console.log(node);
 
-    console.log(`node.offsetHeight ${node.offsetHeight}`);
-    console.log(`node.offsetWidth ${node.offsetWidth}`);
+    // console.log(`node.offsetHeight ${node.offsetHeight}`);
+    // console.log(`node.offsetWidth ${node.offsetWidth}`);
 
     this.width = node.offsetWidth;
     this.height = node.offsetHeight;
@@ -803,7 +808,7 @@ export class TreeNode {
     this.nodeDOM = node;
 
     tree.imageLoader.processNode(this);
-    console.log('createGeometry end');
+    // console.log('createGeometry end');
   }
 
   /**
