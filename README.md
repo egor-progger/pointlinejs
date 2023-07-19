@@ -1,8 +1,8 @@
 <pre>
-Graph JS
+PointlineJS
 </pre>
 
-Graph-js is an SVG based JS library for drawing tree diagrams.
+PointlineJS is an SVG based JS library for drawing tree diagrams.
 It relies on Treant-JS, Raphael for handling SVG and animations, JQuery.
 
 For Docs, Examples, and everything else see:
