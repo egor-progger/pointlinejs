@@ -10,14 +10,16 @@ import { NodeDB } from "./NodeDB";
 import { RaphaelAttributes } from "raphael";
 import { TreeNode } from "./TreeNode";
 
+export type ElementWithSupportIE = Element & { currentStyle?: string, attachEvent: (eventType: string, handler: (event: Event) => void) => void };
+
 export type Coordinate = { x: number, y: number };
 
 export type CallbackFunction = {
   onCreateNode: (treeNode: TreeNode, treeNodeDom: any) => void,
   onCreateNodeCollapseSwitch: (
     treeNode: TreeNode,
-    treeNodeDom: HTMLElement,
-    switchDom: any
+    treeNodeDom: HTMLAnchorElement | HTMLDivElement,
+    switchDom: HTMLAnchorElement | HTMLDivElement
   ) => void,
   onAfterAddNode: (
     newTreeNode: TreeNode,
@@ -43,17 +45,17 @@ export type CallbackFunction = {
   onTreeLoaded: (rootTreeNode: TreeNode) => void
 }
 
-export type rootOrientationType = 'NORTH' | 'EAST' | 'WEST' | 'SOUTH';
+export type RootOrientationType = 'NORTH' | 'EAST' | 'WEST' | 'SOUTH';
 
-export type nodeAlignType = 'CENTER' | 'TOP' | 'BOTTOM';
+export type NodeAlignType = 'CENTER' | 'TOP' | 'BOTTOM';
 
-export type scrollbarType = 'resize' | 'native' | 'fancy' | 'None';
+export type ScrollbarType = 'resize' | 'native' | 'fancy' | 'None';
 
-export type connectorType = { type: 'curve' | 'bCurve' | 'step' | 'straight', style: Partial<RaphaelAttributes>, stackIndent: number };
+export type ConnectorType = { type: 'curve' | 'bCurve' | 'step' | 'straight', style: Partial<RaphaelAttributes>, stackIndent: number };
 
-export type nodeType = { HTMLclass: string, drawLineThrough: boolean, collapsable: boolean, link: { target: '_self' } };
+export type NodeType = { HTMLclass: string, drawLineThrough: boolean, collapsable: boolean, link: { target: '_self' } };
 
-export type animationType = {
+export type AnimationType = {
   nodeSpeed: number,
   nodeAnimation: string;
   connectorsSpeed: number,
@@ -63,23 +65,23 @@ export type animationType = {
 export interface ChartInterface {
   container: string;
   callback: Partial<CallbackFunction>;
-  rootOrientation: rootOrientationType;
-  nodeAlign: nodeAlignType;
+  rootOrientation: RootOrientationType;
+  nodeAlign: NodeAlignType;
   levelSeparation: number;
   siblingSeparation: number;
   subTeeSeparation: number;
   hideRootNode: boolean;
   animateOnInit: boolean;
   animateOnInitDelay: number;
-  scrollbar: scrollbarType;
+  scrollbar: ScrollbarType;
   padding: number;
-  connectors: Partial<connectorType>;
-  node: Partial<nodeType>;
-  animation: animationType;
+  connectors: Partial<ConnectorType>;
+  node: Partial<NodeType>;
+  animation: AnimationType;
   maxDepth: number;
 }
 
-export type nodeText = {
+export type NodeText = {
   name: string | Record<string, string>;
   title: string | Record<string, string>;
   desc: string | Record<string, string>;
@@ -87,27 +89,28 @@ export type nodeText = {
   data: string;
 };
 
-export type nodeLink = {
+export type NodeLink = {
   href: string,
   target: string
 };
 
 export interface NodeInterface {
-  text: Partial<nodeText>,
-  link: Partial<nodeLink>,
+  text: Partial<NodeText>,
+  link: Partial<NodeLink>,
   image: string;
   innerHTML: string;
   childrenDropLevel: number;
   pseudo: boolean;
-  connectors: connectorType;
+  connectors: ConnectorType;
   collapsable: boolean;
   collapsed: boolean;
   HTMLclass: string;
   HTMLid: string;
   stackChildren: boolean;
   drawLineThrough: boolean;
-  children?: Partial<NodeInterface>[];
+  children: Partial<NodeInterface>[];
   meta: object;
+  position: string;
 }
 
 export type ChartStructure = {

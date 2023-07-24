@@ -2,6 +2,8 @@ import { inject, injectable } from "inversify";
 import { TreeNode } from "./TreeNode";
 import { UTIL } from "./Util";
 import { DI_LIST } from "./InjectableList";
+import { NodeInterface } from "./Treant";
+import { Tree } from "./Tree";
 
 @injectable()
 export class NodeDBState {
@@ -29,7 +31,7 @@ export class NodeDB {
  * @param {Tree} tree
  * @constructor
  */
-  init(nodeStructure: any, tree: any) {
+  init(nodeStructure: Partial<NodeInterface>, tree: Tree) {
     return this.reset(nodeStructure, tree);
   }
 
@@ -37,7 +39,7 @@ export class NodeDB {
    * @param {object} node
    * @param {number} parentId
    */
-  private iterateChildren(node: any, parentId: number, tree?: any) {
+  private iterateChildren(node: Partial<NodeInterface>, parentId: number, tree?: Tree) {
     var newNode = this.createNode(node, parentId, tree, null);
 
     if (node.children) {
@@ -79,7 +81,7 @@ export class NodeDB {
    * @param {Tree} tree
    * @returns {NodeDB}
    */
-  reset(nodeStructure: any, tree: any) {
+  reset(nodeStructure: Partial<NodeInterface>, tree: Tree) {
     this.db = [];
 
     if (tree.CONFIG.animateOnInit) {
@@ -95,7 +97,7 @@ export class NodeDB {
    * @param {Tree} tree
    * @returns {NodeDB}
    */
-  createGeometries(tree: any) {
+  createGeometries(tree: Tree): NodeDB {
     var i = this.db.length;
     this.nodeDBState.totalNodes = this.db.length;
     const logTimeout = (nodeDb: TreeNode, nodeDBState: NodeDBState) => {
@@ -124,7 +126,7 @@ export class NodeDB {
    * @param {function} callback
    * @returns {NodeDB}
    */
-  walk(callback: any) {
+  walk(callback: () => void) {
     var i = this.db.length;
 
     while (i--) {
@@ -142,9 +144,9 @@ export class NodeDB {
    * @returns {TreeNode}
    */
   createNode(
-    nodeStructure: any,
+    nodeStructure: Partial<NodeInterface> | 'pseudo',
     parentId: number,
-    tree: any,
+    tree: Tree,
     stackParentId: number | null
   ) {
     const node = new TreeNode(tree).init(
@@ -162,28 +164,31 @@ export class NodeDB {
       var parent = this.get(parentId);
 
       // todo: refactor into separate private method
-      if (nodeStructure.position) {
-        if (nodeStructure.position === "left") {
-          parent.children.push(node.id);
-        } else if (nodeStructure.position === "right") {
-          parent.children.splice(0, 0, node.id);
-        } else if (nodeStructure.position === "center") {
-          parent.children.splice(
-            Math.floor(parent.children.length / 2),
-            0,
-            node.id
-          );
-        } else {
-          // edge case when there's only 1 child
-          var position = parseInt(nodeStructure.position);
-          if (parent.children.length === 1 && position > 0) {
+      if (typeof node.pseudo !== 'undefined' && node.pseudo === false) {
+        const nodeStructureValue = nodeStructure as Partial<NodeInterface>;
+        if (nodeStructureValue.position) {
+          if (nodeStructureValue.position === "left") {
+            parent.children.push(node.id);
+          } else if (nodeStructureValue.position === "right") {
             parent.children.splice(0, 0, node.id);
-          } else {
+          } else if (nodeStructureValue.position === "center") {
             parent.children.splice(
-              Math.max(position, parent.children.length - 1),
+              Math.floor(parent.children.length / 2),
               0,
               node.id
             );
+          } else {
+            // edge case when there's only 1 child
+            const position = parseInt(nodeStructureValue.position, 10);
+            if (parent.children.length === 1 && position > 0) {
+              parent.children.splice(0, 0, node.id);
+            } else {
+              parent.children.splice(
+                Math.max(position, parent.children.length - 1),
+                0,
+                node.id
+              );
+            }
           }
         }
       } else {
@@ -199,7 +204,7 @@ export class NodeDB {
     return node;
   }
 
-  getMinMaxCoord(dim: any, parent: any, MinMax: any) {
+  getMinMaxCoord(dim: 'X' | 'Y', parent: TreeNode, MinMax: { min: number, max: number }) {
     // used for getting the dimensions of the tree, dim = 'X' || 'Y'
     // looks for min and max (X and Y) within the set of nodes
     parent = parent || this.get(0);
@@ -233,7 +238,7 @@ export class NodeDB {
    * @param {object} nodeStructure
    * @returns {boolean}
    */
-  hasGrandChildren(nodeStructure: any) {
+  hasGrandChildren(nodeStructure: Partial<NodeInterface>) {
     var i = nodeStructure.children.length;
     while (i--) {
       if (

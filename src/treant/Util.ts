@@ -1,5 +1,6 @@
 import { injectable } from 'inversify';
 import $ from 'jquery';
+import { ElementWithSupportIE } from './Treant';
 
 @injectable()
 export class UTIL {
@@ -10,7 +11,7 @@ export class UTIL {
      * @param {object} applyFrom
      * @return {object}
      */
-    inheritAttrs(applyTo: any, applyFrom: any) {
+    inheritAttrs(applyTo: object, applyFrom: object) {
         for (var attr in applyFrom) {
             if (applyFrom.hasOwnProperty(attr)) {
                 if ((applyTo[attr] instanceof Object && applyFrom[attr] instanceof Object) && (typeof applyFrom[attr] !== 'function')) {
@@ -45,7 +46,7 @@ export class UTIL {
      * Takes any number of arguments
      * @returns {*}
      */
-    extend(...args: any) {
+    extend(...args: unknown[]) {
         if (typeof ($) !== 'undefined') {
             Array.prototype.unshift.apply(args, [true, {}]);
             return $.extend.apply($, args);
@@ -59,11 +60,11 @@ export class UTIL {
     //  * @param {object} obj
     //  * @returns {*}
     //  */
-    cloneObj(obj: any) {
+    cloneObj(obj: object | { constructor: new () => object }) {
         if (Object(obj) !== obj) {
             return obj;
         }
-        var res = new obj.constructor();
+        var res = new (obj as { constructor: new () => object }).constructor();
         for (var key in obj) {
             if (obj.hasOwnProperty(key)) {
                 res[key] = this.cloneObj(obj[key]);
@@ -85,7 +86,7 @@ export class UTIL {
             el.addEventListener(eventType, handler, false);
         }
         else if (el['attachEvent']) { // IE <= 8
-            let elementInOldIE = el as Element & { attachEvent: (eventType: string, handler: (event: Event) => void) => void };
+            let elementInOldIE = el as ElementWithSupportIE;
             elementInOldIE.attachEvent('on' + eventType, handler);
         }
         else { // ancient browsers
@@ -122,7 +123,7 @@ export class UTIL {
         }
     }
 
-    getOuterHeight(element: any) {
+    getOuterHeight(element: ElementWithSupportIE) {
         var nRoundingCompensation = 1;
         if (typeof element.getBoundingClientRect === 'function') {
             return element.getBoundingClientRect().height;
@@ -133,16 +134,16 @@ export class UTIL {
         else {
             return Math.ceil(
                 element.clientHeight
-                + this.getStyle(element, 'border-top-width', true)
-                + this.getStyle(element, 'border-bottom-width', true)
-                + this.getStyle(element, 'padding-top', true)
-                + this.getStyle(element, 'padding-bottom', true)
+                + (this.getStyle(element, 'border-top-width', true) as number)
+                + (this.getStyle(element, 'border-bottom-width', true) as number)
+                + (this.getStyle(element, 'padding-top', true) as number)
+                + (this.getStyle(element, 'padding-bottom', true) as number)
                 + nRoundingCompensation
             );
         }
     }
 
-    getOuterWidth(element: any) {
+    getOuterWidth(element: ElementWithSupportIE) {
         var nRoundingCompensation = 1;
         if (typeof element.getBoundingClientRect === 'function') {
             return element.getBoundingClientRect().width;
@@ -153,23 +154,23 @@ export class UTIL {
         else {
             return Math.ceil(
                 element.clientWidth
-                + this.getStyle(element, 'border-left-width', true)
-                + this.getStyle(element, 'border-right-width', true)
-                + this.getStyle(element, 'padding-left', true)
-                + this.getStyle(element, 'padding-right', true)
+                + (this.getStyle(element, 'border-left-width', true) as number)
+                + (this.getStyle(element, 'border-right-width', true) as number)
+                + (this.getStyle(element, 'padding-left', true) as number)
+                + (this.getStyle(element, 'padding-right', true) as number)
                 + nRoundingCompensation
             );
         }
     }
 
-    getStyle(element: any, strCssRule: any, asInt: boolean) {
+    getStyle(element: ElementWithSupportIE, strCssRule: string, asInt: boolean) {
         var strValue = "";
         if (document.defaultView && document.defaultView.getComputedStyle) {
             strValue = document.defaultView.getComputedStyle(element, '').getPropertyValue(strCssRule);
         }
         else if (element.currentStyle) {
             strCssRule = strCssRule.replace(/\-(\w)/g,
-                function (strMatch: any, p1: any) {
+                function (strMatch: string, p1: string) {
                     return p1.toUpperCase();
                 }
             );
@@ -179,7 +180,7 @@ export class UTIL {
         return (asInt ? parseFloat(strValue) : strValue);
     }
 
-    addClass(element: any, cssClass: string) {
+    addClass(element: HTMLElement, cssClass: string) {
         if ($) {
             $(element).addClass(cssClass);
         }
@@ -195,11 +196,11 @@ export class UTIL {
         }
     }
 
-    hasClass(element: any, my_class: string) {
+    hasClass(element: HTMLElement, my_class: string) {
         return (" " + element.className + " ").replace(/[\n\t]/g, " ").indexOf(" " + my_class + " ") > -1;
     }
 
-    toggleClass(element: any, cls: string, apply: boolean) {
+    toggleClass(element: Element, cls: string, apply: boolean) {
         if ($) {
             $(element).toggleClass(cls, apply);
         }
@@ -214,7 +215,7 @@ export class UTIL {
         }
     }
 
-    setDimensions(element: any, width: number, height: number) {
+    setDimensions(element: HTMLElement, width: number, height: number) {
         if ($) {
             $(element).width(width).height(height);
         }

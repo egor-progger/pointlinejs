@@ -12,7 +12,10 @@ import { injectable } from "inversify";
 import { UTIL } from "./Util";
 import { Tree } from "./Tree";
 import $ from "jquery";
-import { Coordinate, NodeInterface } from "./Treant";
+import { ConnectorType, Coordinate, NodeInterface, NodeLink, NodeText } from "./Treant";
+import { RaphaelPath } from "raphael";
+
+export type RaphaelPathExtended = RaphaelPath<"SVG" | "VML"> & { hidden?: boolean };
 
 @injectable()
 export class TreeNode {
@@ -30,13 +33,13 @@ export class TreeNode {
   pseudo: boolean;
   meta: object;
   image: string;
-  link: any;
+  link: NodeLink;
   connStyle: any;
-  connector: any;
-  drawLineThrough: any;
+  connector: RaphaelPathExtended;
+  drawLineThrough: boolean;
   collapsable: boolean;
   collapsed: boolean;
-  text: any;
+  text: Partial<NodeText>;
   nodeInnerHTML: string;
   nodeHTMLclass: string;
   nodeHTMLid: number;
@@ -45,11 +48,11 @@ export class TreeNode {
   height: number;
   X: number;
   Y: number;
-  lineThroughMe: any;
-  nodeDOM: any;
+  lineThroughMe: RaphaelPathExtended;
+  nodeDOM: HTMLAnchorElement | HTMLDivElement;
   hidden: boolean;
   positioned: boolean;
-  style: any;
+  style: CSSStyleDeclaration;
   stackChildren: number[];
 
   CONFIG = {
@@ -62,7 +65,7 @@ export class TreeNode {
   }
 
   init(
-    nodeStructure: Partial<NodeInterface>,
+    nodeStructure: Partial<NodeInterface> | 'pseudo',
     id: number,
     parentId: number,
     tree: Tree,
@@ -79,7 +82,7 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   reset(
-    nodeStructure: Partial<NodeInterface>,
+    nodeStructure: Partial<NodeInterface> | 'pseudo',
     id: number,
     parentId: number,
     tree: Tree,
@@ -98,40 +101,43 @@ export class TreeNode {
     // pseudo node is a node with width=height=0, it is invisible, but necessary for the correct positioning of the tree
     this.pseudo = nodeStructure === "pseudo" || nodeStructure["pseudo"]; // todo: surely if nodeStructure is a scalar then the rest will error:
 
-    this.meta = nodeStructure.meta || {};
-    this.image = nodeStructure.image || null;
+    if (typeof this.pseudo === 'undefined' || this.pseudo !== false) {
+      const nodeStructureValue = nodeStructure as Partial<NodeInterface>;
+      this.meta = nodeStructureValue.meta || {};
+      this.image = nodeStructureValue.image || null;
+
+      this.connStyle = this.util.createMerge(
+        tree.CONFIG.connectors,
+        nodeStructureValue.connectors
+      );
+
+      this.drawLineThrough =
+        nodeStructureValue.drawLineThrough === false
+          ? false
+          : nodeStructureValue.drawLineThrough || tree.CONFIG.node.drawLineThrough;
+
+      this.collapsable =
+        nodeStructureValue.collapsable === false
+          ? false
+          : nodeStructureValue.collapsable || tree.CONFIG.node.collapsable;
+      this.collapsed = nodeStructureValue.collapsed;
+
+      this.text = nodeStructureValue.text;
+
+      // '.node' DIV
+      this.nodeInnerHTML = nodeStructureValue.innerHTML;
+      this.nodeHTMLclass =
+        (tree.CONFIG.node.HTMLclass ? tree.CONFIG.node.HTMLclass : "") + // globally defined class for the nodex
+        (nodeStructureValue.HTMLclass ? " " + nodeStructureValue.HTMLclass : ""); // + specific node class
+
+      this.nodeHTMLid = parseInt(nodeStructureValue.HTMLid, 10);
+    }
 
     this.link = this.util.createMerge(
       tree.CONFIG.node.link,
       nodeStructure.link
-    );
-
-    this.connStyle = this.util.createMerge(
-      tree.CONFIG.connectors,
-      nodeStructure.connectors
-    );
+    ) as NodeLink;
     this.connector = null;
-
-    this.drawLineThrough =
-      nodeStructure.drawLineThrough === false
-        ? false
-        : nodeStructure.drawLineThrough || tree.CONFIG.node.drawLineThrough;
-
-    this.collapsable =
-      nodeStructure.collapsable === false
-        ? false
-        : nodeStructure.collapsable || tree.CONFIG.node.collapsable;
-    this.collapsed = nodeStructure.collapsed;
-
-    this.text = nodeStructure.text;
-
-    // '.node' DIV
-    this.nodeInnerHTML = nodeStructure.innerHTML;
-    this.nodeHTMLclass =
-      (tree.CONFIG.node.HTMLclass ? tree.CONFIG.node.HTMLclass : "") + // globally defined class for the nodex
-      (nodeStructure.HTMLclass ? " " + nodeStructure.HTMLclass : ""); // + specific node class
-
-    this.nodeHTMLid = parseInt(nodeStructure.HTMLid, 10);
 
     this.children = [];
     return this;
@@ -373,7 +379,7 @@ export class TreeNode {
   /**
    * @param {object} hidePoint
    */
-  drawLineThroughMe(hidePoint: boolean): void {
+  drawLineThroughMe(hidePoint?: boolean): void {
     // hidepoint se proslijedjuje ako je node sakriven zbog collapsed
     var pathString = hidePoint
       ? this.getTree().getPointPathString(hidePoint)
@@ -479,13 +485,13 @@ export class TreeNode {
 
     var tree = this.getTree(),
       config = this.getTreeConfig(),
-      oNewState: any = {
-        opacity: 0,
+      oNewState: JQueryCssProperties = {
+        opacity: '0',
       };
 
     if (collapse_to_point) {
-      oNewState.left = collapse_to_point.x;
-      oNewState.top = collapse_to_point.y;
+      oNewState.left = collapse_to_point.x.toString();
+      oNewState.top = collapse_to_point.y.toString();
     }
 
     // if parent was hidden in initial configuration, position the node behind the parent without animations
@@ -513,7 +519,7 @@ export class TreeNode {
         this.nodeDOM.style.transition =
           "all " + config.animation.nodeSpeed + "ms ease";
         this.nodeDOM.style.transitionProperty = "opacity, left, top";
-        this.nodeDOM.style.opacity = oNewState.opacity;
+        this.nodeDOM.style.opacity = oNewState.opacity.toString();
         this.nodeDOM.style.left = oNewState.left + "px";
         this.nodeDOM.style.top = oNewState.top + "px";
         this.nodeDOM.style.visibility = "hidden";
@@ -585,7 +591,7 @@ export class TreeNode {
       this.nodeDOM.style.transitionProperty = "opacity, left, top";
       this.nodeDOM.style.left = oNewState.left + "px";
       this.nodeDOM.style.top = oNewState.top + "px";
-      this.nodeDOM.style.opacity = oNewState.opacity;
+      this.nodeDOM.style.opacity = oNewState.opacity.toString();
       this.nodeDOM.style.overflow = "";
     }
 
@@ -687,7 +693,7 @@ export class TreeNode {
    */
   buildNodeFromHtml(node: HTMLAnchorElement | HTMLDivElement) {
     // get some element by ID and clone its structure into a node
-    let generatedNode: HTMLAnchorElement | HTMLDivElement;
+    let generatedNode: HTMLAnchorElement | HTMLDivElement = node;
     if (this.nodeInnerHTML.charAt(0) === "#") {
       var elem = document.getElementById(this.nodeInnerHTML.substring(1));
       if (elem) {
