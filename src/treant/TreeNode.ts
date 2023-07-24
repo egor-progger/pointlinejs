@@ -12,6 +12,7 @@ import { injectable } from "inversify";
 import { UTIL } from "./Util";
 import { Tree } from "./Tree";
 import $ from "jquery";
+import { Coordinate, NodeInterface } from "./Treant";
 
 @injectable()
 export class TreeNode {
@@ -24,10 +25,10 @@ export class TreeNode {
   modifier: number;
   leftNeighborId: number | null;
   rightNeighborId: number | null;
-  stackParentId: any;
+  stackParentId: number;
   stackParent: boolean = undefined;
-  pseudo: any;
-  meta: string;
+  pseudo: boolean;
+  meta: object;
   image: string;
   link: any;
   connStyle: any;
@@ -36,10 +37,10 @@ export class TreeNode {
   collapsable: boolean;
   collapsed: boolean;
   text: any;
-  nodeInnerHTML: any;
+  nodeInnerHTML: string;
   nodeHTMLclass: string;
   nodeHTMLid: number;
-  children: any;
+  children: number[];
   width: number;
   height: number;
   X: number;
@@ -47,9 +48,9 @@ export class TreeNode {
   lineThroughMe: any;
   nodeDOM: any;
   hidden: boolean;
-  positioned: any;
+  positioned: boolean;
   style: any;
-  stackChildren: any;
+  stackChildren: number[];
 
   CONFIG = {
     nodeHTMLclass: "node",
@@ -61,10 +62,10 @@ export class TreeNode {
   }
 
   init(
-    nodeStructure: any,
+    nodeStructure: Partial<NodeInterface>,
     id: number,
     parentId: number,
-    tree: any,
+    tree: Tree,
     stackParentId: number | null) {
     return this.reset(nodeStructure, id, parentId, tree, stackParentId);
   }
@@ -78,10 +79,10 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   reset(
-    nodeStructure: any,
+    nodeStructure: Partial<NodeInterface>,
     id: number,
     parentId: number,
-    tree: any,
+    tree: Tree,
     stackParentId: number | null
   ) {
     this.id = id;
@@ -130,7 +131,7 @@ export class TreeNode {
       (tree.CONFIG.node.HTMLclass ? tree.CONFIG.node.HTMLclass : "") + // globally defined class for the nodex
       (nodeStructure.HTMLclass ? " " + nodeStructure.HTMLclass : ""); // + specific node class
 
-    this.nodeHTMLid = nodeStructure.HTMLid;
+    this.nodeHTMLid = parseInt(nodeStructure.HTMLid, 10);
 
     this.children = [];
     return this;
@@ -316,8 +317,8 @@ export class TreeNode {
 
   // returns start or the end point of the connector line, origin is upper-left
   connectorPoint(startPoint: boolean) {
-    var orient = this.getTree().CONFIG.rootOrientation,
-      point: any = {};
+    let orient = this.getTree().CONFIG.rootOrientation;
+    const point: Coordinate = { x: 0, y: 0 };
 
     if (this.stackParentId) {
       // return different end point if node is a stacked child
@@ -372,7 +373,7 @@ export class TreeNode {
   /**
    * @param {object} hidePoint
    */
-  drawLineThroughMe(hidePoint: any): void {
+  drawLineThroughMe(hidePoint: boolean): void {
     // hidepoint se proslijedjuje ako je node sakriven zbog collapsed
     var pathString = hidePoint
       ? this.getTree().getPointPathString(hidePoint)
@@ -393,9 +394,9 @@ export class TreeNode {
     }
   }
 
-  addSwitchEvent(nodeSwitch: any) {
+  addSwitchEvent(nodeSwitch: Element | JQuery) {
     var self = this;
-    this.util.addEvent(nodeSwitch, "click", function (e: any) {
+    this.util.addEvent(nodeSwitch as Element, "click", (e: Event) => {
       e.preventDefault();
       if (
         self
@@ -469,8 +470,7 @@ export class TreeNode {
     return this;
   }
 
-  hide(collapse_to_point: any) {
-    collapse_to_point = collapse_to_point || false;
+  hide(collapse_to_point?: Coordinate) {
 
     var bCurrentState = this.hidden;
     this.hidden = true;
@@ -633,7 +633,7 @@ export class TreeNode {
    *
    * @Returns the configured node
    */
-  buildNodeFromText(node: any) {
+  buildNodeFromText(node: HTMLAnchorElement | HTMLDivElement) {
     // IMAGE
     if (this.image) {
       const image = document.createElement("img");
@@ -685,20 +685,26 @@ export class TreeNode {
    *
    * @Returns node the configured node
    */
-  buildNodeFromHtml(node: any) {
+  buildNodeFromHtml(node: HTMLAnchorElement | HTMLDivElement) {
     // get some element by ID and clone its structure into a node
+    let generatedNode: HTMLAnchorElement | HTMLDivElement;
     if (this.nodeInnerHTML.charAt(0) === "#") {
       var elem = document.getElementById(this.nodeInnerHTML.substring(1));
       if (elem) {
-        node = elem.cloneNode(true);
-        node.id += "-clone";
-        node.className += " node";
+        if (node instanceof HTMLAnchorElement) {
+          generatedNode = elem.cloneNode(true) as HTMLAnchorElement;
+        }
+        if (node instanceof HTMLDivElement) {
+          generatedNode = elem.cloneNode(true) as HTMLDivElement;
+        }
+        generatedNode.id += "-clone";
+        generatedNode.className += " node";
       } else {
-        node.innerHTML = "<b> Wrong ID selector </b>";
+        generatedNode.innerHTML = "<b> Wrong ID selector </b>";
       }
     } else {
       // insert your custom HTML into a node
-      node.innerHTML = this.nodeInnerHTML;
+      generatedNode.innerHTML = this.nodeInnerHTML;
     }
     return node;
   }
@@ -706,7 +712,7 @@ export class TreeNode {
   /**
    * @param {Tree} tree
    */
-  createGeometry(tree: any) {
+  createGeometry(tree: Tree) {
     if (this.id === 0 && tree.CONFIG.hideRootNode) {
       this.width = 0;
       this.height = 0;
@@ -716,7 +722,7 @@ export class TreeNode {
     var drawArea = tree.drawArea,
       image;
     /////////// CREATE NODE //////////////
-    let node: any = document.createElement(this.link.href ? "a" : "div");
+    let node: HTMLAnchorElement | HTMLDivElement = document.createElement(this.link.href ? "a" : "div");
 
     node.className = !this.pseudo ? this.CONFIG.nodeHTMLclass : "pseudo";
     if (this.nodeHTMLclass && !this.pseudo) {
@@ -724,10 +730,10 @@ export class TreeNode {
     }
 
     if (this.nodeHTMLid) {
-      node.id = this.nodeHTMLid ?? this.id;
+      node.id = this.nodeHTMLid ? this.nodeHTMLid.toString() : this.id.toString();
     }
 
-    if (this.link.href) {
+    if (this.link.href && node instanceof HTMLAnchorElement) {
       node.href = this.link.href;
       node.target = this.link.target;
     }
@@ -735,9 +741,9 @@ export class TreeNode {
     if ($) {
       $(node).data("treenode", this);
     } else {
-      node.data = {
+      node.setAttribute('data', JSON.stringify({
         treenode: this,
-      };
+      }));
     }
 
     /////////// BUILD NODE CONTENT //////////////
@@ -769,7 +775,7 @@ export class TreeNode {
    * @param {Tree} tree
    * @param {Element} nodeEl
    */
-  createSwitchGeometry(tree: any, nodeEl: any) {
+  createSwitchGeometry(tree: Tree, nodeEl: Element) {
     nodeEl = nodeEl || this.nodeDOM;
 
     // safe guard and check to see if it has a collapse switch

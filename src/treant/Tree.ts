@@ -6,8 +6,8 @@ import { DI_LIST } from "./InjectableList";
 import { inject, injectable } from "inversify";
 import { TreeNode } from "./TreeNode";
 import $ from 'jquery';
-import JQuery from 'jquery';
 import PerfectScrollbar from 'perfect-scrollbar';
+import { Coordinate, ChartInterface } from "./Treant";
 
 /**
  * Tree constructor.
@@ -19,17 +19,17 @@ import PerfectScrollbar from 'perfect-scrollbar';
 export class Tree {
   private util: UTIL = new UTIL();
 
-  initJsonConfig: any;
+  initJsonConfig: Partial<ChartInterface>;
   initTreeId: number = 0;
   id: number = 0;
-  drawArea: any;
+  drawArea: HTMLElement;
   connectionStore: any;
   loaded: boolean = false;
   _R: any;
   lastNodeOnLevel: any;
   levelMaxDim: any;
   inAnimation: any;
-  CONFIG: any = {
+  CONFIG: Partial<ChartInterface> = {
     maxDepth: 100,
     rootOrientation: "NORTH", // NORTH || EAST || WEST || SOUTH
     nodeAlign: "CENTER", // CENTER || TOP || BOTTOM
@@ -86,21 +86,21 @@ export class Tree {
       ) { }, // this = Tree
       onBeforeAddNode: function (parentTreeNode: any, nodeStructure: any) { }, // this = Tree
       onAfterPositionNode: function (
-        treeNode: any,
-        nodeDbIndex: any,
-        containerCenter: any,
-        treeCenter: any
+        treeNode: TreeNode,
+        nodeDbIndex: number,
+        containerCenter: Coordinate,
+        treeCenter: Coordinate
       ) { }, // this = Tree
       onBeforePositionNode: function (
-        treeNode: any,
-        nodeDbIndex: any,
-        containerCenter: any,
-        treeCenter: any
+        treeNode: TreeNode,
+        nodeDbIndex: number,
+        containerCenter: Coordinate,
+        treeCenter: Coordinate
       ) { }, // this = Tree
-      onToggleCollapseFinished: function (treeNode: any, bIsCollapsed: any) { }, // this = Tree
-      onAfterClickCollapseSwitch: function (nodeSwitch: any, event: any) { }, // this = TreeNode
-      onBeforeClickCollapseSwitch: function (nodeSwitch: any, event: any) { }, // this = TreeNode
-      onTreeLoaded: function (rootTreeNode: any) { }, // this = Tree
+      onToggleCollapseFinished: function (treeNode: TreeNode, bIsCollapsed: boolean) { }, // this = Tree
+      onAfterClickCollapseSwitch: function (nodeSwitch: Element | JQuery, event: Event) { }, // this = TreeNode
+      onBeforeClickCollapseSwitch: function (nodeSwitch: Element | JQuery, event: Event) { }, // this = TreeNode
+      onTreeLoaded: function (rootTreeNode: TreeNode) { }, // this = Tree
     },
   };
   nodeDB: NodeDB = {} as NodeDB;
@@ -124,7 +124,7 @@ export class Tree {
     this.id = treeId;
 
     this.CONFIG = this.util.extend(this.CONFIG, jsonConfig.chart);
-    this.drawArea = this.util.findEl(this.CONFIG.container, true);
+    this.drawArea = this.util.findEl(this.CONFIG.container, true) as HTMLElement;
     if (!this.drawArea) {
       throw new Error(
         'Failed to find element by selector "' + this.CONFIG.container + '"'
@@ -176,7 +176,7 @@ export class Tree {
    * @param {function} callback
    * @returns {Tree}
    */
-  positionTree(callback?: any) {
+  positionTree(callback?: (tree: Tree) => void) {
     var self = this;
 
     if (this.imageLoader.isNotLoading() === true) {
@@ -317,12 +317,7 @@ export class Tree {
       // find the gap between two trees and apply it to subTrees
       // and matching smaller gaps to smaller subtrees
 
-      var totalGap =
-        firstChildLeftNeighbor.prelim +
-        modifierSumLeft +
-        firstChildLeftNeighbor.size() +
-        this.CONFIG.subTeeSeparation -
-        (firstChild.prelim + modifierSumRight);
+      var totalGap = firstChildLeftNeighbor.prelim + modifierSumLeft + firstChildLeftNeighbor.size() + this.CONFIG.subTeeSeparation - (firstChild.prelim + modifierSumRight);
 
       if (totalGap > 0) {
         var subtreeAux = node,
@@ -369,7 +364,7 @@ export class Tree {
    * the tree.  (The roles of x and y are reversed for
    * RootOrientations of EAST or WEST.)
    */
-  secondWalk(node: any, level: number, X: number, Y: number) {
+  secondWalk(node: TreeNode, level: number, X: number, Y: number) {
     if (level > this.CONFIG.maxDepth) {
       return;
     }
@@ -532,7 +527,7 @@ export class Tree {
         this.setConnectionToParent(node, hidePoint); // skip the root node
       } else if (!this.CONFIG.hideRootNode && node.drawLineThrough) {
         // drawlinethrough is performed for for the root node also
-        node.drawLineThroughMe(true);
+        node.drawLineThroughMe();
       }
 
       self.CONFIG.callback.onAfterPositionNode.apply(self, [

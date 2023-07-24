@@ -309,12 +309,6 @@
                 node.height = node.nodeDOM.offsetHeight;
             }
 
-    //         console.log('image loader create');
-    // console.log(node);
-
-    // console.log(image.src);
-    // console.log(image.src.indexOf("data:"));
-
             if ( image.src.indexOf( 'data:' ) !== 0 ) {
                 this.loading.push( source );
 
@@ -337,7 +331,6 @@
          * @returns {boolean}
          */
         isNotLoading: function() {
-            // console.log(this.loading.length);
             return ( this.loading.length === 0 );
         }
     };
@@ -508,7 +501,6 @@
                 this.resetLevelData();
 
                 this.firstWalk( root, 0 );
-                // return;
                 this.secondWalk( root, 0, 0, 0 );
 
                 this.positionNodes();
@@ -551,80 +543,51 @@
          * @param {number} level
          * @returns {Tree}
          */
-        firstWalk(node, level) {
-            // console.log('firstWalk begin');
+        firstWalk: function( node, level ) {
             node.prelim = null;
             node.modifier = null;
-            // console.log(node);
-            // console.log(level);
-            // if (level === 1) {
-            //   return;
-            // }
-        
-            this.setNeighbors(node, level);
-            this.calcLevelDim(node, level);
-        
+
+            this.setNeighbors( node, level );
+            this.calcLevelDim( node, level );
+
             var leftSibling = node.leftSibling();
-        
-            if (node.childrenCount() === 0 || level === this.CONFIG.maxDepth) {
-              // set preliminary x-coordinate
-            //   console.log('set preliminary x-coordinate begin');
-            //   console.log(`leftSibling.size() ${leftSibling?.size()}`);
-              if (leftSibling) {
-                node.prelim =
-                  leftSibling.prelim +
-                  leftSibling.size() +
-                  this.CONFIG.siblingSeparation;
-              } else {
-                node.prelim = 0;
-              }
-            //   console.log('set preliminary x-coordinate end');
-            } else {
-              //node is not a leaf,  firstWalk for each child
-            //   console.log('node is not a leaf,  firstWalk for each child begin');
-              for (var i = 0, n = node.childrenCount(); i < n; i++) {
-                this.firstWalk(node.childAt(i), level + 1);
-              }
-        
-              var midPoint = node.childrenCenter() - node.size() / 2;
-            //   console.log(`midPoint ${midPoint}`);
-            //   console.log(`leftSibling`);
-            //   console.log(leftSibling);
-            //   console.log(`leftSibling.prelim`);
-            //   console.log(leftSibling?.size());
-            //   console.log(`this.CONFIG.siblingSeparation`);
-            //   console.log(this.CONFIG.siblingSeparation);
-        
-              if (leftSibling) {
-                node.prelim =
-                  leftSibling.prelim +
-                  leftSibling.size() +
-                  this.CONFIG.siblingSeparation;
-                node.modifier = node.prelim - midPoint;
-                this.apportion(node, level);
-              } else {
-                node.prelim = midPoint;
-              }
-        
-              // handle stacked children positioning
-              if (node.stackParent) {
-                // handle the parent of stacked children
-                // console.log('// handle the parent of stacked children begin');
-                // console.log(`this.nodeDB.get(node.stackChildren[0]).size() ${this.nodeDB.get(node.stackChildren[0]).size()}`);
-                // console.log(`node.connStyle.stackIndent ${node.connStyle.stackIndent}`);
-                node.modifier +=
-                this.nodeDB.get(node.stackChildren[0]).size() / 2 +
-                node.connStyle.stackIndent;
-                // console.log('// handle the parent of stacked children end');
-              } else if (node.stackParentId) {
-                // handle stacked children
-                node.prelim = 0;
-              }
-            //   console.log('node is not a leaf,  firstWalk for each child end');
+
+            if ( node.childrenCount() === 0 || level == this.CONFIG.maxDepth ) {
+                // set preliminary x-coordinate
+                if ( leftSibling ) {
+                    node.prelim = leftSibling.prelim + leftSibling.size() + this.CONFIG.siblingSeparation;
+                }
+                else {
+                    node.prelim = 0;
+                }
             }
-            // console.log('firstWalk end');
+            else {
+                //node is not a leaf,  firstWalk for each child
+                for ( var i = 0, n = node.childrenCount(); i < n; i++ ) {
+                    this.firstWalk(node.childAt(i), level + 1);
+                }
+
+                var midPoint = node.childrenCenter() - node.size() / 2;
+
+                if ( leftSibling ) {
+                    node.prelim = leftSibling.prelim + leftSibling.size() + this.CONFIG.siblingSeparation;
+                    node.modifier = node.prelim - midPoint;
+                    this.apportion( node, level );
+                }
+                else {
+                    node.prelim = midPoint;
+                }
+
+                // handle stacked children positioning
+                if ( node.stackParent ) { // handle the parent of stacked children
+                    node.modifier += this.nodeDB.get( node.stackChildren[0] ).size()/2 + node.connStyle.stackIndent;
+                }
+                else if ( node.stackParentId ) { // handle stacked children
+                    node.prelim = 0;
+                }
+            }
             return this;
-          },
+        },
 
         /*
          * Clean up the positioning of small sibling subtrees.
@@ -635,92 +598,70 @@
          * accrue from positioning nodes rather than subtrees.
          */
         apportion: function (node, level) {
-            // console.log('apportion begin');
-    let firstChild = node.firstChild();
-    var firstChildLeftNeighbor = firstChild.leftNeighbor(),
-      compareDepth = 1,
-      depthToStop = this.CONFIG.maxDepth - level;
+            var firstChild              = node.firstChild(),
+                firstChildLeftNeighbor  = firstChild.leftNeighbor(),
+                compareDepth            = 1,
+                depthToStop             = this.CONFIG.maxDepth - level;
 
-      let loopIndex = 0;
+            while( firstChild && firstChildLeftNeighbor && compareDepth <= depthToStop ) {
+                // calculate the position of the firstChild, according to the position of firstChildLeftNeighbor
 
-    // console.log(`depthToStop ${depthToStop}`);
+                var modifierSumRight    = 0,
+                    modifierSumLeft     = 0,
+                    leftAncestor        = firstChildLeftNeighbor,
+                    rightAncestor       = firstChild;
 
-    while (
-      firstChild &&
-      firstChildLeftNeighbor &&
-      compareDepth <= depthToStop
-    ) {
-      loopIndex++;
-      // calculate the position of the firstChild, according to the position of firstChildLeftNeighbor
+                for ( var i = 0; i < compareDepth; i++ ) {
+                    leftAncestor = leftAncestor.parent();
+                    rightAncestor = rightAncestor.parent();
+                    modifierSumLeft += leftAncestor.modifier;
+                    modifierSumRight += rightAncestor.modifier;
 
-      var modifierSumRight = 0,
-        modifierSumLeft = 0,
-        leftAncestor = firstChildLeftNeighbor,
-        rightAncestor = firstChild;
+                    // all the stacked children are oriented towards right so use right variables
+                    if ( rightAncestor.stackParent !== undefined ) {
+                        modifierSumRight += rightAncestor.size() / 2;
+                    }
+                }
 
-      for (var i = 0; i < compareDepth; i++) {
-        leftAncestor = leftAncestor.parent();
-        rightAncestor = rightAncestor.parent();
-        modifierSumLeft += leftAncestor.modifier;
-        modifierSumRight += rightAncestor.modifier;
+                // find the gap between two trees and apply it to subTrees
+                // and matching smaller gaps to smaller subtrees
 
-        // all the stacked children are oriented towards right so use right variables
-        // console.log(`rightAncestor`);
-        // console.log(rightAncestor);
-        if (rightAncestor.stackParent !== undefined) {
-            // console.log(`rightAncestor.stackParent !== undefined`);
-          modifierSumRight += rightAncestor.size() / 2;
-        }
-      }
+                var totalGap = firstChildLeftNeighbor.prelim + modifierSumLeft + firstChildLeftNeighbor.size() + this.CONFIG.subTeeSeparation - (firstChild.prelim + modifierSumRight);
 
-      // find the gap between two trees and apply it to subTrees
-      // and matching smaller gaps to smaller subtrees
+                if ( totalGap > 0 ) {
+                    var subtreeAux = node,
+                        numSubtrees = 0;
 
-      var totalGap =
-        firstChildLeftNeighbor.prelim +
-        modifierSumLeft +
-        firstChildLeftNeighbor.size() +
-        this.CONFIG.subTeeSeparation -
-        (firstChild.prelim + modifierSumRight);
-    //   console.log(`totalGap ${totalGap}`);
+                    // count all the subtrees in the LeftSibling
+                    while ( subtreeAux && subtreeAux.id !== leftAncestor.id ) {
+                        subtreeAux = subtreeAux.leftSibling();
+                        numSubtrees++;
+                    }
 
-      if (totalGap > 0) {
-        var subtreeAux = node,
-          numSubtrees = 0;
+                    if ( subtreeAux ) {
+                        var subtreeMoveAux = node,
+                            singleGap = totalGap / numSubtrees;
 
-        // count all the subtrees in the LeftSibling
-        while (subtreeAux && subtreeAux.id !== leftAncestor.id) {
-          subtreeAux = subtreeAux.leftSibling();
-          numSubtrees++;
-        }
+                        while ( subtreeMoveAux.id !== leftAncestor.id ) {
+                            subtreeMoveAux.prelim += totalGap;
+                            subtreeMoveAux.modifier += totalGap;
 
-        if (subtreeAux) {
-          var subtreeMoveAux = node,
-            singleGap = totalGap / numSubtrees;
+                            totalGap -= singleGap;
+                            subtreeMoveAux = subtreeMoveAux.leftSibling();
+                        }
+                    }
+                }
 
-          while (subtreeMoveAux.id !== leftAncestor.id) {
-            subtreeMoveAux.prelim += totalGap;
-            subtreeMoveAux.modifier += totalGap;
+                compareDepth++;
 
-            totalGap -= singleGap;
-            subtreeMoveAux = subtreeMoveAux.leftSibling();
-          }
-        }
-      }
+                firstChild = ( firstChild.childrenCount() === 0 )?
+                    node.leftMost(0, compareDepth):
+                    firstChild = firstChild.firstChild();
 
-      compareDepth++;
-
-      firstChild =
-        firstChild.childrenCount() === 0
-          ? node.leftMost(0, compareDepth)
-          : (firstChild = firstChild.firstChild());
-
-      if (firstChild) {
-        firstChildLeftNeighbor = firstChild.leftNeighbor();
-      }
-    }
-    // console.log(`loopIndex ${loopIndex}`);
-    // console.log('apportion end');
+                if ( firstChild ) {
+                    firstChildLeftNeighbor = firstChild.leftNeighbor();
+                }
+            }
         },
 
         /*
@@ -805,106 +746,84 @@
          * 0,0 coordinate is in the upper left corner
          * @returns {Tree}
          */
-        positionNodes() {
-            // console.log('positionNodes begin');
+        positionNodes: function() {
             var self = this,
-              treeSize = {
-                x: self.nodeDB.getMinMaxCoord("X", null, null),
-                y: self.nodeDB.getMinMaxCoord("Y", null, null),
-              },
-              treeWidth = treeSize.x.max - treeSize.x.min,
-              treeHeight = treeSize.y.max - treeSize.y.min,
-              treeCenter = {
-                x: treeSize.x.max - treeWidth / 2,
-                y: treeSize.y.max - treeHeight / 2,
-              };
-        
-            //   console.log(`treeSize`);
-            //   console.log(treeSize);
-        
+                treeSize = {
+                    x: self.nodeDB.getMinMaxCoord('X', null, null),
+                    y: self.nodeDB.getMinMaxCoord('Y', null, null)
+                },
+
+                treeWidth = treeSize.x.max - treeSize.x.min,
+                treeHeight = treeSize.y.max - treeSize.y.min,
+
+                treeCenter = {
+                    x: treeSize.x.max - treeWidth/2,
+                    y: treeSize.y.max - treeHeight/2
+                };
+
             this.handleOverflow(treeWidth, treeHeight);
-        
-            var containerCenter = {
-              x: self.drawArea.clientWidth / 2,
-              y: self.drawArea.clientHeight / 2,
-            },
-              deltaX = containerCenter.x - treeCenter.x,
-              deltaY = containerCenter.y - treeCenter.y,
-              // all nodes must have positive X or Y coordinates, handle this with offsets
-              negOffsetX = treeSize.x.min + deltaX <= 0 ? Math.abs(treeSize.x.min) : 0,
-              negOffsetY = treeSize.y.min + deltaY <= 0 ? Math.abs(treeSize.y.min) : 0,
-              i,
-              len,
-              node;
-        
+
+            var
+                containerCenter = {
+                    x: self.drawArea.clientWidth/2,
+                    y: self.drawArea.clientHeight/2
+                },
+
+                deltaX = containerCenter.x - treeCenter.x,
+                deltaY = containerCenter.y - treeCenter.y,
+
+                // all nodes must have positive X or Y coordinates, handle this with offsets
+                negOffsetX = ((treeSize.x.min + deltaX) <= 0) ? Math.abs(treeSize.x.min) : 0,
+                negOffsetY = ((treeSize.y.min + deltaY) <= 0) ? Math.abs(treeSize.y.min) : 0,
+                i, len, node;
+
             // position all the nodes
-            for (i = 0, len = this.nodeDB.db.length; i < len; i++) {
-              node = this.nodeDB.get(i);
-        
-              self.CONFIG.callback.onBeforePositionNode.apply(self, [
-                node,
-                i,
-                containerCenter,
-                treeCenter,
-              ]);
-        
-              if (node.id === 0 && this.CONFIG.hideRootNode) {
-                self.CONFIG.callback.onAfterPositionNode.apply(self, [
-                  node,
-                  i,
-                  containerCenter,
-                  treeCenter,
-                ]);
-                continue;
-              }
-        
-              // if the tree is smaller than the draw area, then center the tree within drawing area
-              node.X +=
-                negOffsetX +
-                (treeWidth < this.drawArea.clientWidth ? deltaX : this.CONFIG.padding);
-              node.Y +=
-                negOffsetY +
-                (treeHeight < this.drawArea.clientHeight
-                  ? deltaY
-                  : this.CONFIG.padding);
-        
-              var collapsedParent = node.collapsedParent(),
-                hidePoint = null;
-        
-              if (collapsedParent) {
-                // position the node behind the connector point of the parent, so future animations can be visible
-                hidePoint = collapsedParent.connectorPoint(true);
-                node.hide(hidePoint);
-              } else if (node.positioned) {
-                // node is already positioned,
-                node.show();
-              } else {
-                // inicijalno stvaranje nodeova, postavi lokaciju
-                node.nodeDOM.style.left = node.X + "px";
-                node.nodeDOM.style.top = node.Y + "px";
-                node.positioned = true;
-              }
-        
-              if (
-                node.id !== 0 &&
-                !(node.parent().id === 0 && this.CONFIG.hideRootNode)
-              ) {
-                this.setConnectionToParent(node, hidePoint); // skip the root node
-              } else if (!this.CONFIG.hideRootNode && node.drawLineThrough) {
-                // drawlinethrough is performed for for the root node also
-                node.drawLineThroughMe(true);
-              }
-        
-              self.CONFIG.callback.onAfterPositionNode.apply(self, [
-                node,
-                i,
-                containerCenter,
-                treeCenter,
-              ]);
+            for ( i = 0, len = this.nodeDB.db.length; i < len; i++ ) {
+
+                node = this.nodeDB.get(i);
+
+                self.CONFIG.callback.onBeforePositionNode.apply( self, [node, i, containerCenter, treeCenter] );
+
+                if ( node.id === 0 && this.CONFIG.hideRootNode ) {
+                    self.CONFIG.callback.onAfterPositionNode.apply( self, [node, i, containerCenter, treeCenter] );
+                    continue;
+                }
+
+                // if the tree is smaller than the draw area, then center the tree within drawing area
+                node.X += negOffsetX + ((treeWidth < this.drawArea.clientWidth) ? deltaX : this.CONFIG.padding);
+                node.Y += negOffsetY + ((treeHeight < this.drawArea.clientHeight) ? deltaY : this.CONFIG.padding);
+
+                var collapsedParent = node.collapsedParent(),
+                    hidePoint = null;
+
+                if (collapsedParent) {
+                    // position the node behind the connector point of the parent, so future animations can be visible
+                    hidePoint = collapsedParent.connectorPoint( true );
+                    node.hide(hidePoint);
+
+                }
+                else if (node.positioned) {
+                    // node is already positioned,
+                    node.show();
+                }
+                else { // inicijalno stvaranje nodeova, postavi lokaciju
+                    node.nodeDOM.style.left = node.X + 'px';
+                    node.nodeDOM.style.top = node.Y + 'px';
+                    node.positioned = true;
+                }
+
+                if (node.id !== 0 && !(node.parent().id === 0 && this.CONFIG.hideRootNode)) {
+                    this.setConnectionToParent(node, hidePoint); // skip the root node
+                }
+                else if (!this.CONFIG.hideRootNode && node.drawLineThrough) {
+                    // drawlinethrough is performed for for the root node also
+                    node.drawLineThroughMe();
+                }
+
+                self.CONFIG.callback.onAfterPositionNode.apply( self, [node, i, containerCenter, treeCenter] );
             }
-            // console.log('positionNodes end');
             return this;
-          },
+        },
 
         /**
          * Create Raphael instance, (optionally set scroll bars if necessary)
@@ -1142,22 +1061,11 @@
          * @returns {Tree}
          */
         calcLevelDim: function( node, level ) { // root node is on level 0
-    //         console.log('calcLevelDim begin');
-    // console.log(node.height);
-    // console.log(node.width);
-    // root node is on level 0
-    this.levelMaxDim[level] = {
-      width: Math.max(
-        this.levelMaxDim[level] ? this.levelMaxDim[level].width : 0,
-        node.width
-      ),
-      height: Math.max(
-        this.levelMaxDim[level] ? this.levelMaxDim[level].height : 0,
-        node.height
-      ),
-    };
-    // console.log(this.levelMaxDim[level]);
-    // console.log('calcLevelDim end')
+            this.levelMaxDim[level] = {
+                width: Math.max( this.levelMaxDim[level]? this.levelMaxDim[level].width: 0, node.width ),
+                height: Math.max( this.levelMaxDim[level]? this.levelMaxDim[level].height: 0, node.height )
+            };
+            return this;
         },
 
         /**
@@ -1341,38 +1249,33 @@
             return node;
         },
 
-        getMinMaxCoord(dim, parent, MinMax) {
-            // console.log('getMinMaxCoord begin');
-            // console.log(parent);
-            // used for getting the dimensions of the tree, dim = 'X' || 'Y'
+        getMinMaxCoord: function( dim, parent, MinMax ) { // used for getting the dimensions of the tree, dim = 'X' || 'Y'
             // looks for min and max (X and Y) within the set of nodes
             parent = parent || this.get(0);
-        
-            MinMax = MinMax || {
-              // start with root node dimensions
-              min: parent[dim],
-              max: parent[dim] + (dim === "X" ? parent.width : parent.height),
-            };
-        
+
+            MinMax = MinMax || { // start with root node dimensions
+                    min: parent[dim],
+                    max: parent[dim] + ( ( dim === 'X' )? parent.width: parent.height )
+                };
+
             var i = parent.childrenCount();
-        
-            while (i--) {
-              var node = parent.childAt(i),
-                maxTest = node[dim] + (dim === "X" ? node.width : node.height),
-                minTest = node[dim];
-        
-              if (maxTest > MinMax.max) {
-                MinMax.max = maxTest;
-              }
-              if (minTest < MinMax.min) {
-                MinMax.min = minTest;
-              }
-        
-              this.getMinMaxCoord(dim, node, MinMax);
+
+            while ( i-- ) {
+                var node = parent.childAt( i ),
+                    maxTest = node[dim] + ( ( dim === 'X' )? node.width: node.height ),
+                    minTest = node[dim];
+
+                if ( maxTest > MinMax.max ) {
+                    MinMax.max = maxTest;
+                }
+                if ( minTest < MinMax.min ) {
+                    MinMax.min = minTest;
+                }
+
+                this.getMinMaxCoord( dim, node, MinMax );
             }
-            // console.log('getMinMaxCoord end');
             return MinMax;
-          },
+        },
 
         /**
          * @param {object} nodeStructure
@@ -1501,30 +1404,21 @@
          * Returns the width of the node
          * @returns {float}
          */
-        size() {
-            // console.log('size begin');
-            const orientation = this.getTreeConfig().rootOrientation;
-        
-            if (this.pseudo) {
-              // prevents separating the subtrees
-            //   console.log(-1 * this.getTreeConfig().subTeeSeparation);
-            //   console.log('size end');
-              return -1 * this.getTreeConfig().subTeeSeparation;
+        size: function() {
+            var orientation = this.getTreeConfig().rootOrientation;
+
+            if ( this.pseudo ) {
+                // prevents separating the subtrees
+                return ( -this.getTreeConfig().subTeeSeparation );
             }
-        
-            if (orientation === "NORTH" || orientation === "SOUTH") {
-            //   console.log(this.width);
-            //   console.log('size end');
-              return this.width;
-            } else if (orientation === "WEST" || orientation === "EAST") {
-            //   console.log(this.height);
-            //   console.log('size end');
-              return this.height;
+
+            if ( orientation === 'NORTH' || orientation === 'SOUTH' ) {
+                return this.width;
             }
-            // console.log(0);
-            // console.log('size end');
-            return 0;
-          },
+            else if ( orientation === 'WEST' || orientation === 'EAST' ) {
+                return this.height;
+            }
+        },
 
         /**
          * @returns {number}
@@ -1605,20 +1499,12 @@
         /**
          * @returns {number}
          */
-        childrenCenter() {
-            // console.log('childrenCenter begin');
-    var first = this.firstChild(),
-      last = this.lastChild();
-    // console.log(`first.prelim ${first.prelim}`);
-    // console.log(`first`);
-    // console.log(first);
-    // console.log(`last`);
-    // console.log(last);
-    // console.log(`last.prelim ${last.prelim}`);
-    // console.log(`last.size() ${last.size()}`);
-    // console.log('childrenCenter end');
-            return first.prelim + (last.prelim - first.prelim + last.size()) / 2;
-          },
+        childrenCenter: function () {
+            var first = this.firstChild(),
+                last = this.lastChild();
+
+            return ( first.prelim + ((last.prelim - first.prelim) + last.size()) / 2 );
+        },
 
         /**
          * Find out if one of the node ancestors is collapsed
@@ -1763,7 +1649,6 @@
          * @returns {TreeNode}
          */
         toggleCollapse: function() {
-            console.log('toggleCollapse begin');
             var oTree = this.getTree();
 
             if ( !oTree.inAnimation ) {
@@ -1786,7 +1671,6 @@
                         oTree.CONFIG.animation.connectorsSpeed
                 );
             }
-            console.log('toggleCollapse end');
             return this;
         },
 
@@ -2024,7 +1908,6 @@
      * @param {Tree} tree
      */
     TreeNode.prototype.createGeometry = function( tree ) {
-        // console.log('createGeometry begin');
         if ( this.id === 0 && tree.CONFIG.hideRootNode ) {
             this.width = 0;
             this.height = 0;
@@ -2075,20 +1958,12 @@
         /////////// APPEND all //////////////
         drawArea.appendChild(node);
 
-        // console.log(`node`);
-        // console.log(node);
-    
-        // console.log(`node.offsetHeight ${node.offsetHeight}`);
-        // console.log(`node.offsetWidth ${node.offsetWidth}`);
-
         this.width = node.offsetWidth;
         this.height = node.offsetHeight;
 
         this.nodeDOM = node;
 
         tree.imageLoader.processNode(this);
-        
-        // console.log('createGeometry end');
     };
 
     /**
@@ -2271,16 +2146,9 @@
      * Chart constructor.
      */
     var Treant = function( jsonConfig, callback, jQuery ) {
-        // console.log(`jsonConfig instanceof Array`);
-        // console.log(jsonConfig instanceof Array);
         if ( jsonConfig instanceof Array ) {
             jsonConfig = JSONconfig.make( jsonConfig );
-            // console.log('jsonConfig');
-            // console.log(jsonConfig);
         }
-
-        // console.log(`jsonConfig`);
-        // console.log(jsonConfig);
 
         // optional
         if ( jQuery ) {
