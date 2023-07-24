@@ -1,5 +1,17 @@
+/*
+ * PointlineJS
+ *
+ * (c) 2023 Egor Fedoseev
+ * PointlineJS may be freely distributed under the MIT license.
+ *
+ * PointlineJS is an open-source JavaScript library for visualization of tree diagrams.
+ *
+ * Author:
+ * Egor Fedoseev, https://github.com/egor-progger/pointlinejs
+ */
+
 import { ImageLoader } from "@treantjs/ImageLoader";
-import { DI_LIST } from "@treantjs/InjectableList";
+import { DI_LIST } from "@pointlinejs/InjectableList";
 import { JSONconfig } from "@treantjs/JSONConfig";
 import { NodeDB, NodeDBState } from "@treantjs/NodeDB";
 import { ChartConfigType, Treant } from "@treantjs/Treant";
@@ -12,7 +24,7 @@ import "reflect-metadata";
 window.jQuery = window.$ = require('jquery');
 require('jquery.easing');
 
-export class GraphJS {
+export class PointlineJS {
     private treant: Treant;
     private chartConfig: ChartConfigType;
 

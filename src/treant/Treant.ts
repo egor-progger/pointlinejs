@@ -1,9 +1,28 @@
+/*
+ * Treant-js
+ *
+ * (c) 2013 Fran Peručić
+ * Treant-js may be freely distributed under the MIT license.
+ * For all details and documentation:
+ * http://fperucic.github.io/treant-js
+ *
+ * Treant is an open-source JavaScipt library for visualization of tree diagrams.
+ * It implements the node positioning algorithm of John Q. Walker II "Positioning nodes for General Trees".
+ *
+ * References:
+ * Emilio Cortegoso Lobato: ECOTree.js v1.0 (October 26th, 2006)
+ *
+ * Contributors:
+ * Fran Peručić, https://github.com/fperucic
+ * Dave Goodchild, https://github.com/dlgoodchild
+ */
+
 import "./styles/Treant.css";
 import '../../node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
 import { JSONconfig } from "./JSONConfig";
 import { TreeStore } from "./TreeStore";
 import { inject, injectable } from "inversify";
-import { DI_LIST } from "./InjectableList";
+import { DI_LIST } from "../pointlinejs/InjectableList";
 import "reflect-metadata";
 import { Tree } from "./Tree";
 import { NodeDB } from "./NodeDB";
@@ -111,6 +130,8 @@ export interface NodeInterface {
   children: Partial<NodeInterface>[];
   meta: object;
   position: string;
+  _json_id: number;
+  parent: Partial<NodeInterface>;
 }
 
 export type ChartStructure = {
@@ -125,7 +146,7 @@ export type ChartConfigType = Array<Partial<ChartInterface> | Partial<NodeInterf
  */
 @injectable()
 export class Treant {
-  jsonConfig: ChartConfigType;
+  jsonConfig: ChartStructure;
 
   tree: Promise<Tree> | null = null;
 

@@ -1,5 +1,5 @@
-import { GraphJS } from "../../graphjs/graphjs";
-import { ChartConfigType } from "../../treant/Treant";
+import { PointlineJS } from "@pointlinejs/pointlinejs";
+import { ChartConfigType } from "@treantjs/Treant";
 import "./styles/main.scss";
 
 const chart_config = {
@@ -114,5 +114,5 @@ const chart_config = {
 
 */
 
-const graphJS = new GraphJS(chart_config as unknown as ChartConfigType);
+const graphJS = new PointlineJS(chart_config as unknown as ChartConfigType);
 graphJS.draw();

@@ -1,6 +1,6 @@
-import { GraphJS } from '@graphjs/graphjs';
-import './styles/evolution-tree.css';
+import { PointlineJS } from '@pointlinejs/pointlinejs';
 import { ChartConfigType } from '@treantjs/Treant';
+import './styles/main.scss';
 
 var tree_structure = {
     chart: {
@@ -266,5 +266,5 @@ var tree_structure = {
 };
 
 
-const graphJS = new GraphJS(tree_structure as unknown as ChartConfigType);
+const graphJS = new PointlineJS(tree_structure as unknown as ChartConfigType);
 graphJS.draw();

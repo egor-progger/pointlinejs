@@ -10,7 +10,7 @@ import image8 from '../headshots/8.jpg';
 import image9 from '../headshots/9.jpg';
 import image10 from '../headshots/10.jpg';
 import image11 from '../headshots/11.jpg';
-import { GraphJS } from "@graphjs/graphjs";
+import { PointlineJS } from "@pointlinejs/pointlinejs";
 import { ChartConfigType } from "@treantjs/Treant";
 
 var config = {
@@ -193,5 +193,5 @@ var config = {
 // };
 
 
-const graphJS = new GraphJS(chart_config as unknown as ChartConfigType);
+const graphJS = new PointlineJS(chart_config as unknown as ChartConfigType);
 graphJS.draw();

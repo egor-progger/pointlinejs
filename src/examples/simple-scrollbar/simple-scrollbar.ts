@@ -1,4 +1,4 @@
-import { GraphJS } from "@graphjs/graphjs";
+import { PointlineJS } from "@pointlinejs/pointlinejs";
 import { ChartConfigType } from "@treantjs/Treant";
 import "./styles/simple-scrollbar.css";
 
@@ -131,5 +131,5 @@ var config = {
     ];
 
 
-const graphJS = new GraphJS(ALTERNATIVE as unknown as ChartConfigType);
+const graphJS = new PointlineJS(ALTERNATIVE as unknown as ChartConfigType);
 graphJS.draw();

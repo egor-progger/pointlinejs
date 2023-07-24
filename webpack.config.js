@@ -109,7 +109,7 @@ module.exports = {
       jQuery: "jquery/src/jquery",
       $: "jquery/src/jquery",
       "@treantjs": path.resolve(__dirname, './src/treant'),
-      "@graphjs": path.resolve(__dirname, './src/graphjs')
+      "@pointlinejs": path.resolve(__dirname, './src/pointlinejs')
     }
   },
   plugins: [

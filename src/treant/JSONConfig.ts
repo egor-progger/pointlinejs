@@ -3,14 +3,14 @@
 // #############################################
 
 import { injectable } from "inversify";
-import { ChartStructure } from "./Treant";
+import { ChartInterface, ChartStructure, NodeInterface } from "./Treant";
 
 @injectable()
 export class JSONconfig {
   private json_id = 1;
   private jsonStructure: ChartStructure;
 
-  make(configArray: any) {
+  make(configArray: Array<Partial<ChartInterface> | Partial<NodeInterface>>) {
     var i = configArray.length,
       node;
 
@@ -37,7 +37,7 @@ export class JSONconfig {
     return this.jsonStructure;
   }
 
-  findChildren(nodes: any) {
+  findChildren(nodes: Partial<ChartInterface | NodeInterface>[]) {
     var parents = [0]; // start with a a root node
 
     while (parents.length) {
@@ -49,15 +49,18 @@ export class JSONconfig {
 
       for (; i < len; i++) {
         var node = nodes[i];
-        if (node.parent && node.parent._json_id === parentId) {
-          // skip config and root nodes
+        if (node['parent']) {
+          const nodeValue = node as NodeInterface;
+          if (nodeValue.parent && nodeValue.parent._json_id === parentId) {
+            // skip config and root nodes
 
-          node._json_id = this.getID();
+            nodeValue._json_id = this.getID();
 
-          delete node.parent;
+            delete nodeValue.parent;
 
-          children.push(node);
-          parents.push(node._json_id);
+            children.push(node);
+            parents.push(nodeValue._json_id);
+          }
         }
       }
 
@@ -67,7 +70,7 @@ export class JSONconfig {
     }
   }
 
-  findNode(node: any, nodeId: number): any {
+  findNode(node: Partial<NodeInterface>, nodeId: number): Partial<NodeInterface> {
     var childrenLen, found;
 
     if (node._json_id === nodeId) {

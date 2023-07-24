@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { TreeNode } from "./TreeNode";
-import { DI_LIST } from "./InjectableList";
+import { DI_LIST } from "../pointlinejs/InjectableList";
 import { UTIL } from "./Util";
 import "reflect-metadata";
 
@@ -11,7 +11,7 @@ import "reflect-metadata";
 
 @injectable()
 export class ImageLoader {
-  loading: any[] = [];
+  loading: string[] = [];
 
   constructor(@inject(DI_LIST.util) public util: UTIL) {
     return this.reset();
@@ -33,7 +33,7 @@ export class ImageLoader {
    * @param {TreeNode} node
    * @returns {ImageLoader}
    */
-  processNode(node: any) {
+  processNode(node: TreeNode) {
     var aImages = node.nodeDOM.getElementsByTagName("img");
 
     var i = aImages.length;
@@ -61,7 +61,7 @@ export class ImageLoader {
    * @param {Element} image
    * @returns {*}
    */
-  create(node: TreeNode, image: any) {
+  create(node: TreeNode, image: HTMLImageElement) {
     var self = this,
       source = image.src;
 

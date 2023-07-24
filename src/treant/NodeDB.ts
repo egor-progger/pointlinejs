@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { TreeNode } from "./TreeNode";
 import { UTIL } from "./Util";
-import { DI_LIST } from "./InjectableList";
+import { DI_LIST } from "../pointlinejs/InjectableList";
 import { NodeInterface } from "./Treant";
 import { Tree } from "./Tree";
 

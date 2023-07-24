@@ -108,7 +108,7 @@
     "baseUrl": ".",
     "paths": {
       "@treantjs/*": ["src/treant/*"],
-      "@graphjs/*": ["src/graphjs/*"]
+      "@pointlinejs/*": ["src/pointlinejs/*"]
     }
   }
 }

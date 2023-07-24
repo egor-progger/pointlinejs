@@ -3,7 +3,7 @@ import { NodeDB } from "./NodeDB";
 import { UTIL } from "./Util";
 import Raphael from "../../vendor/raphael.no-deps";
 import { RaphaelBaseElement, RaphaelPaper } from 'raphael';
-import { DI_LIST } from "./InjectableList";
+import { DI_LIST } from "../pointlinejs/InjectableList";
 import { inject, injectable } from "inversify";
 import { RaphaelPathExtended, TreeNode } from "./TreeNode";
 import $ from 'jquery';

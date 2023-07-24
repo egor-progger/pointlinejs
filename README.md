@@ -1,12 +1,9 @@
-<pre>
-PointlineJS
-</pre>
+# PointlineJS
 
 PointlineJS is an SVG based JS library for drawing tree diagrams.
 It relies on Treant-JS, Raphael for handling SVG and animations, JQuery.
 
-For Docs, Examples, and everything else see:
-
+For Docs, Examples, and everything else see: /* TODO */
 
 # Compile
 

@@ -1,4 +1,4 @@
-import { GraphJS } from "@graphjs/graphjs";
+import { PointlineJS } from "@pointlinejs/pointlinejs";
 import { ChartConfigType } from "@treantjs/Treant";
 import './styles/super-simple.css';
 
@@ -45,5 +45,5 @@ var simple_chart_config = {
 // 		first_child, second_child 
 // ];
 
-const graphJS = new GraphJS(simple_chart_config as unknown as ChartConfigType);
+const graphJS = new PointlineJS(simple_chart_config as unknown as ChartConfigType);
 graphJS.draw();

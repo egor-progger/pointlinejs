@@ -1,4 +1,4 @@
-import { GraphJS } from "@graphjs/graphjs";
+import { PointlineJS } from "@pointlinejs/pointlinejs";
 import { ChartConfigType } from "@treantjs/Treant";
 import "./styles/main.scss";
 
@@ -130,5 +130,5 @@ const ALTERNATIVE = [
     ciso4
 ];
 
-const graphJS = new GraphJS(ALTERNATIVE as unknown as ChartConfigType);
+const graphJS = new PointlineJS(ALTERNATIVE as unknown as ChartConfigType);
 graphJS.draw();

@@ -1,7 +1,7 @@
 // source: 
 // http://www.atpworldtour.com/Share/Event-Draws.aspx?EventId=410&Year=2013
 
-import { GraphJS } from '@graphjs/graphjs';
+import { PointlineJS } from '@pointlinejs/pointlinejs';
 import './styles/tennis-draw.css';
 import { ChartConfigType } from '@treantjs/Treant';
 
@@ -275,5 +275,5 @@ var tree_structure = {
     }
 };
 
-const graphJS = new GraphJS(tree_structure as unknown as ChartConfigType);
+const graphJS = new PointlineJS(tree_structure as unknown as ChartConfigType);
 graphJS.draw();
