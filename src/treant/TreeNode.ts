@@ -8,50 +8,49 @@
  * @constructor
  */
 
-import { inject, injectable } from "inversify";
-import { TreeStore } from "./TreeStore";
+import { injectable } from "inversify";
 import { UTIL } from "./Util";
-import { DI_LIST } from "./InjectableList";
-import $ from 'jquery';
 import { Tree } from "./Tree";
+import $ from "jquery";
+import { Coordinate, NodeInterface } from "./Treant";
 
 @injectable()
 export class TreeNode {
   protected util: UTIL = new UTIL();
 
-  id: number = 0;
-  parentId: number = 0;
-  treeId: number = 0;
-  prelim: number = 0;
-  modifier: number = 0;
-  leftNeighborId: number | null = null;
-  rightNeighborId: number | null = null;
-  stackParentId: any = 0;
-  stackParent: boolean = false;
-  pseudo: any;
-  meta: string = "";
-  image: string = "";
+  id: number;
+  parentId: number;
+  treeId: number;
+  prelim: number;
+  modifier: number;
+  leftNeighborId: number | null;
+  rightNeighborId: number | null;
+  stackParentId: number;
+  stackParent: boolean = undefined;
+  pseudo: boolean;
+  meta: object;
+  image: string;
   link: any;
   connStyle: any;
   connector: any;
   drawLineThrough: any;
-  collapsable: boolean = false;
-  collapsed: boolean = false;
+  collapsable: boolean;
+  collapsed: boolean;
   text: any;
-  nodeInnerHTML: any;
-  nodeHTMLclass = "";
-  nodeHTMLid = 0;
-  children: any;
-  width: number = 0;
-  height: number = 0;
-  X: number = 0;
-  Y: number = 0;
+  nodeInnerHTML: string;
+  nodeHTMLclass: string;
+  nodeHTMLid: number;
+  children: number[];
+  width: number;
+  height: number;
+  X: number;
+  Y: number;
   lineThroughMe: any;
   nodeDOM: any;
-  hidden: boolean = false;
-  positioned: any;
+  hidden: boolean;
+  positioned: boolean;
   style: any;
-  stackChildren: any;
+  stackChildren: number[];
 
   CONFIG = {
     nodeHTMLclass: "node",
@@ -60,15 +59,13 @@ export class TreeNode {
   constructor(
     public tree: Tree
   ) {
-    console.log('TreeNode constructor');
-    console.log(this.tree);
   }
 
   init(
-    nodeStructure: any,
+    nodeStructure: Partial<NodeInterface>,
     id: number,
     parentId: number,
-    tree: any,
+    tree: Tree,
     stackParentId: number | null) {
     return this.reset(nodeStructure, id, parentId, tree, stackParentId);
   }
@@ -82,10 +79,10 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   reset(
-    nodeStructure: any,
+    nodeStructure: Partial<NodeInterface>,
     id: number,
     parentId: number,
-    tree: any,
+    tree: Tree,
     stackParentId: number | null
   ) {
     this.id = id;
@@ -134,10 +131,9 @@ export class TreeNode {
       (tree.CONFIG.node.HTMLclass ? tree.CONFIG.node.HTMLclass : "") + // globally defined class for the nodex
       (nodeStructure.HTMLclass ? " " + nodeStructure.HTMLclass : ""); // + specific node class
 
-    this.nodeHTMLid = nodeStructure.HTMLid;
+    this.nodeHTMLid = parseInt(nodeStructure.HTMLid, 10);
 
     this.children = [];
-
     return this;
   }
 
@@ -159,7 +155,7 @@ export class TreeNode {
    * @param {number} nodeId
    * @returns {TreeNode}
    */
-  lookupNode(nodeId: any) {
+  lookupNode(nodeId: number) {
     return this.getTreeNodeDb().get(nodeId);
   }
 
@@ -183,11 +179,11 @@ export class TreeNode {
    * @returns {float}
    */
   size() {
-    var orientation = this.getTreeConfig().rootOrientation;
+    const orientation = this.getTreeConfig().rootOrientation;
 
     if (this.pseudo) {
       // prevents separating the subtrees
-      return -this.getTreeConfig().subTeeSeparation;
+      return -1 * this.getTreeConfig().subTeeSeparation;
     }
 
     if (orientation === "NORTH" || orientation === "SOUTH") {
@@ -256,8 +252,7 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   leftSibling() {
-    var leftNeighbor = this.leftNeighbor();
-
+    const leftNeighbor = this.leftNeighbor();
     if (leftNeighbor && leftNeighbor.parentId === this.parentId) {
       return leftNeighbor;
     }
@@ -278,12 +273,8 @@ export class TreeNode {
    * @returns {number}
    */
   childrenCenter() {
-    console.log('childrenCenter begin');
     var first = this.firstChild(),
       last = this.lastChild();
-    console.log(first);
-    console.log(last);
-    console.log('childrenCenter end');
     return first.prelim + (last.prelim - first.prelim + last.size()) / 2;
   }
 
@@ -308,12 +299,12 @@ export class TreeNode {
    * @param depth
    * @returns {*}
    */
-  leftMost(level: number, depth: number): TreeNode | void {
+  leftMost(level: number, depth: number): TreeNode | null {
     if (level >= depth) {
       return this;
     }
     if (this.childrenCount() === 0) {
-      return;
+      return null;
     }
 
     for (var i = 0, n = this.childrenCount(); i < n; i++) {
@@ -326,8 +317,8 @@ export class TreeNode {
 
   // returns start or the end point of the connector line, origin is upper-left
   connectorPoint(startPoint: boolean) {
-    var orient = this.getTree().CONFIG.rootOrientation,
-      point: any = {};
+    let orient = this.getTree().CONFIG.rootOrientation;
+    const point: Coordinate = { x: 0, y: 0 };
 
     if (this.stackParentId) {
       // return different end point if node is a stacked child
@@ -382,7 +373,7 @@ export class TreeNode {
   /**
    * @param {object} hidePoint
    */
-  drawLineThroughMe(hidePoint: any): void {
+  drawLineThroughMe(hidePoint: boolean): void {
     // hidepoint se proslijedjuje ako je node sakriven zbog collapsed
     var pathString = hidePoint
       ? this.getTree().getPointPathString(hidePoint)
@@ -403,9 +394,9 @@ export class TreeNode {
     }
   }
 
-  addSwitchEvent(nodeSwitch: any) {
+  addSwitchEvent(nodeSwitch: Element | JQuery) {
     var self = this;
-    this.util.addEvent(nodeSwitch, "click", function (e: any) {
+    this.util.addEvent(nodeSwitch as Element, "click", (e: Event) => {
       e.preventDefault();
       if (
         self
@@ -448,7 +439,7 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   toggleCollapse() {
-    var oTree = this.getTree();
+    const oTree = this.getTree();
 
     if (!oTree.inAnimation) {
       oTree.inAnimation = true;
@@ -473,13 +464,13 @@ export class TreeNode {
           oTree.CONFIG.animation.connectorsSpeed
           ? oTree.CONFIG.animation.nodeSpeed
           : oTree.CONFIG.animation.connectorsSpeed
+        , oTree
       );
     }
     return this;
   }
 
-  hide(collapse_to_point: any) {
-    collapse_to_point = collapse_to_point || false;
+  hide(collapse_to_point?: Coordinate) {
 
     var bCurrentState = this.hidden;
     this.hidden = true;
@@ -514,7 +505,7 @@ export class TreeNode {
           oNewState,
           config.animation.nodeSpeed,
           config.animation.nodeAnimation,
-          () => {
+          function () {
             this.style.visibility = "hidden";
           }
         );
@@ -577,13 +568,13 @@ export class TreeNode {
     };
     const config = this.getTreeConfig();
 
-    // if the node was hidden, update opacity and position
+    // // if the node was hidden, update opacity and position
     if ($) {
       $(this.nodeDOM).animate(
         oNewState,
         config.animation.nodeSpeed,
         config.animation.nodeAnimation,
-        () => {
+        function () {
           // $.animate applies "overflow:hidden" to the node, remove it to avoid visual problems
           this.style.overflow = "";
         }
@@ -642,7 +633,7 @@ export class TreeNode {
    *
    * @Returns the configured node
    */
-  buildNodeFromText(node: any) {
+  buildNodeFromText(node: HTMLAnchorElement | HTMLDivElement) {
     // IMAGE
     if (this.image) {
       const image = document.createElement("img");
@@ -694,20 +685,26 @@ export class TreeNode {
    *
    * @Returns node the configured node
    */
-  buildNodeFromHtml(node: any) {
+  buildNodeFromHtml(node: HTMLAnchorElement | HTMLDivElement) {
     // get some element by ID and clone its structure into a node
+    let generatedNode: HTMLAnchorElement | HTMLDivElement;
     if (this.nodeInnerHTML.charAt(0) === "#") {
       var elem = document.getElementById(this.nodeInnerHTML.substring(1));
       if (elem) {
-        node = elem.cloneNode(true);
-        node.id += "-clone";
-        node.className += " node";
+        if (node instanceof HTMLAnchorElement) {
+          generatedNode = elem.cloneNode(true) as HTMLAnchorElement;
+        }
+        if (node instanceof HTMLDivElement) {
+          generatedNode = elem.cloneNode(true) as HTMLDivElement;
+        }
+        generatedNode.id += "-clone";
+        generatedNode.className += " node";
       } else {
-        node.innerHTML = "<b> Wrong ID selector </b>";
+        generatedNode.innerHTML = "<b> Wrong ID selector </b>";
       }
     } else {
       // insert your custom HTML into a node
-      node.innerHTML = this.nodeInnerHTML;
+      generatedNode.innerHTML = this.nodeInnerHTML;
     }
     return node;
   }
@@ -715,8 +712,7 @@ export class TreeNode {
   /**
    * @param {Tree} tree
    */
-  createGeometry(tree: any) {
-    // console.log('createGeometry begin');
+  createGeometry(tree: Tree) {
     if (this.id === 0 && tree.CONFIG.hideRootNode) {
       this.width = 0;
       this.height = 0;
@@ -726,7 +722,7 @@ export class TreeNode {
     var drawArea = tree.drawArea,
       image;
     /////////// CREATE NODE //////////////
-    let node: any = document.createElement(this.link.href ? "a" : "div");
+    let node: HTMLAnchorElement | HTMLDivElement = document.createElement(this.link.href ? "a" : "div");
 
     node.className = !this.pseudo ? this.CONFIG.nodeHTMLclass : "pseudo";
     if (this.nodeHTMLclass && !this.pseudo) {
@@ -734,10 +730,10 @@ export class TreeNode {
     }
 
     if (this.nodeHTMLid) {
-      node.id = this.nodeHTMLid ?? this.id;
+      node.id = this.nodeHTMLid ? this.nodeHTMLid.toString() : this.id.toString();
     }
 
-    if (this.link.href) {
+    if (this.link.href && node instanceof HTMLAnchorElement) {
       node.href = this.link.href;
       node.target = this.link.target;
     }
@@ -745,9 +741,9 @@ export class TreeNode {
     if ($) {
       $(node).data("treenode", this);
     } else {
-      node.data = {
+      node.setAttribute('data', JSON.stringify({
         treenode: this,
-      };
+      }));
     }
 
     /////////// BUILD NODE CONTENT //////////////
@@ -769,26 +765,17 @@ export class TreeNode {
 
     /////////// APPEND all //////////////
     drawArea.appendChild(node);
-
-    // console.log(node);
-
-    // console.log(node.offsetHeight);
-    // console.log(node.offsetWidth);
-
     this.width = node.offsetWidth;
     this.height = node.offsetHeight;
-
     this.nodeDOM = node;
-
     tree.imageLoader.processNode(this);
-    // console.log('createGeometry end');
   }
 
   /**
    * @param {Tree} tree
    * @param {Element} nodeEl
    */
-  createSwitchGeometry(tree: any, nodeEl: any) {
+  createSwitchGeometry(tree: Tree, nodeEl: Element) {
     nodeEl = nodeEl || this.nodeDOM;
 
     // safe guard and check to see if it has a collapse switch

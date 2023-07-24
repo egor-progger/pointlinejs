@@ -11,7 +11,6 @@ import "reflect-metadata";
 
 @injectable()
 export class ImageLoader {
-  // protected util: UTIL = new UTIL();
   loading: any[] = [];
 
   constructor(@inject(DI_LIST.util) public util: UTIL) {
@@ -57,14 +56,6 @@ export class ImageLoader {
     return this;
   }
 
-  // imgTrigger(node: TreeNode, source: string) {
-  //   console.log('imgTrigger');
-  //   console.log(this);
-  //   this.removeAll(source);
-  //   node.width = node.nodeDOM.offsetWidth;
-  //   node.height = node.nodeDOM.offsetHeight;
-  // }
-
   /**
    * @param {TreeNode} node
    * @param {Element} image
@@ -80,12 +71,6 @@ export class ImageLoader {
       node.height = node.nodeDOM.offsetHeight;
     }
 
-    console.log('image loader create');
-    console.log(node);
-
-    console.log(image.src);
-    console.log(image.src.indexOf("data:"));
-
     if (image.src.indexOf("data:") !== 0) {
       this.loading.push(source);
 
@@ -100,18 +85,14 @@ export class ImageLoader {
       image.src +=
         (image.src.indexOf("?") > 0 ? "&" : "?") + new Date().getTime();
     } else {
-      console.log((image.complete))
       imgTrigger();
     }
-    console.log('image loader end');
   }
 
   /**
    * @returns {boolean}
    */
   isNotLoading() {
-    console.log('image loader isNotLoading');
-    console.log(this.loading.length);
     return this.loading.length === 0;
   }
 }

@@ -30,7 +30,7 @@ export class UTIL {
      * @param {object} obj2
      * @returns {object}
      */
-    createMerge(obj1: any, obj2: any) {
+    createMerge(obj1: object, obj2: object) {
         var newObj = {};
         if (obj1) {
             this.inheritAttrs(newObj, this.cloneObj(obj1));
@@ -77,15 +77,16 @@ export class UTIL {
     //  * @param {string} eventType
     //  * @param {function} handler
     //  */
-    addEvent(el: any, eventType: string, handler: any) {
+    addEvent(el: Element, eventType: string, handler: (event: Event) => void) {
         if ($) {
             $(el).on(eventType + '.treant', handler);
         }
         else if (el.addEventListener) { // DOM Level 2 browsers
             el.addEventListener(eventType, handler, false);
         }
-        else if (el.attachEvent) { // IE <= 8
-            el.attachEvent('on' + eventType, handler);
+        else if (el['attachEvent']) { // IE <= 8
+            let elementInOldIE = el as Element & { attachEvent: (eventType: string, handler: (event: Event) => void) => void };
+            elementInOldIE.attachEvent('on' + eventType, handler);
         }
         else { // ancient browsers
             el['on' + eventType] = handler;
@@ -98,8 +99,8 @@ export class UTIL {
     //  * @param {Element} parentEl
     //  * @returns {Element|jQuery}
     //  */
-    findEl(selector: string, raw: boolean, parentEl?: any) {
-        parentEl = parentEl || document;
+    findEl(selector: string, raw: boolean, parentEl?: Element): Element | JQuery {
+        const element = parentEl || window.document;
 
         if ($) {
             var $element = $(selector, parentEl);
@@ -110,10 +111,10 @@ export class UTIL {
             // todo: getElementsByTagName()
             // todo: getElementsByTagNameNS()
             if (selector.charAt(0) === '#') {
-                return parentEl.getElementById(selector.substring(1));
+                return (element as Document).getElementById(selector.substring(1));
             }
             else if (selector.charAt(0) === '.') {
-                var oElements = parentEl.getElementsByClassName(selector.substring(1));
+                var oElements = element.getElementsByClassName(selector.substring(1));
                 return (oElements.length ? oElements[0] : null);
             }
 

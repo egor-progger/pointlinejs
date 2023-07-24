@@ -130,10 +130,5 @@ const ALTERNATIVE = [
     ciso4
 ];
 
-console.log('ALTERNATIVE');
-console.log(ALTERNATIVE);
-
-console.log(Array.isArray(ALTERNATIVE));
-
 const graphJS = new GraphJS(ALTERNATIVE as unknown as ChartConfigType);
 graphJS.draw();

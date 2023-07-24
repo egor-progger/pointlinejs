@@ -1,5 +1,6 @@
 import { ImageLoader } from "@treantjs/ImageLoader";
 import { DI_LIST } from "@treantjs/InjectableList";
+import { JSONconfig } from "@treantjs/JSONConfig";
 import { NodeDB, NodeDBState } from "@treantjs/NodeDB";
 import { ChartConfigType, Treant } from "@treantjs/Treant";
 import { Tree } from "@treantjs/Tree";
@@ -8,6 +9,8 @@ import { TreeStore } from "@treantjs/TreeStore";
 import { UTIL } from "@treantjs/Util";
 import { Container } from "inversify";
 import "reflect-metadata";
+window.jQuery = window.$ = require('jquery');
+require('jquery.easing');
 
 export class GraphJS {
     private treant: Treant;
@@ -20,6 +23,7 @@ export class GraphJS {
         container.bind(DI_LIST.imageLoader).to(ImageLoader).inSingletonScope();
         container.bind(DI_LIST.nodeDB).to(NodeDB).inSingletonScope();
         container.bind(DI_LIST.nodeDBState).to(NodeDBState).inSingletonScope();
+        container.bind(DI_LIST.jsonConfig).to(JSONconfig).inSingletonScope();
         container.bind(DI_LIST.treeNode).to(TreeNode);
         container.bind(DI_LIST.tree).to(Tree);
         container.bind(DI_LIST.treant).to(Treant);

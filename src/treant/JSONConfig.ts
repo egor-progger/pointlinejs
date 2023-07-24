@@ -2,10 +2,13 @@
 // Makes a JSON chart config out of Array config
 // #############################################
 
+import { injectable } from "inversify";
 import { ChartStructure } from "./Treant";
 
+@injectable()
 export class JSONconfig {
-  jsonStructure: ChartStructure;
+  private json_id = 1;
+  private jsonStructure: ChartStructure;
 
   make(configArray: any) {
     var i = configArray.length,
@@ -82,11 +85,6 @@ export class JSONconfig {
   }
 
   getID() {
-    () => {
-      var i = 1;
-      return function () {
-        return i++;
-      };
-    };
+    return this.json_id++;
   }
 }

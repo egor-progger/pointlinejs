@@ -6,6 +6,8 @@ import { DI_LIST } from "./InjectableList";
 import { inject, injectable } from "inversify";
 import { TreeNode } from "./TreeNode";
 import $ from 'jquery';
+import PerfectScrollbar from 'perfect-scrollbar';
+import { Coordinate, ChartInterface } from "./Treant";
 
 /**
  * Tree constructor.
@@ -15,19 +17,19 @@ import $ from 'jquery';
  */
 @injectable()
 export class Tree {
-  protected util: UTIL = new UTIL();
+  private util: UTIL = new UTIL();
 
-  initJsonConfig: any;
+  initJsonConfig: Partial<ChartInterface>;
   initTreeId: number = 0;
   id: number = 0;
-  drawArea: any;
+  drawArea: HTMLElement;
   connectionStore: any;
   loaded: boolean = false;
   _R: any;
   lastNodeOnLevel: any;
   levelMaxDim: any;
   inAnimation: any;
-  CONFIG: any = {
+  CONFIG: Partial<ChartInterface> = {
     maxDepth: 100,
     rootOrientation: "NORTH", // NORTH || EAST || WEST || SOUTH
     nodeAlign: "CENTER", // CENTER || TOP || BOTTOM
@@ -84,21 +86,21 @@ export class Tree {
       ) { }, // this = Tree
       onBeforeAddNode: function (parentTreeNode: any, nodeStructure: any) { }, // this = Tree
       onAfterPositionNode: function (
-        treeNode: any,
-        nodeDbIndex: any,
-        containerCenter: any,
-        treeCenter: any
+        treeNode: TreeNode,
+        nodeDbIndex: number,
+        containerCenter: Coordinate,
+        treeCenter: Coordinate
       ) { }, // this = Tree
       onBeforePositionNode: function (
-        treeNode: any,
-        nodeDbIndex: any,
-        containerCenter: any,
-        treeCenter: any
+        treeNode: TreeNode,
+        nodeDbIndex: number,
+        containerCenter: Coordinate,
+        treeCenter: Coordinate
       ) { }, // this = Tree
-      onToggleCollapseFinished: function (treeNode: any, bIsCollapsed: any) { }, // this = Tree
-      onAfterClickCollapseSwitch: function (nodeSwitch: any, event: any) { }, // this = TreeNode
-      onBeforeClickCollapseSwitch: function (nodeSwitch: any, event: any) { }, // this = TreeNode
-      onTreeLoaded: function (rootTreeNode: any) { }, // this = Tree
+      onToggleCollapseFinished: function (treeNode: TreeNode, bIsCollapsed: boolean) { }, // this = Tree
+      onAfterClickCollapseSwitch: function (nodeSwitch: Element | JQuery, event: Event) { }, // this = TreeNode
+      onBeforeClickCollapseSwitch: function (nodeSwitch: Element | JQuery, event: Event) { }, // this = TreeNode
+      onTreeLoaded: function (rootTreeNode: TreeNode) { }, // this = Tree
     },
   };
   nodeDB: NodeDB = {} as NodeDB;
@@ -116,13 +118,13 @@ export class Tree {
    * @returns {Tree}
    */
   reset(jsonConfig: any, treeId: number) {
-    this.initJsonConfig = jsonConfig;
+    this.initJsonConfig = { ...this.initJsonConfig, ...jsonConfig };
     this.initTreeId = treeId;
 
     this.id = treeId;
 
     this.CONFIG = this.util.extend(this.CONFIG, jsonConfig.chart);
-    this.drawArea = this.util.findEl(this.CONFIG.container, true);
+    this.drawArea = this.util.findEl(this.CONFIG.container, true) as HTMLElement;
     if (!this.drawArea) {
       throw new Error(
         'Failed to find element by selector "' + this.CONFIG.container + '"'
@@ -174,11 +176,11 @@ export class Tree {
    * @param {function} callback
    * @returns {Tree}
    */
-  positionTree(callback?: any) {
+  positionTree(callback?: (tree: Tree) => void) {
     var self = this;
 
     if (this.imageLoader.isNotLoading() === true) {
-      var root = this.root();
+      const root = this.root();
 
       this.resetLevelData();
 
@@ -222,12 +224,12 @@ export class Tree {
     node.prelim = null;
     node.modifier = null;
 
-    this.setNeighbors(node, level);
+    node = this.setNeighbors(node, level);
     this.calcLevelDim(node, level);
 
     var leftSibling = node.leftSibling();
 
-    if (node.childrenCount() === 0 || level == this.CONFIG.maxDepth) {
+    if (node.childrenCount() === 0 || level === this.CONFIG.maxDepth) {
       // set preliminary x-coordinate
       if (leftSibling) {
         node.prelim =
@@ -246,6 +248,7 @@ export class Tree {
       var midPoint = node.childrenCenter() - node.size() / 2;
 
       if (leftSibling) {
+
         node.prelim =
           leftSibling.prelim +
           leftSibling.size() +
@@ -278,17 +281,20 @@ export class Tree {
    * together, we avoid the undesirable effects that can
    * accrue from positioning nodes rather than subtrees.
    */
-  apportion(node: any, level: number) {
-    var firstChild = node.firstChild(),
-      firstChildLeftNeighbor = firstChild.leftNeighbor(),
+  apportion(node: TreeNode, level: number) {
+    let firstChild: TreeNode | null = node.firstChild();
+    var firstChildLeftNeighbor = firstChild.leftNeighbor(),
       compareDepth = 1,
       depthToStop = this.CONFIG.maxDepth - level;
+
+    let loopIndex = 0;
 
     while (
       firstChild &&
       firstChildLeftNeighbor &&
       compareDepth <= depthToStop
     ) {
+      loopIndex++;
       // calculate the position of the firstChild, according to the position of firstChildLeftNeighbor
 
       var modifierSumRight = 0,
@@ -311,12 +317,7 @@ export class Tree {
       // find the gap between two trees and apply it to subTrees
       // and matching smaller gaps to smaller subtrees
 
-      var totalGap =
-        firstChildLeftNeighbor.prelim +
-        modifierSumLeft +
-        firstChildLeftNeighbor.size() +
-        this.CONFIG.subTeeSeparation -
-        (firstChild.prelim + modifierSumRight);
+      var totalGap = firstChildLeftNeighbor.prelim + modifierSumLeft + firstChildLeftNeighbor.size() + this.CONFIG.subTeeSeparation - (firstChild.prelim + modifierSumRight);
 
       if (totalGap > 0) {
         var subtreeAux = node,
@@ -363,7 +364,7 @@ export class Tree {
    * the tree.  (The roles of x and y are reversed for
    * RootOrientations of EAST or WEST.)
    */
-  secondWalk(node: any, level: number, X: number, Y: number) {
+  secondWalk(node: TreeNode, level: number, X: number, Y: number) {
     if (level > this.CONFIG.maxDepth) {
       return;
     }
@@ -444,7 +445,6 @@ export class Tree {
    * @returns {Tree}
    */
   positionNodes() {
-    console.log('positionNodes begin');
     var self = this,
       treeSize = {
         x: self.nodeDB.getMinMaxCoord("X", null, null),
@@ -456,9 +456,6 @@ export class Tree {
         x: treeSize.x.max - treeWidth / 2,
         y: treeSize.y.max - treeHeight / 2,
       };
-
-    console.log(`treeSize`);
-    console.log(treeSize);
 
     this.handleOverflow(treeWidth, treeHeight);
 
@@ -530,7 +527,7 @@ export class Tree {
         this.setConnectionToParent(node, hidePoint); // skip the root node
       } else if (!this.CONFIG.hideRootNode && node.drawLineThrough) {
         // drawlinethrough is performed for for the root node also
-        node.drawLineThroughMe(true);
+        node.drawLineThroughMe();
       }
 
       self.CONFIG.callback.onAfterPositionNode.apply(self, [
@@ -540,7 +537,6 @@ export class Tree {
         treeCenter,
       ]);
     }
-    console.log('positionNodes end');
     return this;
   }
   /**
@@ -579,15 +575,15 @@ export class Tree {
     }
     // Fancy scrollbar relies heavily on jQuery, so guarding with if ( $ )
     else if (this.CONFIG.scrollbar === "fancy") {
-      var jq_drawArea: any = $(this.drawArea);
+      var jq_drawArea: JQuery = $(this.drawArea);
       if (jq_drawArea.hasClass("ps-container")) {
         // znaci da je 'fancy' vec inicijaliziran, treba updateat
         jq_drawArea.find(".Treant").css({
           width: viewWidth,
           height: viewHeight,
         });
-
-        jq_drawArea.perfectScrollbar("update");
+        const perfectScrollbar = new PerfectScrollbar(jq_drawArea.context as HTMLElement);
+        perfectScrollbar.update()
       } else {
         var mainContainer = jq_drawArea.wrapInner('<div class="Treant"/>'),
           child = mainContainer.find(".Treant");
@@ -596,8 +592,7 @@ export class Tree {
           width: viewWidth,
           height: viewHeight,
         });
-
-        mainContainer.perfectScrollbar();
+        const perfectScrollbar = new PerfectScrollbar(mainContainer.context as HTMLElement);
       }
     } // else this.CONFIG.scrollbar == 'None'
 
@@ -783,13 +778,13 @@ export class Tree {
    * @param {number} level
    * @returns {Tree}
    */
-  setNeighbors(node: any, level: number) {
+  setNeighbors(node: TreeNode, level: number) {
     node.leftNeighborId = this.lastNodeOnLevel[level];
     if (node.leftNeighborId) {
       node.leftNeighbor().rightNeighborId = node.id;
     }
     this.lastNodeOnLevel[level] = node.id;
-    return this;
+    return node;
   }
 
   /**
@@ -799,10 +794,6 @@ export class Tree {
    * @returns {Tree}
    */
   calcLevelDim(node: any, level: number) {
-    console.log('calcLevelDim begin');
-    console.log(this.levelMaxDim[level]);
-    console.log(node.height);
-    console.log(node.width);
     // root node is on level 0
     this.levelMaxDim[level] = {
       width: Math.max(
@@ -814,8 +805,6 @@ export class Tree {
         node.height
       ),
     };
-    console.log('calcLevelDim end')
-    return this;
   }
 
   /**
