@@ -479,7 +479,7 @@ export class Tree {
       node: TreeNode;
 
     // position all the nodes
-    for (i = 0, len = this.nodeDB.db.length; i < len; i++) {
+    for (i = 0, len = this.nodeDB.size; i < len; i++) {
       node = this.nodeDB.get(i);
 
       self.CONFIG.callback.onBeforePositionNode.apply(self, [

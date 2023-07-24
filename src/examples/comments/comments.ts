@@ -1,5 +1,5 @@
 import { ChartConfigType } from "@treantjs/Treant";
-import { PointlineJS } from "@pointlinejs/pointlinejs";
+import { PointlineJS } from "@pointlinejs/PointlineJS";
 import "./styles/main.scss";
 
 var config = {

@@ -4,7 +4,6 @@ import { ElementWithSupportIE } from './Treant';
 
 @injectable()
 export class UTIL {
-
     /**
      * Directly updates, recursively/deeply, the first object with all properties in the second object
      * @param {object} applyTo
@@ -226,6 +225,4 @@ export class UTIL {
     }
 
     isjQueryAvailable() { return (typeof ($) !== 'undefined' && $); }
-
-
 };

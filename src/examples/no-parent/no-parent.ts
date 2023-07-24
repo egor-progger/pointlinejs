@@ -1,4 +1,4 @@
-import { PointlineJS } from "@pointlinejs/pointlinejs";
+import { PointlineJS } from "@pointlinejs/PointlineJS";
 import { ChartConfigType } from "@treantjs/Treant";
 import "./styles/no-parent.css";
 

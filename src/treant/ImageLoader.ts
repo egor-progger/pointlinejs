@@ -11,20 +11,16 @@ import "reflect-metadata";
 
 @injectable()
 export class ImageLoader {
-  loading: string[] = [];
+  private loading: string[] = [];
 
   constructor(@inject(DI_LIST.util) public util: UTIL) {
-    return this.reset();
-  }
-
-  init() {
     return this.reset();
   }
 
   /**
    * @returns {ImageLoader}
    */
-  reset() {
+  private reset() {
     this.loading = [];
     return this;
   }
@@ -46,7 +42,7 @@ export class ImageLoader {
   /**
    * @returns {ImageLoader}
    */
-  removeAll(img_src: string) {
+  private removeAll(img_src: string) {
     var i = this.loading.length;
     while (i--) {
       if (this.loading[i] === img_src) {
@@ -61,7 +57,7 @@ export class ImageLoader {
    * @param {Element} image
    * @returns {*}
    */
-  create(node: TreeNode, image: HTMLImageElement) {
+  private create(node: TreeNode, image: HTMLImageElement) {
     var self = this,
       source = image.src;
 

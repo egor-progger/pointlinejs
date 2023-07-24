@@ -20,9 +20,13 @@ export class NodeDBState {
 @injectable()
 export class NodeDB {
   protected util: UTIL = new UTIL();
-  db: TreeNode[] = [];
+  private db: TreeNode[] = [];
 
   constructor(@inject(DI_LIST.nodeDBState) public nodeDBState: NodeDBState) {
+  }
+
+  get size(): number {
+    return this.db.length;
   }
 
   /**
@@ -81,7 +85,7 @@ export class NodeDB {
    * @param {Tree} tree
    * @returns {NodeDB}
    */
-  reset(nodeStructure: Partial<NodeInterface>, tree: Tree) {
+  private reset(nodeStructure: Partial<NodeInterface>, tree: Tree) {
     this.db = [];
 
     if (tree.CONFIG.animateOnInit) {
@@ -97,7 +101,7 @@ export class NodeDB {
    * @param {Tree} tree
    * @returns {NodeDB}
    */
-  createGeometries(tree: Tree): NodeDB {
+  private createGeometries(tree: Tree): NodeDB {
     var i = this.db.length;
     this.nodeDBState.totalNodes = this.db.length;
     const logTimeout = (nodeDb: TreeNode, nodeDBState: NodeDBState) => {
@@ -123,6 +127,7 @@ export class NodeDB {
   }
 
   /**
+   * @deprecated
    * @param {function} callback
    * @returns {NodeDB}
    */
@@ -143,7 +148,7 @@ export class NodeDB {
    * @param {number} stackParentId
    * @returns {TreeNode}
    */
-  createNode(
+  private createNode(
     nodeStructure: Partial<NodeInterface> | 'pseudo',
     parentId: number,
     tree: Tree,
@@ -238,7 +243,7 @@ export class NodeDB {
    * @param {object} nodeStructure
    * @returns {boolean}
    */
-  hasGrandChildren(nodeStructure: Partial<NodeInterface>) {
+  private hasGrandChildren(nodeStructure: Partial<NodeInterface>) {
     var i = nodeStructure.children.length;
     while (i--) {
       if (

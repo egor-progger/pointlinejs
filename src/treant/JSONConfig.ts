@@ -37,7 +37,7 @@ export class JSONconfig {
     return this.jsonStructure;
   }
 
-  findChildren(nodes: Partial<ChartInterface | NodeInterface>[]) {
+  private findChildren(nodes: Partial<ChartInterface | NodeInterface>[]) {
     var parents = [0]; // start with a a root node
 
     while (parents.length) {
@@ -70,7 +70,7 @@ export class JSONconfig {
     }
   }
 
-  findNode(node: Partial<NodeInterface>, nodeId: number): Partial<NodeInterface> {
+  private findNode(node: Partial<NodeInterface>, nodeId: number): Partial<NodeInterface> {
     var childrenLen, found;
 
     if (node._json_id === nodeId) {
@@ -87,7 +87,7 @@ export class JSONconfig {
     return null;
   }
 
-  getID() {
+  private getID() {
     return this.json_id++;
   }
 }

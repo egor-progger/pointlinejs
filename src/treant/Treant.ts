@@ -146,9 +146,8 @@ export type ChartConfigType = Array<Partial<ChartInterface> | Partial<NodeInterf
  */
 @injectable()
 export class Treant {
-  jsonConfig: ChartStructure;
-
-  tree: Promise<Tree> | null = null;
+  private jsonConfig: ChartStructure;
+  private tree: Promise<Tree> | null = null;
 
   constructor(
     @inject(DI_LIST.jsonConfig) public jsonConfigService: JSONconfig,

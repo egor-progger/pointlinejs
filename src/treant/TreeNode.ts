@@ -19,11 +19,26 @@ export type RaphaelPathExtended = RaphaelPath<"SVG" | "VML"> & { hidden?: boolea
 
 @injectable()
 export class TreeNode {
-  protected util: UTIL = new UTIL();
+  private util: UTIL = new UTIL();
+  private parentId: number;
+  private treeId: number;
+  private meta: object;
+  private image: string;
+  private link: NodeLink;
+  private collapsable: boolean;
+  private collapsed: boolean;
+  private text: Partial<NodeText>;
+  private nodeInnerHTML: string;
+  private nodeHTMLclass: string;
+  private nodeHTMLid: number;
+  private lineThroughMe: RaphaelPathExtended;
+  private hidden: boolean;
+  private style: CSSStyleDeclaration;
+  private CONFIG = {
+    nodeHTMLclass: "node",
+  };
 
   id: number;
-  parentId: number;
-  treeId: number;
   prelim: number;
   modifier: number;
   leftNeighborId: number | null;
@@ -31,36 +46,20 @@ export class TreeNode {
   stackParentId: number;
   stackParent: boolean = undefined;
   pseudo: boolean;
-  meta: object;
-  image: string;
-  link: NodeLink;
   connStyle: any;
   connector: RaphaelPathExtended;
   drawLineThrough: boolean;
-  collapsable: boolean;
-  collapsed: boolean;
-  text: Partial<NodeText>;
-  nodeInnerHTML: string;
-  nodeHTMLclass: string;
-  nodeHTMLid: number;
   children: number[];
   width: number;
   height: number;
   X: number;
   Y: number;
-  lineThroughMe: RaphaelPathExtended;
   nodeDOM: HTMLAnchorElement | HTMLDivElement;
-  hidden: boolean;
   positioned: boolean;
-  style: CSSStyleDeclaration;
   stackChildren: number[];
 
-  CONFIG = {
-    nodeHTMLclass: "node",
-  };
-
   constructor(
-    public tree: Tree
+    private tree: Tree
   ) {
   }
 
@@ -81,7 +80,7 @@ export class TreeNode {
    * @param {number} stackParentId
    * @returns {TreeNode}
    */
-  reset(
+  private reset(
     nodeStructure: Partial<NodeInterface> | 'pseudo',
     id: number,
     parentId: number,
@@ -146,14 +145,14 @@ export class TreeNode {
   /**
    * @returns {object}
    */
-  getTreeConfig() {
+  private getTreeConfig() {
     return this.getTree().CONFIG;
   }
 
   /**
    * @returns {NodeDB}
    */
-  getTreeNodeDb() {
+  private getTreeNodeDb() {
     return this.getTree().getNodeDb();
   }
 
@@ -161,14 +160,14 @@ export class TreeNode {
    * @param {number} nodeId
    * @returns {TreeNode}
    */
-  lookupNode(nodeId: number) {
+  private lookupNode(nodeId: number) {
     return this.getTreeNodeDb().get(nodeId);
   }
 
   /**
    * @returns {Tree}
    */
-  getTree() {
+  private getTree() {
     return this.tree;
   }
 
@@ -176,7 +175,7 @@ export class TreeNode {
    * @param {number} nodeId
    * @returns {TreeNode}
    */
-  dbGet(nodeId: number) {
+  private dbGet(nodeId: number) {
     return this.getTreeNodeDb().get(nodeId);
   }
 
@@ -363,7 +362,7 @@ export class TreeNode {
   /**
    * @returns {string}
    */
-  pathStringThrough() {
+  private pathStringThrough() {
     // get the geometry of a path going through the node
     var startPoint = this.connectorPoint(true),
       endPoint = this.connectorPoint(false);
@@ -400,7 +399,7 @@ export class TreeNode {
     }
   }
 
-  addSwitchEvent(nodeSwitch: Element | JQuery) {
+  private addSwitchEvent(nodeSwitch: Element | JQuery) {
     var self = this;
     this.util.addEvent(nodeSwitch as Element, "click", (e: Event) => {
       e.preventDefault();
@@ -424,7 +423,7 @@ export class TreeNode {
   /**
    * @returns {TreeNode}
    */
-  collapse() {
+  private collapse() {
     if (!this.collapsed) {
       this.toggleCollapse();
     }
@@ -434,7 +433,7 @@ export class TreeNode {
   /**
    * @returns {TreeNode}
    */
-  expand() {
+  private expand() {
     if (this.collapsed) {
       this.toggleCollapse();
     }
@@ -547,7 +546,7 @@ export class TreeNode {
   /**
    * @returns {TreeNode}
    */
-  hideConnector() {
+  private hideConnector() {
     var oTree = this.getTree();
     var oPath = oTree.connectionStore[this.id];
     if (oPath) {
@@ -605,7 +604,7 @@ export class TreeNode {
   /**
    * @returns {TreeNode}
    */
-  showConnector() {
+  private showConnector() {
     var oTree = this.getTree();
     var oPath = oTree.connectionStore[this.id];
     if (oPath) {
@@ -639,7 +638,7 @@ export class TreeNode {
    *
    * @Returns the configured node
    */
-  buildNodeFromText(node: HTMLAnchorElement | HTMLDivElement) {
+  private buildNodeFromText(node: HTMLAnchorElement | HTMLDivElement) {
     // IMAGE
     if (this.image) {
       const image = document.createElement("img");
@@ -691,7 +690,7 @@ export class TreeNode {
    *
    * @Returns node the configured node
    */
-  buildNodeFromHtml(node: HTMLAnchorElement | HTMLDivElement) {
+  private buildNodeFromHtml(node: HTMLAnchorElement | HTMLDivElement) {
     // get some element by ID and clone its structure into a node
     let generatedNode: HTMLAnchorElement | HTMLDivElement = node;
     if (this.nodeInnerHTML.charAt(0) === "#") {
@@ -781,7 +780,7 @@ export class TreeNode {
    * @param {Tree} tree
    * @param {Element} nodeEl
    */
-  createSwitchGeometry(tree: Tree, nodeEl: Element) {
+  private createSwitchGeometry(tree: Tree, nodeEl: Element) {
     nodeEl = nodeEl || this.nodeDOM;
 
     // safe guard and check to see if it has a collapse switch

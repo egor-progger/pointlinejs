@@ -10,7 +10,7 @@ import image8 from '../headshots/8.jpg';
 import image9 from '../headshots/9.jpg';
 import image10 from '../headshots/10.jpg';
 import image11 from '../headshots/11.jpg';
-import { PointlineJS } from "@pointlinejs/pointlinejs";
+import { PointlineJS } from "@pointlinejs/PointlineJS";
 import { ChartConfigType } from "@treantjs/Treant";
 
 var config = {
