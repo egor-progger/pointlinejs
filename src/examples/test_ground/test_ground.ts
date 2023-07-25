@@ -1,4 +1,4 @@
-import { GraphJS } from "@graphjs/graphjs";
+import { PointlineJS } from "@pointlinejs/PointlineJS";
 import { ChartConfigType } from "@treantjs/Treant";
 import './styles/test_ground.css';
 import { UTIL } from "@treantjs/Util";
@@ -425,7 +425,7 @@ var config = {
 
 const util = new UTIL();
 
-var T1 = new GraphJS(example1 as unknown as ChartConfigType);
+var T1 = new PointlineJS(example1 as unknown as ChartConfigType);
 
 var example2 = util.createMerge(
 	example1,
@@ -445,7 +445,7 @@ var example2 = util.createMerge(
 		}
 	}
 );
-var T2 = new GraphJS(example2 as unknown as ChartConfigType);
+var T2 = new PointlineJS(example2 as unknown as ChartConfigType);
 
 var example3 = util.createMerge(
 	example1,
@@ -465,7 +465,7 @@ var example3 = util.createMerge(
 		}
 	}
 );
-var T3 = new GraphJS(example3 as unknown as ChartConfigType)
+var T3 = new PointlineJS(example3 as unknown as ChartConfigType)
 
 var example4 = util.createMerge(
 	example1,
@@ -485,9 +485,9 @@ var example4 = util.createMerge(
 		}
 	}
 );
-var T4 = new GraphJS(example4 as unknown as ChartConfigType);
+var T4 = new PointlineJS(example4 as unknown as ChartConfigType);
 
-var T5 = new GraphJS(ALTERNATIVE as unknown as ChartConfigType);
+var T5 = new PointlineJS(ALTERNATIVE as unknown as ChartConfigType);
 
 T1.draw();
 T2.draw();

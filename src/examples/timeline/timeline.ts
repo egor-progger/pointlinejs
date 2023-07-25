@@ -1,4 +1,4 @@
-import { GraphJS } from "@graphjs/graphjs";
+import { PointlineJS } from "@pointlinejs/PointlineJS";
 import { ChartConfigType } from "@treantjs/Treant";
 import './styles/timeline.css';
 
@@ -72,5 +72,5 @@ var simple_chart_config = {
 		]
 	}
 };
-const graphjs = new GraphJS(simple_chart_config as unknown as ChartConfigType);
+const graphjs = new PointlineJS(simple_chart_config as unknown as ChartConfigType);
 graphjs.draw();

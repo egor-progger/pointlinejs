@@ -1,6 +1,6 @@
-import { GraphJS } from "@graphjs/graphjs";
+import { PointlineJS } from "@pointlinejs/PointlineJS";
 import { ChartConfigType } from "@treantjs/Treant";
-import "./styles/main.scss";
+import "./styles/custom-color-plus-scrollbar.css";
 
 var config = {
     container: "#OrganiseChart1",
@@ -130,5 +130,5 @@ const ALTERNATIVE = [
     ciso4
 ];
 
-const graphJS = new GraphJS(ALTERNATIVE as unknown as ChartConfigType);
+const graphJS = new PointlineJS(ALTERNATIVE as unknown as ChartConfigType);
 graphJS.draw();

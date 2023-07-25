@@ -2,12 +2,18 @@ import { ImageLoader } from "./ImageLoader";
 import { NodeDB } from "./NodeDB";
 import { UTIL } from "./Util";
 import Raphael from "../../vendor/raphael.no-deps";
-import { DI_LIST } from "./InjectableList";
+import { RaphaelBaseElement, RaphaelPaper } from 'raphael';
+import { DI_LIST } from "../pointlinejs/InjectableList";
 import { inject, injectable } from "inversify";
-import { TreeNode } from "./TreeNode";
+import { RaphaelPathExtended, TreeNode } from "./TreeNode";
 import $ from 'jquery';
 import PerfectScrollbar from 'perfect-scrollbar';
-import { Coordinate, ChartInterface } from "./Treant";
+import { Coordinate, ChartInterface, NodeInterface, ChartStructure } from "./Treant";
+
+export interface LevelMaxDim {
+  height: number;
+  width: number;
+}
 
 /**
  * Tree constructor.
@@ -19,16 +25,16 @@ import { Coordinate, ChartInterface } from "./Treant";
 export class Tree {
   private util: UTIL = new UTIL();
 
-  initJsonConfig: Partial<ChartInterface>;
+  initJsonConfig: ChartStructure;
   initTreeId: number = 0;
   id: number = 0;
   drawArea: HTMLElement;
-  connectionStore: any;
+  connectionStore: { [key: number]: RaphaelPathExtended };
   loaded: boolean = false;
-  _R: any;
-  lastNodeOnLevel: any;
-  levelMaxDim: any;
-  inAnimation: any;
+  _R: RaphaelPaper;
+  lastNodeOnLevel: { [key: number]: number };
+  levelMaxDim: LevelMaxDim[];
+  inAnimation: boolean;
   CONFIG: Partial<ChartInterface> = {
     maxDepth: 100,
     rootOrientation: "NORTH", // NORTH || EAST || WEST || SOUTH
@@ -73,18 +79,18 @@ export class Tree {
     },
 
     callback: {
-      onCreateNode: function (treeNode: any, treeNodeDom: any) { }, // this = Tree
+      onCreateNode: function (treeNode: TreeNode, treeNodeDom: HTMLAnchorElement | HTMLDivElement) { }, // this = Tree
       onCreateNodeCollapseSwitch: function (
-        treeNode: any,
-        treeNodeDom: any,
-        switchDom: any
+        treeNode: TreeNode,
+        treeNodeDom: HTMLAnchorElement | HTMLDivElement,
+        switchDom: HTMLAnchorElement | HTMLDivElement
       ) { }, // this = Tree
       onAfterAddNode: function (
-        newTreeNode: any,
-        parentTreeNode: any,
-        nodeStructure: any
+        newTreeNode: TreeNode,
+        parentTreeNode: TreeNode,
+        nodeStructure: Partial<NodeInterface>
       ) { }, // this = Tree
-      onBeforeAddNode: function (parentTreeNode: any, nodeStructure: any) { }, // this = Tree
+      onBeforeAddNode: function (parentTreeNode: TreeNode, nodeStructure: Partial<NodeInterface>) { }, // this = Tree
       onAfterPositionNode: function (
         treeNode: TreeNode,
         nodeDbIndex: number,
@@ -108,7 +114,7 @@ export class Tree {
   constructor(@inject(DI_LIST.imageLoader) public imageLoader: ImageLoader,
     @inject(DI_LIST.nodeDB) public nodeDBClass: NodeDB) { }
 
-  init(jsonConfig: any, treeId: number) {
+  init(jsonConfig: ChartStructure, treeId: number) {
     return this.reset(jsonConfig, treeId);
   }
 
@@ -117,7 +123,7 @@ export class Tree {
    * @param {number} treeId
    * @returns {Tree}
    */
-  reset(jsonConfig: any, treeId: number) {
+  reset(jsonConfig: ChartStructure, treeId: number) {
     this.initJsonConfig = { ...this.initJsonConfig, ...jsonConfig };
     this.initTreeId = treeId;
 
@@ -470,10 +476,10 @@ export class Tree {
       negOffsetY = treeSize.y.min + deltaY <= 0 ? Math.abs(treeSize.y.min) : 0,
       i,
       len,
-      node;
+      node: TreeNode;
 
     // position all the nodes
-    for (i = 0, len = this.nodeDB.db.length; i < len; i++) {
+    for (i = 0, len = this.nodeDB.size; i < len; i++) {
       node = this.nodeDB.get(i);
 
       self.CONFIG.callback.onBeforePositionNode.apply(self, [
@@ -504,7 +510,7 @@ export class Tree {
           : this.CONFIG.padding);
 
       var collapsedParent = node.collapsedParent() as TreeNode,
-        hidePoint = null;
+        hidePoint: Coordinate = null;
 
       if (collapsedParent) {
         // position the node behind the connector point of the parent, so future animations can be visible
@@ -601,13 +607,13 @@ export class Tree {
 
   /**
    * @param {TreeNode} treeNode
-   * @param {boolean} hidePoint
+   * @param {Coordinate} hidePoint
    * @returns {Tree}
    */
-  setConnectionToParent(treeNode: any, hidePoint: boolean) {
-    var stacked = treeNode.stackParentId,
-      connLine,
-      parent = stacked ? this.nodeDB.get(stacked) : treeNode.parent(),
+  setConnectionToParent(treeNode: TreeNode, hidePoint: Coordinate) {
+    var stacked = treeNode.stackParentId ? true : false,
+      connLine: RaphaelPathExtended,
+      parent = stacked ? this.nodeDB.get(treeNode.stackParentId) : treeNode.parent(),
       pathString = hidePoint
         ? this.getPointPathString(hidePoint)
         : this.getPathString(parent, treeNode, stacked);
@@ -645,7 +651,7 @@ export class Tree {
    * @param {object} hidePoint
    * @returns {string}
    */
-  getPointPathString(hidePoint: any) {
+  getPointPathString(hidePoint: Coordinate) {
     return [
       "_M",
       hidePoint.x,
@@ -669,7 +675,7 @@ export class Tree {
    * @param {string} pathString
    * @returns {Tree}
    */
-  animatePath(path: any, pathString: string) {
+  animatePath(path: RaphaelPathExtended, pathString: string) {
     if (path.hidden && pathString.charAt(0) !== "_") {
       // path will be shown, so show it
       path.show();
@@ -707,8 +713,8 @@ export class Tree {
       endPoint = to_node.connectorPoint(false),
       orientation = this.CONFIG.rootOrientation,
       connType = from_node.connStyle.type,
-      P1: any = {},
-      P2: any = {};
+      P1: Coordinate = { x: 0, y: 0 },
+      P2: Coordinate = { x: 0, y: 0 };
 
     if (orientation === "NORTH" || orientation === "SOUTH") {
       P1.y = P2.y = (startPoint.y + endPoint.y) / 2;
@@ -728,7 +734,7 @@ export class Tree {
       p2 = P2.x + "," + P2.y,
       ep = endPoint.x + "," + endPoint.y,
       pm = (P1.x + P2.x) / 2 + "," + (P1.y + P2.y) / 2,
-      pathString: any,
+      pathString: string[],
       stackPoint;
 
     if (stacked) {
@@ -793,7 +799,7 @@ export class Tree {
    * @param {number} level
    * @returns {Tree}
    */
-  calcLevelDim(node: any, level: number) {
+  calcLevelDim(node: TreeNode, level: number) {
     // root node is on level 0
     this.levelMaxDim[level] = {
       width: Math.max(

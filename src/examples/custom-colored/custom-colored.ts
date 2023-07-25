@@ -1,6 +1,6 @@
-import { GraphJS } from "@graphjs/graphjs";
+import { PointlineJS } from "@pointlinejs/PointlineJS";
 import { ChartConfigType } from "@treantjs/Treant";
-import './styles/main.scss';
+import './styles/custom-colored.css';
 
 var config = {
     container: "#custom-colored",
@@ -233,5 +233,5 @@ var config = {
 
 */
 
-const graphJS = new GraphJS(chart_config as unknown as ChartConfigType);
+const graphJS = new PointlineJS(chart_config as unknown as ChartConfigType);
 graphJS.draw();

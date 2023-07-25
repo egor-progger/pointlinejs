@@ -1,9 +1,9 @@
 // fix arrow end issues:
 // https://github.com/DmitryBaranovskiy/raphael/issues/471
 
-import { GraphJS } from "@graphjs/graphjs";
+import { PointlineJS } from "@pointlinejs/PointlineJS";
 import { ChartConfigType } from "@treantjs/Treant";
-import "./styles/main.scss";
+import "./styles/connectors.css";
 
 var chart_config = {
 	chart: {
@@ -170,5 +170,5 @@ var chart_config = {
 };
 
 
-const graphJS = new GraphJS(chart_config as unknown as ChartConfigType);
+const graphJS = new PointlineJS(chart_config as unknown as ChartConfigType);
 graphJS.draw();

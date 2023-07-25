@@ -1,4 +1,4 @@
-const DI_LIST = {
+export const DI_LIST = {
   treeNode: Symbol.for("TreeNode"),
   treeStore: Symbol.for("TreeStore"),
   treant: Symbol.for("Treant"),
@@ -9,5 +9,3 @@ const DI_LIST = {
   nodeDBState: Symbol.for("NodeDBState"),
   jsonConfig: Symbol.for("JSONconfig")
 };
-
-export { DI_LIST };

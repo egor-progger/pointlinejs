@@ -1,23 +1,44 @@
+/*
+ * Treant-js
+ *
+ * (c) 2013 Fran Peručić
+ * Treant-js may be freely distributed under the MIT license.
+ * For all details and documentation:
+ * http://fperucic.github.io/treant-js
+ *
+ * Treant is an open-source JavaScipt library for visualization of tree diagrams.
+ * It implements the node positioning algorithm of John Q. Walker II "Positioning nodes for General Trees".
+ *
+ * References:
+ * Emilio Cortegoso Lobato: ECOTree.js v1.0 (October 26th, 2006)
+ *
+ * Contributors:
+ * Fran Peručić, https://github.com/fperucic
+ * Dave Goodchild, https://github.com/dlgoodchild
+ */
+
 import "./styles/Treant.css";
-import '../../node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import { JSONconfig } from "./JSONConfig";
 import { TreeStore } from "./TreeStore";
 import { inject, injectable } from "inversify";
-import { DI_LIST } from "./InjectableList";
+import { DI_LIST } from '@pointlinejs/InjectableList';
 import "reflect-metadata";
 import { Tree } from "./Tree";
 import { NodeDB } from "./NodeDB";
 import { RaphaelAttributes } from "raphael";
 import { TreeNode } from "./TreeNode";
 
+export type ElementWithSupportIE = Element & { currentStyle?: string, attachEvent: (eventType: string, handler: (event: Event) => void) => void };
+
 export type Coordinate = { x: number, y: number };
 
 export type CallbackFunction = {
-  onCreateNode: (treeNode: TreeNode, treeNodeDom: any) => void,
+  onCreateNode: (treeNode: TreeNode, treeNodeDom: HTMLAnchorElement | HTMLDivElement) => void,
   onCreateNodeCollapseSwitch: (
     treeNode: TreeNode,
-    treeNodeDom: HTMLElement,
-    switchDom: any
+    treeNodeDom: HTMLAnchorElement | HTMLDivElement,
+    switchDom: HTMLAnchorElement | HTMLDivElement
   ) => void,
   onAfterAddNode: (
     newTreeNode: TreeNode,
@@ -43,17 +64,17 @@ export type CallbackFunction = {
   onTreeLoaded: (rootTreeNode: TreeNode) => void
 }
 
-export type rootOrientationType = 'NORTH' | 'EAST' | 'WEST' | 'SOUTH';
+export type RootOrientationType = 'NORTH' | 'EAST' | 'WEST' | 'SOUTH';
 
-export type nodeAlignType = 'CENTER' | 'TOP' | 'BOTTOM';
+export type NodeAlignType = 'CENTER' | 'TOP' | 'BOTTOM';
 
-export type scrollbarType = 'resize' | 'native' | 'fancy' | 'None';
+export type ScrollbarType = 'resize' | 'native' | 'fancy' | 'None';
 
-export type connectorType = { type: 'curve' | 'bCurve' | 'step' | 'straight', style: Partial<RaphaelAttributes>, stackIndent: number };
+export type ConnectorType = { type: 'curve' | 'bCurve' | 'step' | 'straight', style: Partial<RaphaelAttributes>, stackIndent: number };
 
-export type nodeType = { HTMLclass: string, drawLineThrough: boolean, collapsable: boolean, link: { target: '_self' } };
+export type NodeType = { HTMLclass: string, drawLineThrough: boolean, collapsable: boolean, link: { target: '_self' } };
 
-export type animationType = {
+export type AnimationType = {
   nodeSpeed: number,
   nodeAnimation: string;
   connectorsSpeed: number,
@@ -63,23 +84,23 @@ export type animationType = {
 export interface ChartInterface {
   container: string;
   callback: Partial<CallbackFunction>;
-  rootOrientation: rootOrientationType;
-  nodeAlign: nodeAlignType;
+  rootOrientation: RootOrientationType;
+  nodeAlign: NodeAlignType;
   levelSeparation: number;
   siblingSeparation: number;
   subTeeSeparation: number;
   hideRootNode: boolean;
   animateOnInit: boolean;
   animateOnInitDelay: number;
-  scrollbar: scrollbarType;
+  scrollbar: ScrollbarType;
   padding: number;
-  connectors: Partial<connectorType>;
-  node: Partial<nodeType>;
-  animation: animationType;
+  connectors: Partial<ConnectorType>;
+  node: Partial<NodeType>;
+  animation: AnimationType;
   maxDepth: number;
 }
 
-export type nodeText = {
+export type NodeText = {
   name: string | Record<string, string>;
   title: string | Record<string, string>;
   desc: string | Record<string, string>;
@@ -87,27 +108,30 @@ export type nodeText = {
   data: string;
 };
 
-export type nodeLink = {
+export type NodeLink = {
   href: string,
   target: string
 };
 
 export interface NodeInterface {
-  text: Partial<nodeText>,
-  link: Partial<nodeLink>,
+  text: Partial<NodeText>,
+  link: Partial<NodeLink>,
   image: string;
   innerHTML: string;
   childrenDropLevel: number;
   pseudo: boolean;
-  connectors: connectorType;
+  connectors: ConnectorType;
   collapsable: boolean;
   collapsed: boolean;
   HTMLclass: string;
   HTMLid: string;
   stackChildren: boolean;
   drawLineThrough: boolean;
-  children?: Partial<NodeInterface>[];
+  children: Partial<NodeInterface>[];
   meta: object;
+  position: string;
+  _json_id: number;
+  parent: Partial<NodeInterface>;
 }
 
 export type ChartStructure = {
@@ -122,9 +146,8 @@ export type ChartConfigType = Array<Partial<ChartInterface> | Partial<NodeInterf
  */
 @injectable()
 export class Treant {
-  jsonConfig: ChartConfigType;
-
-  tree: Promise<Tree> | null = null;
+  private jsonConfig: ChartStructure;
+  private tree: Promise<Tree> | null = null;
 
   constructor(
     @inject(DI_LIST.jsonConfig) public jsonConfigService: JSONconfig,

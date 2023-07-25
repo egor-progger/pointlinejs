@@ -1,7 +1,8 @@
 import { inject, injectable } from "inversify";
 import { Tree } from "./Tree";
 import "reflect-metadata";
-import { DI_LIST } from "./InjectableList";
+import { DI_LIST } from "../pointlinejs/InjectableList";
+import { ChartStructure } from "./Treant";
 
 /**
  * Class: TreeStore
@@ -10,15 +11,14 @@ import { DI_LIST } from "./InjectableList";
  */
 @injectable()
 export class TreeStore {
+  private store: Tree[] = [];
+
   constructor(@inject(DI_LIST.tree) public tree: Tree) { }
-
-  store: any[] = [];
-
   /**
    * @param {object} jsonConfig
    * @returns {Tree}
    */
-  createTree(jsonConfig: any) {
+  createTree(jsonConfig: ChartStructure) {
     var nNewTreeId = this.store.length;
     this.store.push(this.tree.init(jsonConfig, nNewTreeId));
     return this.get(nNewTreeId);

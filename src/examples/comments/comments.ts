@@ -1,6 +1,6 @@
-import { ChartConfigType } from "../../treant/Treant";
-import "./styles/main.scss";
-import { GraphJS } from "../../graphjs/graphjs";
+import { ChartConfigType } from "@treantjs/Treant";
+import { PointlineJS } from "@pointlinejs/PointlineJS";
+import "./styles/example8.css";
 
 var config = {
     container: "#OrganiseChart8",
@@ -80,5 +80,5 @@ const tree_structure = [
 
 */
 
-const graphJS = new GraphJS(tree_structure as unknown as ChartConfigType);
+const graphJS = new PointlineJS(tree_structure as unknown as ChartConfigType);
 graphJS.draw();

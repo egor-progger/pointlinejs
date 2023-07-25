@@ -1,4 +1,4 @@
-import "./styles/main.scss";
+import "./styles/basic-example.css";
 import image1 from '../headshots/1.jpg';
 import image2 from '../headshots/2.jpg';
 import image3 from '../headshots/3.jpg';
@@ -10,7 +10,7 @@ import image8 from '../headshots/8.jpg';
 import image9 from '../headshots/9.jpg';
 import image10 from '../headshots/10.jpg';
 import image11 from '../headshots/11.jpg';
-import { GraphJS } from "@graphjs/graphjs";
+import { PointlineJS } from "@pointlinejs/PointlineJS";
 import { ChartConfigType } from "@treantjs/Treant";
 
 var config = {
@@ -67,15 +67,15 @@ var config = {
         },
         image: "../headshots/8.jpg"
     },
-    // ciso = {
-    //     parent: cto,
-    //     text: {
-    //         name: "Michael Rubin",
-    //         title: "Chief Innovation Officer",
-    //         contact: { val: "we@aregreat.com", href: "mailto:we@aregreat.com" }
-    //     },
-    //     image: "../headshots/9.jpg"
-    // },
+    ciso = {
+        parent: cto,
+        text: {
+            name: "Michael Rubin",
+            title: "Chief Innovation Officer",
+            contact: { val: "we@aregreat.com", href: "mailto:we@aregreat.com" }
+        },
+        image: "../headshots/9.jpg"
+    },
     cio2 = {
         parent: cdo,
         text: {
@@ -95,22 +95,22 @@ var config = {
         },
         image: "../headshots/7.jpg"
     },
-    // ciso3 = {
-    //     parent: cbo,
-    //     text: {
-    //         name: "Mary Johnson",
-    //         title: "Chief Brand Officer"
-    //     },
-    //     image: "../headshots/4.jpg"
-    // },
-    // ciso4 = {
-    //     parent: cbo,
-    //     text: {
-    //         name: "Kirk Douglas",
-    //         title: "Chief Business Development Officer"
-    //     },
-    //     image: "../headshots/11.jpg"
-    // },
+    ciso3 = {
+        parent: cbo,
+        text: {
+            name: "Mary Johnson",
+            title: "Chief Brand Officer"
+        },
+        image: "../headshots/4.jpg"
+    },
+    ciso4 = {
+        parent: cbo,
+        text: {
+            name: "Kirk Douglas",
+            title: "Chief Business Development Officer"
+        },
+        image: "../headshots/11.jpg"
+    },
     chart_config = [
         config,
         ceo,
@@ -118,11 +118,11 @@ var config = {
         cbo,
         cdo,
         cio,
-        // ciso,
+        ciso,
         cio2,
         ciso2,
-        // ciso3,
-        // ciso4
+        ciso3,
+        ciso4
     ];
 
 // Antoher approach, same result
@@ -193,5 +193,5 @@ var config = {
 // };
 
 
-const graphJS = new GraphJS(chart_config as unknown as ChartConfigType);
+const graphJS = new PointlineJS(chart_config as unknown as ChartConfigType);
 graphJS.draw();

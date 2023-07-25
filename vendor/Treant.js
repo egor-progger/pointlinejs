@@ -626,7 +626,7 @@
                 // find the gap between two trees and apply it to subTrees
                 // and matching smaller gaps to smaller subtrees
 
-                var totalGap = firstChildLeftNeighbor.prelim + modifierSumLeft + firstChildLeftNeighbor.size() + this.CONFIG.subTeeSeparation - (firstChild.prelim + modifierSumRight);
+                var totalGap = (firstChildLeftNeighbor.prelim + modifierSumLeft + firstChildLeftNeighbor.size() + this.CONFIG.subTeeSeparation) - (firstChild.prelim + modifierSumRight );
 
                 if ( totalGap > 0 ) {
                     var subtreeAux = node,
