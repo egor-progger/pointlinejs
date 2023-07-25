@@ -12,7 +12,7 @@ import { injectable } from "inversify";
 import { UTIL } from "./Util";
 import { Tree } from "./Tree";
 import $ from "jquery";
-import { ConnectorType, Coordinate, NodeInterface, NodeLink, NodeText } from "./Treant";
+import { ConnectorType, Coordinate, NodeInterface, NodeLink, NodeText, RaphaelAttributesExtended } from "./Treant";
 import { RaphaelPath } from "raphael";
 
 export type RaphaelPathExtended = RaphaelPath<"SVG" | "VML"> & { hidden?: boolean };
@@ -21,8 +21,6 @@ export type RaphaelPathExtended = RaphaelPath<"SVG" | "VML"> & { hidden?: boolea
 export class TreeNode {
   private util: UTIL = new UTIL();
   private parentId: number;
-  private treeId: number;
-  private meta: object;
   private image: string;
   private link: NodeLink;
   private collapsable: boolean;
@@ -33,7 +31,6 @@ export class TreeNode {
   private nodeHTMLid: number;
   private lineThroughMe: RaphaelPathExtended;
   private hidden: boolean;
-  private style: CSSStyleDeclaration;
   private CONFIG = {
     nodeHTMLclass: "node",
   };
@@ -57,6 +54,9 @@ export class TreeNode {
   nodeDOM: HTMLAnchorElement | HTMLDivElement;
   positioned: boolean;
   stackChildren: number[];
+  style: CSSStyleDeclaration;
+  treeId: number;
+  meta: object;
 
   constructor(
     private tree: Tree
@@ -242,6 +242,7 @@ export class TreeNode {
     if (this.leftNeighborId) {
       return this.lookupNode(this.leftNeighborId);
     }
+    return null;
   }
 
   /**
@@ -251,6 +252,7 @@ export class TreeNode {
     if (this.rightNeighborId) {
       return this.lookupNode(this.rightNeighborId);
     }
+    return null;
   }
 
   /**
@@ -261,6 +263,7 @@ export class TreeNode {
     if (leftNeighbor && leftNeighbor.parentId === this.parentId) {
       return leftNeighbor;
     }
+    return null;
   }
 
   /**
@@ -272,6 +275,7 @@ export class TreeNode {
     if (rightNeighbor && rightNeighbor.parentId === this.parentId) {
       return rightNeighbor;
     }
+    return null;
   }
 
   /**
@@ -318,6 +322,7 @@ export class TreeNode {
         return leftmostDescendant;
       }
     }
+    return null;
   }
 
   // returns start or the end point of the connector line, origin is upper-left
@@ -386,7 +391,7 @@ export class TreeNode {
 
     this.lineThroughMe = this.lineThroughMe || this.getTree()._R.path(pathString);
 
-    var line_style = this.util.cloneObj(this.connStyle.style);
+    const line_style: RaphaelAttributesExtended = this.util.cloneObj(this.connStyle.style);
 
     delete line_style["arrow-start"];
     delete line_style["arrow-end"];
@@ -401,7 +406,7 @@ export class TreeNode {
 
   private addSwitchEvent(nodeSwitch: Element | JQuery) {
     var self = this;
-    this.util.addEvent(nodeSwitch as Element, "click", (e: Event) => {
+    this.util.addEvent(nodeSwitch as Element, "click", (e: Event): void | boolean => {
       e.preventDefault();
       if (
         self
@@ -423,7 +428,7 @@ export class TreeNode {
   /**
    * @returns {TreeNode}
    */
-  private collapse() {
+  collapse() {
     if (!this.collapsed) {
       this.toggleCollapse();
     }
@@ -433,7 +438,7 @@ export class TreeNode {
   /**
    * @returns {TreeNode}
    */
-  private expand() {
+  expand() {
     if (this.collapsed) {
       this.toggleCollapse();
     }
@@ -489,8 +494,8 @@ export class TreeNode {
       };
 
     if (collapse_to_point) {
-      oNewState.left = collapse_to_point.x.toString();
-      oNewState.top = collapse_to_point.y.toString();
+      oNewState['left'] = collapse_to_point.x.toString();
+      oNewState['top'] = collapse_to_point.y.toString();
     }
 
     // if parent was hidden in initial configuration, position the node behind the parent without animations
@@ -499,8 +504,8 @@ export class TreeNode {
       if ($) {
         $(this.nodeDOM).css(oNewState);
       } else {
-        this.nodeDOM.style.left = oNewState.left + "px";
-        this.nodeDOM.style.top = oNewState.top + "px";
+        this.nodeDOM.style.left = oNewState['left'] + "px";
+        this.nodeDOM.style.top = oNewState['top'] + "px";
       }
       this.positioned = true;
     } else {
@@ -510,7 +515,7 @@ export class TreeNode {
           oNewState,
           config.animation.nodeSpeed,
           config.animation.nodeAnimation,
-          function () {
+          function (this: HTMLAnchorElement | HTMLDivElement) {
             this.style.visibility = "hidden";
           }
         );
@@ -518,9 +523,9 @@ export class TreeNode {
         this.nodeDOM.style.transition =
           "all " + config.animation.nodeSpeed + "ms ease";
         this.nodeDOM.style.transitionProperty = "opacity, left, top";
-        this.nodeDOM.style.opacity = oNewState.opacity.toString();
-        this.nodeDOM.style.left = oNewState.left + "px";
-        this.nodeDOM.style.top = oNewState.top + "px";
+        this.nodeDOM.style.opacity = oNewState['opacity'].toString();
+        this.nodeDOM.style.left = oNewState['left'] + "px";
+        this.nodeDOM.style.top = oNewState['top'] + "px";
         this.nodeDOM.style.visibility = "hidden";
       }
     }
@@ -546,7 +551,7 @@ export class TreeNode {
   /**
    * @returns {TreeNode}
    */
-  private hideConnector() {
+  hideConnector() {
     var oTree = this.getTree();
     var oPath = oTree.connectionStore[this.id];
     if (oPath) {
@@ -564,8 +569,6 @@ export class TreeNode {
 
     this.nodeDOM.style.visibility = "visible";
 
-    var oTree = this.getTree();
-
     var oNewState = {
       left: this.X,
       top: this.Y,
@@ -579,7 +582,7 @@ export class TreeNode {
         oNewState,
         config.animation.nodeSpeed,
         config.animation.nodeAnimation,
-        function () {
+        function (this: HTMLAnchorElement | HTMLDivElement) {
           // $.animate applies "overflow:hidden" to the node, remove it to avoid visual problems
           this.style.overflow = "";
         }
@@ -604,7 +607,7 @@ export class TreeNode {
   /**
    * @returns {TreeNode}
    */
-  private showConnector() {
+  showConnector() {
     var oTree = this.getTree();
     var oPath = oTree.connectionStore[this.id];
     if (oPath) {
@@ -649,30 +652,44 @@ export class TreeNode {
     // TEXT
     if (this.text) {
       for (var key in this.text) {
+        const keyTyped = key as keyof typeof this.text;
         // adding DATA Attributes to the node
         if (key.startsWith("data-")) {
-          node.setAttribute(key, this.text[key]);
+          node.setAttribute(key, this.text[keyTyped] as string);
         } else {
+          let textValue;
+          let href;
+          let target;
+          let val;
+          if (typeof this.text[keyTyped] === 'object') {
+            textValue = this.text[keyTyped] as Record<string, string>;
+            href = textValue['href'];
+            target = textValue['target'];
+            val = textValue['val'];
+          } else {
+            textValue = this.text[keyTyped] as string;
+          }
+
           var textElement = document.createElement(
-            this.text[key].href ? "a" : "p"
+            href ? "a" : "p"
           ) as HTMLAnchorElement;
 
           // make an <a> element if required
-          if (this.text[key].href) {
-            textElement.href = this.text[key].href;
-            if (this.text[key].target) {
-              textElement.target = this.text[key].target;
+          if (href) {
+            textElement.href = href;
+            if (target) {
+              textElement.target = target;
             }
           }
 
           textElement.className = "node-" + key;
           textElement.appendChild(
             document.createTextNode(
-              this.text[key].val
-                ? this.text[key].val
-                : this.text[key] instanceof Object
+              val
+                ? val
+                : textValue instanceof Object
                   ? "'val' param missing!"
-                  : this.text[key]
+                  : this.text[keyTyped] as string
             )
           );
 
@@ -723,8 +740,7 @@ export class TreeNode {
       return;
     }
 
-    var drawArea = tree.drawArea,
-      image;
+    var drawArea = tree.drawArea;
     /////////// CREATE NODE //////////////
     let node: HTMLAnchorElement | HTMLDivElement = document.createElement(this.link.href ? "a" : "div");
 
@@ -777,13 +793,13 @@ export class TreeNode {
 
   /**
    * @param {Tree} tree
-   * @param {Element} nodeEl
+   * @param {HTMLAnchorElement | HTMLDivElement} nodeEl
    */
-  private createSwitchGeometry(tree: Tree, nodeEl: Element) {
+  private createSwitchGeometry(tree: Tree, nodeEl: HTMLAnchorElement | HTMLDivElement) {
     nodeEl = nodeEl || this.nodeDOM;
 
     // safe guard and check to see if it has a collapse switch
-    var nodeSwitchEl = this.util.findEl(".collapse-switch", true, nodeEl);
+    var nodeSwitchEl = this.util.findEl(".collapse-switch", true, nodeEl) as HTMLAnchorElement | HTMLDivElement;
     if (!nodeSwitchEl) {
       nodeSwitchEl = document.createElement("a");
       nodeSwitchEl.className = "collapse-switch";

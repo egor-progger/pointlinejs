@@ -1,15 +1,4 @@
 import "./styles/basic-example.css";
-import image1 from '../headshots/1.jpg';
-import image2 from '../headshots/2.jpg';
-import image3 from '../headshots/3.jpg';
-import image4 from '../headshots/4.jpg';
-import image5 from '../headshots/5.jpg';
-import image6 from '../headshots/6.jpg';
-import image7 from '../headshots/7.jpg';
-import image8 from '../headshots/8.jpg';
-import image9 from '../headshots/9.jpg';
-import image10 from '../headshots/10.jpg';
-import image11 from '../headshots/11.jpg';
 import { PointlineJS } from "@pointlinejs/PointlineJS";
 import { ChartConfigType } from "@treantjs/Treant";
 

@@ -144,7 +144,7 @@ module.exports = {
     compress: true,
     port: 9000,
     hot: true,
-    open: ['/documentation'],
+    open: ['/documentation/'],
     static: {
       serveIndex: true
     }

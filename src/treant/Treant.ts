@@ -29,7 +29,7 @@ import { NodeDB } from "./NodeDB";
 import { RaphaelAttributes } from "raphael";
 import { TreeNode } from "./TreeNode";
 
-export type ElementWithSupportIE = Element & { currentStyle?: string, attachEvent: (eventType: string, handler: (event: Event) => void) => void };
+export type ElementWithSupportIE = Element & { currentStyle?: Record<string, string>, attachEvent: (eventType: string, handler: (event: Event) => void) => void };
 
 export type Coordinate = { x: number, y: number };
 
@@ -60,7 +60,7 @@ export type CallbackFunction = {
   ) => void,
   onToggleCollapseFinished: (treeNode: TreeNode, bIsCollapsed: boolean) => void,
   onAfterClickCollapseSwitch: (nodeSwitch: Element | JQuery, event: Event) => void,
-  onBeforeClickCollapseSwitch: (nodeSwitch: Element | JQuery, event: Event) => void,
+  onBeforeClickCollapseSwitch: (nodeSwitch: Element | JQuery, event: Event) => void | boolean,
   onTreeLoaded: (rootTreeNode: TreeNode) => void
 }
 
@@ -70,7 +70,9 @@ export type NodeAlignType = 'CENTER' | 'TOP' | 'BOTTOM';
 
 export type ScrollbarType = 'resize' | 'native' | 'fancy' | 'None';
 
-export type ConnectorType = { type: 'curve' | 'bCurve' | 'step' | 'straight', style: Partial<RaphaelAttributes>, stackIndent: number };
+export type RaphaelAttributesExtended = Partial<RaphaelAttributes> & { 'arrow-start'?: string };
+
+export type ConnectorType = { type: 'curve' | 'bCurve' | 'step' | 'straight', style: RaphaelAttributesExtended, stackIndent: number };
 
 export type NodeType = { HTMLclass: string, drawLineThrough: boolean, collapsable: boolean, link: { target: '_self' } };
 

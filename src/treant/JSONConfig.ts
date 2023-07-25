@@ -27,8 +27,8 @@ export class JSONconfig {
       }
 
       if (!node.hasOwnProperty("parent") && !node.hasOwnProperty("container")) {
-        this.jsonStructure.nodeStructure = node;
-        node._json_id = 0;
+        this.jsonStructure.nodeStructure = node as Partial<NodeInterface>;
+        (node as Partial<NodeInterface>)._json_id = 0;
       }
     }
 
@@ -49,7 +49,7 @@ export class JSONconfig {
 
       for (; i < len; i++) {
         var node = nodes[i];
-        if (node['parent']) {
+        if ((node as Partial<NodeInterface>)['parent']) {
           const nodeValue = node as NodeInterface;
           if (nodeValue.parent && nodeValue.parent._json_id === parentId) {
             // skip config and root nodes
@@ -65,7 +65,7 @@ export class JSONconfig {
       }
 
       if (children.length) {
-        parent.children = children;
+        parent.children = children as Partial<NodeInterface>[];
       }
     }
   }

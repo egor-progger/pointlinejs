@@ -131,7 +131,7 @@ export class NodeDB {
    * @param {function} callback
    * @returns {NodeDB}
    */
-  walk(callback: () => void) {
+  walk(callback: (node: TreeNode) => void) {
     var i = this.db.length;
 
     while (i--) {

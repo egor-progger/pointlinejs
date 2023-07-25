@@ -132,159 +132,158 @@ var example1 = {
 	}
 };
 
+// var example1b = {
+// 	chart: {
+// 		container: "#OrganiseChart1"
+// 		// nodeAlign: "BOTTOM"
+// 	},
 
-var example1b = {
-	chart: {
-		container: "#OrganiseChart1"
-		// nodeAlign: "BOTTOM"
-	},
+// 	nodeStructure: {
+// 		text: {
+// 			name: "C1"
+// 		},
+// 		children: [
+// 			{
+// 				text: {
+// 					name: "c2_C1"
+// 				},
+// 				connectors: {
 
-	nodeStructure: {
-		text: {
-			name: "C1"
-		},
-		children: [
-			{
-				text: {
-					name: "c2_C1"
-				},
-				connectors: {
+// 					type: 'step',
+// 					style: {
+// 						'stroke': 'white',
+// 						'arrow-end': 'block-wide-long',
+// 						'arrow-start': 'block-wide-long',
+// 						'stroke-width': 2
+// 					}
+// 				},
+// 				children: [
+// 					{
+// 						HTMLclass: 'cyan',
+// 						text: {
+// 							name: "c1_C2C1"
+// 						},
+// 						connectors: {
 
-					type: 'step',
-					style: {
-						'stroke': 'white',
-						'arrow-end': 'block-wide-long',
-						'arrow-start': 'block-wide-long',
-						'stroke-width': 2
-					}
-				},
-				children: [
-					{
-						HTMLclass: 'cyan',
-						text: {
-							name: "c1_C2C1"
-						},
-						connectors: {
+// 							type: 'curve',
+// 							style: {
+// 								'stroke': 'white',
+// 								'arrow-end': 'block-wide-long',
+// 								'stroke-width': 2
+// 							}
+// 						},
+// 						children: [
+// 							{
+// 								text: {
+// 									name: "c1_C1C2C1"
+// 								}
+// 							},
+// 							{
+// 								text: {
+// 									name: "c2_C1C2C1"
+// 								}
+// 							},
+// 							{
+// 								text: {
+// 									name: "c3_C1C2C1"
+// 								},
+// 								stackChildren: true,
+// 								children: [
+// 									{
+// 										text: {
+// 											name: "c1_C1C2C1"
+// 										}
+// 									},
+// 									{
+// 										text: {
+// 											name: "c2_C1C2C1"
+// 										}
+// 									}
+// 								]
+// 							}
 
-							type: 'curve',
-							style: {
-								'stroke': 'white',
-								'arrow-end': 'block-wide-long',
-								'stroke-width': 2
-							}
-						},
-						children: [
-							{
-								text: {
-									name: "c1_C1C2C1"
-								}
-							},
-							{
-								text: {
-									name: "c2_C1C2C1"
-								}
-							},
-							{
-								text: {
-									name: "c3_C1C2C1"
-								},
-								stackChildren: true,
-								children: [
-									{
-										text: {
-											name: "c1_C1C2C1"
-										}
-									},
-									{
-										text: {
-											name: "c2_C1C2C1"
-										}
-									}
-								]
-							}
+// 						]
+// 					}
+// 				]
+// 			},
+// 			{
+// 				text: {
+// 					name: "c1_C1"
+// 				},
+// 				children: [
+// 					{
 
-						]
-					}
-				]
-			},
-			{
-				text: {
-					name: "c1_C1"
-				},
-				children: [
-					{
+// 						text: {
+// 							name: "c1_C1"
+// 						},
+// 						children: [
+// 							{
+// 								text: {
+// 									name: "c1_C1"
+// 								},
+// 								stackChildren: true,
+// 								children: [
 
-						text: {
-							name: "c1_C1"
-						},
-						children: [
-							{
-								text: {
-									name: "c1_C1"
-								},
-								stackChildren: true,
-								children: [
-
-									{
-										text: {
-											name: "c2_C1C1"
-										},
-										link: {
-											href: "http://www.google.com"
-											// target defaults to "_self"
-										}
-									},
-									{
-										innerHTML: "<ul> \
-											<li> test </li> \
-											<li> test </li> \
-										</ul><img src='slika-manja.jpg' />"
-									},
-									{
-										link: {
-											href: "http://www.google.com",
-											target: "_blank"
-										},
-										text: {
-											name: "c3_C1C1"
-										}
-									},
-									{
-										link: {
-											href: "http://www.google.com",
-											target: "_blank"
-										},
-										text: {
-											name: "c3_C1C1"
-										}
-									}
-								]
-							}
-						]
-					}
-				]
-			},
-			{
-				text: {
-					name: "c3_C1"
-				},
-				children: [
-					{
-						text: {
-							name: "c1_C3C1"
-						},
-						HTMLid: "NodeID"
-					},
-					{
-						text: {
-							name: "c2_C3C1"
-						}
-					}
-				]
-			}
-		]
-	}
-};
+// 									{
+// 										text: {
+// 											name: "c2_C1C1"
+// 										},
+// 										link: {
+// 											href: "http://www.google.com"
+// 											// target defaults to "_self"
+// 										}
+// 									},
+// 									{
+// 										innerHTML: "<ul> \
+// 											<li> test </li> \
+// 											<li> test </li> \
+// 										</ul><img src='slika-manja.jpg' />"
+// 									},
+// 									{
+// 										link: {
+// 											href: "http://www.google.com",
+// 											target: "_blank"
+// 										},
+// 										text: {
+// 											name: "c3_C1C1"
+// 										}
+// 									},
+// 									{
+// 										link: {
+// 											href: "http://www.google.com",
+// 											target: "_blank"
+// 										},
+// 										text: {
+// 											name: "c3_C1C1"
+// 										}
+// 									}
+// 								]
+// 							}
+// 						]
+// 					}
+// 				]
+// 			},
+// 			{
+// 				text: {
+// 					name: "c3_C1"
+// 				},
+// 				children: [
+// 					{
+// 						text: {
+// 							name: "c1_C3C1"
+// 						},
+// 						HTMLid: "NodeID"
+// 					},
+// 					{
+// 						text: {
+// 							name: "c2_C3C1"
+// 						}
+// 					}
+// 				]
+// 			}
+// 		]
+// 	}
+// };
 
 // #####################################
 // ########### ALTERNATIVE CONFIG ######

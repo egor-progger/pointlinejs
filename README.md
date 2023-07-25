@@ -17,5 +17,5 @@ For Docs, Examples, and everything else see: /* TODO */
 
 # Dev-server
 
-1. `npx webpack serve --open`
+1. `npx webpack serve`
 2. open `http://localhost:9000/documentation` in browser

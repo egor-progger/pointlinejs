@@ -2,7 +2,7 @@ import { ImageLoader } from "./ImageLoader";
 import { NodeDB } from "./NodeDB";
 import { UTIL } from "./Util";
 import Raphael from "../../vendor/raphael.no-deps";
-import { RaphaelBaseElement, RaphaelPaper } from 'raphael';
+import { RaphaelPaper } from 'raphael';
 import { DI_LIST } from "../pointlinejs/InjectableList";
 import { inject, injectable } from "inversify";
 import { RaphaelPathExtended, TreeNode } from "./TreeNode";
@@ -293,16 +293,12 @@ export class Tree {
       compareDepth = 1,
       depthToStop = this.CONFIG.maxDepth - level;
 
-    let loopIndex = 0;
-
     while (
       firstChild &&
       firstChildLeftNeighbor &&
       compareDepth <= depthToStop
     ) {
-      loopIndex++;
       // calculate the position of the firstChild, according to the position of firstChildLeftNeighbor
-
       var modifierSumRight = 0,
         modifierSumLeft = 0,
         leftAncestor = firstChildLeftNeighbor,
@@ -589,7 +585,7 @@ export class Tree {
           height: viewHeight,
         });
         const perfectScrollbar = new PerfectScrollbar(jq_drawArea.context as HTMLElement);
-        perfectScrollbar.update()
+        perfectScrollbar.update();
       } else {
         var mainContainer = jq_drawArea.wrapInner('<div class="Treant"/>'),
           child = mainContainer.find(".Treant");
@@ -599,6 +595,7 @@ export class Tree {
           height: viewHeight,
         });
         const perfectScrollbar = new PerfectScrollbar(mainContainer.context as HTMLElement);
+        perfectScrollbar.update();
       }
     } // else this.CONFIG.scrollbar == 'None'
 

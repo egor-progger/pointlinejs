@@ -10,11 +10,11 @@ export class UTIL {
      * @param {object} applyFrom
      * @return {object}
      */
-    inheritAttrs(applyTo: object, applyFrom: object) {
+    inheritAttrs(applyTo: Record<string, object>, applyFrom: Record<string, object>) {
         for (var attr in applyFrom) {
             if (applyFrom.hasOwnProperty(attr)) {
-                if ((applyTo[attr] instanceof Object && applyFrom[attr] instanceof Object) && (typeof applyFrom[attr] !== 'function')) {
-                    this.inheritAttrs(applyTo[attr], applyFrom[attr]);
+                if ((typeof applyTo[attr] === 'object' && typeof applyFrom[attr] === 'object') && (typeof applyFrom[attr] !== 'function')) {
+                    this.inheritAttrs(applyTo[attr] as Record<string, object>, applyFrom[attr] as Record<string, object>);
                 }
                 else {
                     applyTo[attr] = applyFrom[attr];
@@ -30,7 +30,7 @@ export class UTIL {
      * @param {object} obj2
      * @returns {object}
      */
-    createMerge(obj1: object, obj2: object) {
+    createMerge(obj1: any, obj2: any) {
         var newObj = {};
         if (obj1) {
             this.inheritAttrs(newObj, this.cloneObj(obj1));
@@ -45,7 +45,7 @@ export class UTIL {
      * Takes any number of arguments
      * @returns {*}
      */
-    extend(...args: unknown[]) {
+    extend(...args: any) {
         if (typeof ($) !== 'undefined') {
             Array.prototype.unshift.apply(args, [true, {}]);
             return $.extend.apply($, args);
@@ -59,14 +59,14 @@ export class UTIL {
     //  * @param {object} obj
     //  * @returns {*}
     //  */
-    cloneObj(obj: object | { constructor: new () => object }) {
+    cloneObj(obj: any) {
         if (Object(obj) !== obj) {
             return obj;
         }
         var res = new (obj as { constructor: new () => object }).constructor();
         for (var key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                res[key] = this.cloneObj(obj[key]);
+            if (typeof obj === 'object' && obj.hasOwnProperty(key)) {
+                (res as Record<string, object>)[key] = this.cloneObj((obj as Record<string, object>)[key] as Record<string, object>);
             }
         }
         return res;
@@ -84,12 +84,12 @@ export class UTIL {
         else if (el.addEventListener) { // DOM Level 2 browsers
             el.addEventListener(eventType, handler, false);
         }
-        else if (el['attachEvent']) { // IE <= 8
+        else if ((el as ElementWithSupportIE)['attachEvent']) { // IE <= 8
             let elementInOldIE = el as ElementWithSupportIE;
             elementInOldIE.attachEvent('on' + eventType, handler);
         }
         else { // ancient browsers
-            el['on' + eventType] = handler;
+            (el as any)['on' + eventType] = handler;
         }
     }
 
