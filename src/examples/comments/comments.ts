@@ -1,6 +1,6 @@
 import { ChartConfigType } from "@treantjs/Treant";
 import { PointlineJS } from "@pointlinejs/PointlineJS";
-import "./styles/main.scss";
+import "./styles/example8.css";
 
 var config = {
     container: "#OrganiseChart8",

@@ -1,6 +1,6 @@
 import { PointlineJS } from "@pointlinejs/PointlineJS";
 import { ChartConfigType } from "@treantjs/Treant";
-import "./styles/main.scss";
+import "./styles/custom-color-plus-scrollbar.css";
 
 var config = {
     container: "#OrganiseChart1",

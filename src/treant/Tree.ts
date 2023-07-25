@@ -79,7 +79,7 @@ export class Tree {
     },
 
     callback: {
-      onCreateNode: function (treeNode: TreeNode, treeNodeDom: any) { }, // this = Tree
+      onCreateNode: function (treeNode: TreeNode, treeNodeDom: HTMLAnchorElement | HTMLDivElement) { }, // this = Tree
       onCreateNodeCollapseSwitch: function (
         treeNode: TreeNode,
         treeNodeDom: HTMLAnchorElement | HTMLDivElement,
@@ -510,7 +510,7 @@ export class Tree {
           : this.CONFIG.padding);
 
       var collapsedParent = node.collapsedParent() as TreeNode,
-        hidePoint = null;
+        hidePoint: Coordinate = null;
 
       if (collapsedParent) {
         // position the node behind the connector point of the parent, so future animations can be visible
@@ -607,10 +607,10 @@ export class Tree {
 
   /**
    * @param {TreeNode} treeNode
-   * @param {boolean} hidePoint
+   * @param {Coordinate} hidePoint
    * @returns {Tree}
    */
-  setConnectionToParent(treeNode: TreeNode, hidePoint: boolean) {
+  setConnectionToParent(treeNode: TreeNode, hidePoint: Coordinate) {
     var stacked = treeNode.stackParentId ? true : false,
       connLine: RaphaelPathExtended,
       parent = stacked ? this.nodeDB.get(treeNode.stackParentId) : treeNode.parent(),
@@ -651,7 +651,7 @@ export class Tree {
    * @param {object} hidePoint
    * @returns {string}
    */
-  getPointPathString(hidePoint: any) {
+  getPointPathString(hidePoint: Coordinate) {
     return [
       "_M",
       hidePoint.x,

@@ -18,11 +18,11 @@
  */
 
 import "./styles/Treant.css";
-import '../../node_modules/perfect-scrollbar/css/perfect-scrollbar.css';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import { JSONconfig } from "./JSONConfig";
 import { TreeStore } from "./TreeStore";
 import { inject, injectable } from "inversify";
-import { DI_LIST } from "../pointlinejs/InjectableList";
+import { DI_LIST } from '@pointlinejs/InjectableList';
 import "reflect-metadata";
 import { Tree } from "./Tree";
 import { NodeDB } from "./NodeDB";
@@ -34,7 +34,7 @@ export type ElementWithSupportIE = Element & { currentStyle?: string, attachEven
 export type Coordinate = { x: number, y: number };
 
 export type CallbackFunction = {
-  onCreateNode: (treeNode: TreeNode, treeNodeDom: any) => void,
+  onCreateNode: (treeNode: TreeNode, treeNodeDom: HTMLAnchorElement | HTMLDivElement) => void,
   onCreateNodeCollapseSwitch: (
     treeNode: TreeNode,
     treeNodeDom: HTMLAnchorElement | HTMLDivElement,

@@ -1,6 +1,6 @@
 import { PointlineJS } from '@pointlinejs/PointlineJS';
 import { ChartConfigType } from '@treantjs/Treant';
-import './styles/main.scss';
+import './styles/evolution-tree.css';
 
 var tree_structure = {
     chart: {

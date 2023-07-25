@@ -52,15 +52,15 @@ var config = {
         },
         image: "../headshots/8.jpg"
     },
-    // ciso = {
-    //     parent: cto,
-    //     text:{
-    //         name: "Michael Rubin",
-    //         title: "Chief Innovation Officer",
-    //         contact: {val: "we@aregreat.com", href: "mailto:we@aregreat.com"}
-    //     },
-    //     image: "../headshots/9.jpg"
-    // },
+    ciso = {
+        parent: cto,
+        text:{
+            name: "Michael Rubin",
+            title: "Chief Innovation Officer",
+            contact: {val: "we@aregreat.com", href: "mailto:we@aregreat.com"}
+        },
+        image: "../headshots/9.jpg"
+    },
     cio2 = {
         parent: cdo,
         text:{
@@ -80,22 +80,22 @@ var config = {
         },
         image: "../headshots/7.jpg"
     },
-    // ciso3 = {
-    //     parent: cbo,
-    //     text:{
-    //         name: "Mary Johnson",
-    //         title: "Chief Brand Officer"
-    //     },
-    //     image: "../headshots/4.jpg"
-    // },
-    // ciso4 = {
-    //     parent: cbo,
-    //     text:{
-    //         name: "Kirk Douglas",
-    //         title: "Chief Business Development Officer"
-    //     },
-    //     image: "../headshots/11.jpg"
-    // }
+    ciso3 = {
+        parent: cbo,
+        text:{
+            name: "Mary Johnson",
+            title: "Chief Brand Officer"
+        },
+        image: "../headshots/4.jpg"
+    },
+    ciso4 = {
+        parent: cbo,
+        text:{
+            name: "Kirk Douglas",
+            title: "Chief Business Development Officer"
+        },
+        image: "../headshots/11.jpg"
+    }
 
     chart_config = [
         config,
@@ -104,11 +104,11 @@ var config = {
         cbo,
         cdo,
         cio,
-        // ciso,
+        ciso,
         cio2,
         ciso2,
-        // ciso3,
-        // ciso4
+        ciso3,
+        ciso4
     ];
 
 

@@ -3,7 +3,7 @@
 
 import { PointlineJS } from "@pointlinejs/PointlineJS";
 import { ChartConfigType } from "@treantjs/Treant";
-import "./styles/main.scss";
+import "./styles/connectors.css";
 
 var chart_config = {
 	chart: {

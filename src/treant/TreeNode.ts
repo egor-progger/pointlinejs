@@ -46,7 +46,7 @@ export class TreeNode {
   stackParentId: number;
   stackParent: boolean = undefined;
   pseudo: boolean;
-  connStyle: any;
+  connStyle: Partial<ConnectorType>;
   connector: RaphaelPathExtended;
   drawLineThrough: boolean;
   children: number[];
@@ -376,9 +376,9 @@ export class TreeNode {
   }
 
   /**
-   * @param {object} hidePoint
+   * @param {Coordinate} hidePoint
    */
-  drawLineThroughMe(hidePoint?: boolean): void {
+  drawLineThroughMe(hidePoint?: Coordinate): void {
     // hidepoint se proslijedjuje ako je node sakriven zbog collapsed
     var pathString = hidePoint
       ? this.getTree().getPointPathString(hidePoint)
@@ -692,24 +692,23 @@ export class TreeNode {
    */
   private buildNodeFromHtml(node: HTMLAnchorElement | HTMLDivElement) {
     // get some element by ID and clone its structure into a node
-    let generatedNode: HTMLAnchorElement | HTMLDivElement = node;
     if (this.nodeInnerHTML.charAt(0) === "#") {
       var elem = document.getElementById(this.nodeInnerHTML.substring(1));
       if (elem) {
         if (node instanceof HTMLAnchorElement) {
-          generatedNode = elem.cloneNode(true) as HTMLAnchorElement;
+          node = elem.cloneNode(true) as HTMLAnchorElement;
         }
         if (node instanceof HTMLDivElement) {
-          generatedNode = elem.cloneNode(true) as HTMLDivElement;
+          node = elem.cloneNode(true) as HTMLDivElement;
         }
-        generatedNode.id += "-clone";
-        generatedNode.className += " node";
+        node.id += "-clone";
+        node.className += " node";
       } else {
-        generatedNode.innerHTML = "<b> Wrong ID selector </b>";
+        node.innerHTML = "<b> Wrong ID selector </b>";
       }
     } else {
       // insert your custom HTML into a node
-      generatedNode.innerHTML = this.nodeInnerHTML;
+      node.innerHTML = this.nodeInnerHTML;
     }
     return node;
   }
