@@ -17,52 +17,67 @@
  * Dave Goodchild, https://github.com/dlgoodchild
  */
 
-import "./styles/Treant.css";
+import './styles/Treant.css';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
-import { JSONconfig } from "./JSONConfig";
-import { TreeStore } from "./TreeStore";
-import { inject, injectable } from "inversify";
+import { JSONconfig } from './JSONConfig';
+import { TreeStore } from './TreeStore';
+import { inject, injectable } from 'inversify';
 import { DI_LIST } from '@pointlinejs/InjectableList';
-import "reflect-metadata";
-import { Tree } from "./Tree";
-import { NodeDB } from "./NodeDB";
-import { RaphaelAttributes } from "raphael";
-import { TreeNode } from "./TreeNode";
+import 'reflect-metadata';
+import { Tree } from './Tree';
+import { NodeDB } from './NodeDB';
+import { RaphaelAttributes } from 'raphael';
+import { TreeNode } from './TreeNode';
 
-export type ElementWithSupportIE = Element & { currentStyle?: Record<string, string>, attachEvent: (eventType: string, handler: (event: Event) => void) => void };
+export type ElementWithSupportIE = Element & {
+  currentStyle?: Record<string, string>;
+  attachEvent: (eventType: string, handler: (event: Event) => void) => void;
+};
 
-export type Coordinate = { x: number, y: number };
+export type Coordinate = { x: number; y: number };
 
 export type CallbackFunction = {
-  onCreateNode: (treeNode: TreeNode, treeNodeDom: HTMLAnchorElement | HTMLDivElement) => void,
+  onCreateNode: (
+    treeNode: TreeNode,
+    treeNodeDom: HTMLAnchorElement | HTMLDivElement
+  ) => void;
   onCreateNodeCollapseSwitch: (
     treeNode: TreeNode,
     treeNodeDom: HTMLAnchorElement | HTMLDivElement,
     switchDom: HTMLAnchorElement | HTMLDivElement
-  ) => void,
+  ) => void;
   onAfterAddNode: (
     newTreeNode: TreeNode,
     parentTreeNode: TreeNode,
     nodeStructure: Partial<NodeInterface>
-  ) => void,
-  onBeforeAddNode: (parentTreeNode: TreeNode, nodeStructure: Partial<NodeInterface>) => void,
+  ) => void;
+  onBeforeAddNode: (
+    parentTreeNode: TreeNode,
+    nodeStructure: Partial<NodeInterface>
+  ) => void;
   onAfterPositionNode: (
     treeNode: TreeNode,
     nodeDbIndex: number,
     containerCenter: Coordinate,
     treeCenter: Coordinate
-  ) => void,
+  ) => void;
   onBeforePositionNode: (
     treeNode: TreeNode,
     nodeDbIndex: number,
     containerCenter: Coordinate,
     treeCenter: Coordinate
-  ) => void,
-  onToggleCollapseFinished: (treeNode: TreeNode, bIsCollapsed: boolean) => void,
-  onAfterClickCollapseSwitch: (nodeSwitch: Element | JQuery, event: Event) => void,
-  onBeforeClickCollapseSwitch: (nodeSwitch: Element | JQuery, event: Event) => void | boolean,
-  onTreeLoaded: (rootTreeNode: TreeNode) => void
-}
+  ) => void;
+  onToggleCollapseFinished: (treeNode: TreeNode, bIsCollapsed: boolean) => void;
+  onAfterClickCollapseSwitch: (
+    nodeSwitch: Element | JQuery,
+    event: Event
+  ) => void;
+  onBeforeClickCollapseSwitch: (
+    nodeSwitch: Element | JQuery,
+    event: Event
+  ) => void | boolean;
+  onTreeLoaded: (rootTreeNode: TreeNode) => void;
+};
 
 export type RootOrientationType = 'NORTH' | 'EAST' | 'WEST' | 'SOUTH';
 
@@ -70,17 +85,28 @@ export type NodeAlignType = 'CENTER' | 'TOP' | 'BOTTOM';
 
 export type ScrollbarType = 'resize' | 'native' | 'fancy' | 'None';
 
-export type RaphaelAttributesExtended = Partial<RaphaelAttributes> & { 'arrow-start'?: string };
+export type RaphaelAttributesExtended = Partial<RaphaelAttributes> & {
+  'arrow-start'?: string;
+};
 
-export type ConnectorType = { type: 'curve' | 'bCurve' | 'step' | 'straight', style: RaphaelAttributesExtended, stackIndent: number };
+export type ConnectorType = {
+  type: 'curve' | 'bCurve' | 'step' | 'straight';
+  style: RaphaelAttributesExtended;
+  stackIndent: number;
+};
 
-export type NodeType = { HTMLclass: string, drawLineThrough: boolean, collapsable: boolean, link: { target: '_self' } };
+export type NodeType = {
+  HTMLclass: string;
+  drawLineThrough: boolean;
+  collapsable: boolean;
+  link: { target: '_self' };
+};
 
 export type AnimationType = {
-  nodeSpeed: number,
+  nodeSpeed: number;
   nodeAnimation: string;
-  connectorsSpeed: number,
-  connectorsAnimation: string
+  connectorsSpeed: number;
+  connectorsAnimation: string;
 };
 
 export interface ChartInterface {
@@ -111,13 +137,13 @@ export type NodeText = {
 };
 
 export type NodeLink = {
-  href: string,
-  target: string
+  href: string;
+  target: string;
 };
 
 export interface NodeInterface {
-  text: Partial<NodeText>,
-  link: Partial<NodeLink>,
+  text: Partial<NodeText>;
+  link: Partial<NodeLink>;
   image: string;
   innerHTML: string;
   childrenDropLevel: number;
@@ -137,11 +163,13 @@ export interface NodeInterface {
 }
 
 export type ChartStructure = {
-  chart: Partial<ChartInterface>,
+  chart: Partial<ChartInterface>;
   nodeStructure: Partial<NodeInterface>;
-}
+};
 
-export type ChartConfigType = Array<Partial<ChartInterface> | Partial<NodeInterface>> | ChartStructure;
+export type ChartConfigType =
+  | Array<Partial<ChartInterface> | Partial<NodeInterface>>
+  | ChartStructure;
 
 /**
  * Chart constructor.
@@ -154,12 +182,11 @@ export class Treant {
   constructor(
     @inject(DI_LIST.jsonConfig) public jsonConfigService: JSONconfig,
     @inject(DI_LIST.treeStore) public treeStore: TreeStore,
-    @inject(DI_LIST.nodeDB) public nodeDB: NodeDB) { }
+    @inject(DI_LIST.nodeDB) public nodeDB: NodeDB
+  ) {}
 
   destroy() {
-    this.tree.then((tree) =>
-      this.treeStore.destroy(tree.id)
-    );
+    this.tree.then((tree) => this.treeStore.destroy(tree.id));
   }
 
   init(

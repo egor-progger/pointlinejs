@@ -2,8 +2,8 @@
 // Makes a JSON chart config out of Array config
 // #############################################
 
-import { injectable } from "inversify";
-import { ChartInterface, ChartStructure, NodeInterface } from "./Treant";
+import { injectable } from 'inversify';
+import { ChartInterface, ChartStructure, NodeInterface } from './Treant';
 
 @injectable()
 export class JSONconfig {
@@ -21,12 +21,12 @@ export class JSONconfig {
     //fist loop: find config, find root;
     while (i--) {
       node = configArray[i];
-      if (node.hasOwnProperty("container")) {
+      if (node.hasOwnProperty('container')) {
         this.jsonStructure.chart = node;
         continue;
       }
 
-      if (!node.hasOwnProperty("parent") && !node.hasOwnProperty("container")) {
+      if (!node.hasOwnProperty('parent') && !node.hasOwnProperty('container')) {
         this.jsonStructure.nodeStructure = node as Partial<NodeInterface>;
         (node as Partial<NodeInterface>)._json_id = 0;
       }
@@ -70,7 +70,10 @@ export class JSONconfig {
     }
   }
 
-  private findNode(node: Partial<NodeInterface>, nodeId: number): Partial<NodeInterface> {
+  private findNode(
+    node: Partial<NodeInterface>,
+    nodeId: number
+  ): Partial<NodeInterface> {
     var childrenLen, found;
 
     if (node._json_id === nodeId) {

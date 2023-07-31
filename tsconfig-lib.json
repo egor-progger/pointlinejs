@@ -6,8 +6,9 @@
   ],
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist/es",
-    "rootDir": "./src",
-    "module": "es2015"
+    "composite": true,
+    "declaration": true,
+    "outDir": "./dist/lib",
+    "rootDir": "./src"
   }
 }

@@ -1,8 +1,8 @@
-import { inject, injectable } from "inversify";
-import { TreeNode } from "./TreeNode";
-import { DI_LIST } from "../pointlinejs/InjectableList";
-import { UTIL } from "./Util";
-import "reflect-metadata";
+import { inject, injectable } from 'inversify';
+import { TreeNode } from './TreeNode';
+import { DI_LIST } from '../pointlinejs/InjectableList';
+import { UTIL } from './Util';
+import 'reflect-metadata';
 
 /**
  * ImageLoader is used for determining if all the images from the Tree are loaded.
@@ -30,7 +30,7 @@ export class ImageLoader {
    * @returns {ImageLoader}
    */
   processNode(node: TreeNode) {
-    var aImages = node.nodeDOM.getElementsByTagName("img");
+    var aImages = node.nodeDOM.getElementsByTagName('img');
 
     var i = aImages.length;
     while (i--) {
@@ -67,19 +67,19 @@ export class ImageLoader {
       node.height = node.nodeDOM.offsetHeight;
     }
 
-    if (image.src.indexOf("data:") !== 0) {
+    if (image.src.indexOf('data:') !== 0) {
       this.loading.push(source);
 
       if (image.complete) {
         return imgTrigger();
       }
 
-      this.util.addEvent(image, "load", imgTrigger);
-      this.util.addEvent(image, "error", imgTrigger); // handle broken url-s
+      this.util.addEvent(image, 'load', imgTrigger);
+      this.util.addEvent(image, 'error', imgTrigger); // handle broken url-s
 
       // load event is not fired for cached images, force the load event
       image.src +=
-        (image.src.indexOf("?") > 0 ? "&" : "?") + new Date().getTime();
+        (image.src.indexOf('?') > 0 ? '&' : '?') + new Date().getTime();
     } else {
       imgTrigger();
     }

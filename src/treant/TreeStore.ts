@@ -1,8 +1,8 @@
-import { inject, injectable } from "inversify";
-import { Tree } from "./Tree";
-import "reflect-metadata";
-import { DI_LIST } from "../pointlinejs/InjectableList";
-import { ChartStructure } from "./Treant";
+import { inject, injectable } from 'inversify';
+import { Tree } from './Tree';
+import 'reflect-metadata';
+import { DI_LIST } from '../pointlinejs/InjectableList';
+import { ChartStructure } from './Treant';
 
 /**
  * Class: TreeStore
@@ -13,7 +13,7 @@ import { ChartStructure } from "./Treant";
 export class TreeStore {
   private store: Tree[] = [];
 
-  constructor(@inject(DI_LIST.tree) public tree: Tree) { }
+  constructor(@inject(DI_LIST.tree) public tree: Tree) {}
   /**
    * @param {object} jsonConfig
    * @returns {Tree}
@@ -46,18 +46,18 @@ export class TreeStore {
         draw_area.removeChild(draw_area.firstChild);
       }
 
-      var classes = draw_area.className.split(" "),
+      var classes = draw_area.className.split(' '),
         classes_to_stay = [];
 
       for (var i = 0; i < classes.length; i++) {
         var cls = classes[i];
-        if (cls !== "Treant" && cls !== "Treant-loaded") {
+        if (cls !== 'Treant' && cls !== 'Treant-loaded') {
           classes_to_stay.push(cls);
         }
       }
-      draw_area.style.overflowY = "";
-      draw_area.style.overflowX = "";
-      draw_area.className = classes_to_stay.join(" ");
+      draw_area.style.overflowY = '';
+      draw_area.style.overflowX = '';
+      draw_area.className = classes_to_stay.join(' ');
 
       this.store[treeId] = null;
     }

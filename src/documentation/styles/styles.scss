@@ -1,27 +1,72 @@
+body {
+  margin: 0;
+}
+
+$success-color: #84c89d;
+$success-color-dark: #43ac6a;
+$white-color: white;
+
 .layout {
-    display: flex;
-    &-row {
-        @extend .layout;
-        flex-direction: row;
-        &.center-align {
-            align-items: center;
-        }
+  display: flex;
+  &-row {
+    @extend .layout;
+    flex-direction: row;
+    &.center-align {
+      align-items: center;
     }
-    &-column {
-        @extend .layout;
-        flex-direction: column;
-        &.center-align {
-            align-items: center;
-        }
+  }
+  &-column {
+    @extend .layout;
+    flex-direction: column;
+    &.center-align {
+      align-items: center;
     }
+  }
 }
 .wrapper {
-    width: 100rem;
+  width: 100rem;
 }
 .nav-menu {
-    ul {
-        display: flex;
-        padding: 0;
-        list-style: none;
+  background-color: $success-color;
+  width: 100%;
+  & > ul {
+    margin: 0;
+  }
+  .nav-item {
+    line-height: 2rem;
+    padding: 0.5rem;
+    border: $success-color-dark solid 1px;
+    cursor: pointer;
+    a {
+      text-decoration: none;
+      color: $white-color;
+      font-size: 1.2rem;
     }
+    &:not(.active) {
+      background-color: $success-color;
+    }
+    &.active {
+      background-color: $success-color-dark;
+    }
+    &:hover {
+      background-color: $success-color-dark;
+    }
+  }
+  ul {
+    display: flex;
+    padding: 0;
+    list-style: none;
+  }
+}
+code {
+  white-space: pre;
+  background-color: $success-color-dark;
+  padding: 0.5rem;
+  color: $white-color;
+}
+.delimider {
+  margin-top: 0.5rem;
+  height: 0.2rem;
+  background-color: $success-color;
+  width: 100%;
 }

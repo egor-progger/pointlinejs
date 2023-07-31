@@ -1,0 +1,14 @@
+.vscode
+.eslintrc.json
+.prettierignore
+.prettierrc
+build
+LICENSE
+package*
+README.md
+tailwind.config.js
+Treant-gui.js
+tsconfig*
+webpack.config.js
+examples
+src

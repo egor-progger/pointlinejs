@@ -1,9 +1,9 @@
-import { inject, injectable } from "inversify";
-import { TreeNode } from "./TreeNode";
-import { UTIL } from "./Util";
-import { DI_LIST } from "../pointlinejs/InjectableList";
-import { NodeInterface } from "./Treant";
-import { Tree } from "./Tree";
+import { inject, injectable } from 'inversify';
+import { TreeNode } from './TreeNode';
+import { UTIL } from './Util';
+import { DI_LIST } from '../pointlinejs/InjectableList';
+import { NodeInterface } from './Treant';
+import { Tree } from './Tree';
 
 @injectable()
 export class NodeDBState {
@@ -22,19 +22,18 @@ export class NodeDB {
   protected util: UTIL = new UTIL();
   private db: TreeNode[] = [];
 
-  constructor(@inject(DI_LIST.nodeDBState) public nodeDBState: NodeDBState) {
-  }
+  constructor(@inject(DI_LIST.nodeDBState) public nodeDBState: NodeDBState) {}
 
   get size(): number {
     return this.db.length;
   }
 
   /**
- * NodeDB is used for storing the nodes. Each tree has its own NodeDB.
- * @param {object} nodeStructure
- * @param {Tree} tree
- * @constructor
- */
+   * NodeDB is used for storing the nodes. Each tree has its own NodeDB.
+   * @param {object} nodeStructure
+   * @param {Tree} tree
+   * @constructor
+   */
   init(nodeStructure: Partial<NodeInterface>, tree: Tree) {
     return this.reset(nodeStructure, tree);
   }
@@ -43,7 +42,11 @@ export class NodeDB {
    * @param {object} node
    * @param {number} parentId
    */
-  private iterateChildren(node: Partial<NodeInterface>, parentId: number, tree?: Tree) {
+  private iterateChildren(
+    node: Partial<NodeInterface>,
+    parentId: number,
+    tree?: Tree
+  ) {
     var newNode = this.createNode(node, parentId, tree, null);
 
     if (node.children) {
@@ -52,7 +55,7 @@ export class NodeDB {
         while (node.childrenDropLevel--) {
           // pseudo node needs to inherit the connection style from its parent for continuous connectors
           var connStyle = this.util.cloneObj(newNode.connStyle);
-          newNode = this.createNode("pseudo", newNode.id, tree, null);
+          newNode = this.createNode('pseudo', newNode.id, tree, null);
           newNode.connStyle = connStyle;
           newNode.children = [];
         }
@@ -172,11 +175,11 @@ export class NodeDB {
       if (typeof node.pseudo !== 'undefined' && node.pseudo === false) {
         const nodeStructureValue = nodeStructure as Partial<NodeInterface>;
         if (nodeStructureValue.position) {
-          if (nodeStructureValue.position === "left") {
+          if (nodeStructureValue.position === 'left') {
             parent.children.push(node.id);
-          } else if (nodeStructureValue.position === "right") {
+          } else if (nodeStructureValue.position === 'right') {
             parent.children.splice(0, 0, node.id);
-          } else if (nodeStructureValue.position === "center") {
+          } else if (nodeStructureValue.position === 'center') {
             parent.children.splice(
               Math.floor(parent.children.length / 2),
               0,
@@ -209,7 +212,11 @@ export class NodeDB {
     return node;
   }
 
-  getMinMaxCoord(dim: 'X' | 'Y', parent: TreeNode, MinMax: { min: number, max: number }) {
+  getMinMaxCoord(
+    dim: 'X' | 'Y',
+    parent: TreeNode,
+    MinMax: { min: number; max: number }
+  ) {
     // used for getting the dimensions of the tree, dim = 'X' || 'Y'
     // looks for min and max (X and Y) within the set of nodes
     parent = parent || this.get(0);
@@ -217,14 +224,14 @@ export class NodeDB {
     MinMax = MinMax || {
       // start with root node dimensions
       min: parent[dim],
-      max: parent[dim] + (dim === "X" ? parent.width : parent.height),
+      max: parent[dim] + (dim === 'X' ? parent.width : parent.height),
     };
 
     var i = parent.childrenCount();
 
     while (i--) {
       var node = parent.childAt(i),
-        maxTest = node[dim] + (dim === "X" ? node.width : node.height),
+        maxTest = node[dim] + (dim === 'X' ? node.width : node.height),
         minTest = node[dim];
 
       if (maxTest > MinMax.max) {

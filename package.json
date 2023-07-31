@@ -1,8 +1,7 @@
 {
-  "name": "treantjs",
-  "version": "1.0.0",
+  "name": "pointlinejs",
+  "version": "0.1.0",
   "description": "JavaScipt library for visualization of tree diagrams",
-  "main": "Treant.js",
   "directories": {
     "example": "examples"
   },
@@ -13,40 +12,40 @@
   },
   "scripts": {
     "dev": "webpack --mode development",
-    "build": "webpack --mode production",
+    "build": "tsc -p tsconfig-lib.json && tsc -p tsconfig-es.json",
     "watch": "webpack --mode development",
-    "start": "webpack serve --mode development",
+    "start": "npx webpack serve",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "treant",
+    "pointlinejs",
     "diagram",
     "tree",
     "js",
     "svg",
     "draw"
   ],
-  "author": "Fran Peručić",
+  "author": "Egor Fedoseev",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/fperucic/treant-js/issues"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/egor-progger/pointlinejs.git"
   },
-  "homepage": "https://github.com/fperucic/treant-js#readme",
+  "bugs": {
+    "url": "https://github.com/egor-progger/pointlinejs/issues"
+  },
   "dependencies": {
     "@types/raphael": "^2.3.3",
-    "assert": "^2.0.0",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^6.4.1",
     "css-loader": "^5.2.7",
-    "google-closure-compiler": "^20230411.0.0",
+    "highlight.js": "^11.8.0",
     "inversify": "^6.0.1",
     "jquery.easing": "1.3",
     "mini-css-extract-plugin": "^1.6.2",
-    "net": "^1.0.2",
     "perfect-scrollbar": "^1.3.0",
     "reflect-metadata": "^0.1.13",
     "tls": "^0.0.1",
-    "treant-js": "^1.0.1",
     "ts-loader": "^8.4.0",
     "url": "^0.11.0",
     "webpack-node-externals": "^3.0.0"
@@ -72,5 +71,8 @@
     "webpack": "^5.88.1",
     "webpack-cli": "^4.10.0",
     "webpack-dev-server": "^4.15.0"
-  }
+  },
+  "main": "dist/lib/pointlinejs/PointlineJS.js",
+  "module": "dist/es/pointlinejs/PointlineJS.js",
+  "types": "dist/lib/pointlinejs/PointlineJS.d.ts"
 }

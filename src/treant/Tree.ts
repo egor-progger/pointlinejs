@@ -1,14 +1,19 @@
-import { ImageLoader } from "./ImageLoader";
-import { NodeDB } from "./NodeDB";
-import { UTIL } from "./Util";
-import Raphael from "../../vendor/raphael.no-deps";
+import { ImageLoader } from './ImageLoader';
+import { NodeDB } from './NodeDB';
+import { UTIL } from './Util';
+import Raphael from '@raphael/raphael.no-deps.js';
 import { RaphaelPaper } from 'raphael';
-import { DI_LIST } from "../pointlinejs/InjectableList";
-import { inject, injectable } from "inversify";
-import { RaphaelPathExtended, TreeNode } from "./TreeNode";
+import { DI_LIST } from '../pointlinejs/InjectableList';
+import { inject, injectable } from 'inversify';
+import { RaphaelPathExtended, TreeNode } from './TreeNode';
 import $ from 'jquery';
 import PerfectScrollbar from 'perfect-scrollbar';
-import { Coordinate, ChartInterface, NodeInterface, ChartStructure } from "./Treant";
+import {
+  Coordinate,
+  ChartInterface,
+  NodeInterface,
+  ChartStructure,
+} from './Treant';
 
 export interface LevelMaxDim {
   height: number;
@@ -37,8 +42,8 @@ export class Tree {
   inAnimation: boolean;
   CONFIG: Partial<ChartInterface> = {
     maxDepth: 100,
-    rootOrientation: "NORTH", // NORTH || EAST || WEST || SOUTH
-    nodeAlign: "CENTER", // CENTER || TOP || BOTTOM
+    rootOrientation: 'NORTH', // NORTH || EAST || WEST || SOUTH
+    nodeAlign: 'CENTER', // CENTER || TOP || BOTTOM
     levelSeparation: 30,
     siblingSeparation: 30,
     subTeeSeparation: 30,
@@ -49,12 +54,12 @@ export class Tree {
     animateOnInitDelay: 500,
 
     padding: 15, // the difference is seen only when the scrollbar is shown
-    scrollbar: "native", // "native" || "fancy" || "None" (PS: "fancy" requires jquery and perfect-scrollbar)
+    scrollbar: 'native', // "native" || "fancy" || "None" (PS: "fancy" requires jquery and perfect-scrollbar)
 
     connectors: {
-      type: "curve", // 'curve' || 'step' || 'straight' || 'bCurve'
+      type: 'curve', // 'curve' || 'step' || 'straight' || 'bCurve'
       style: {
-        stroke: "black",
+        stroke: 'black',
       },
       stackIndent: 15,
     },
@@ -66,20 +71,23 @@ export class Tree {
       // drawLineThrough: false,
       // collapsable: false,
       link: {
-        target: "_self",
+        target: '_self',
       },
     },
 
     animation: {
       // each node inherits this, it can all be overridden in node config
       nodeSpeed: 450,
-      nodeAnimation: "linear",
+      nodeAnimation: 'linear',
       connectorsSpeed: 450,
-      connectorsAnimation: "linear",
+      connectorsAnimation: 'linear',
     },
 
     callback: {
-      onCreateNode: function (treeNode: TreeNode, treeNodeDom: HTMLAnchorElement | HTMLDivElement) { }, // this = Tree
+      onCreateNode: function (
+        treeNode: TreeNode,
+        treeNodeDom: HTMLAnchorElement | HTMLDivElement
+      ) { }, // this = Tree
       onCreateNodeCollapseSwitch: function (
         treeNode: TreeNode,
         treeNodeDom: HTMLAnchorElement | HTMLDivElement,
@@ -90,7 +98,10 @@ export class Tree {
         parentTreeNode: TreeNode,
         nodeStructure: Partial<NodeInterface>
       ) { }, // this = Tree
-      onBeforeAddNode: function (parentTreeNode: TreeNode, nodeStructure: Partial<NodeInterface>) { }, // this = Tree
+      onBeforeAddNode: function (
+        parentTreeNode: TreeNode,
+        nodeStructure: Partial<NodeInterface>
+      ) { }, // this = Tree
       onAfterPositionNode: function (
         treeNode: TreeNode,
         nodeDbIndex: number,
@@ -103,16 +114,27 @@ export class Tree {
         containerCenter: Coordinate,
         treeCenter: Coordinate
       ) { }, // this = Tree
-      onToggleCollapseFinished: function (treeNode: TreeNode, bIsCollapsed: boolean) { }, // this = Tree
-      onAfterClickCollapseSwitch: function (nodeSwitch: Element | JQuery, event: Event) { }, // this = TreeNode
-      onBeforeClickCollapseSwitch: function (nodeSwitch: Element | JQuery, event: Event) { }, // this = TreeNode
+      onToggleCollapseFinished: function (
+        treeNode: TreeNode,
+        bIsCollapsed: boolean
+      ) { }, // this = Tree
+      onAfterClickCollapseSwitch: function (
+        nodeSwitch: Element | JQuery,
+        event: Event
+      ) { }, // this = TreeNode
+      onBeforeClickCollapseSwitch: function (
+        nodeSwitch: Element | JQuery,
+        event: Event
+      ) { }, // this = TreeNode
       onTreeLoaded: function (rootTreeNode: TreeNode) { }, // this = Tree
     },
   };
   nodeDB: NodeDB = {} as NodeDB;
 
-  constructor(@inject(DI_LIST.imageLoader) public imageLoader: ImageLoader,
-    @inject(DI_LIST.nodeDB) public nodeDBClass: NodeDB) { }
+  constructor(
+    @inject(DI_LIST.imageLoader) public imageLoader: ImageLoader,
+    @inject(DI_LIST.nodeDB) public nodeDBClass: NodeDB
+  ) { }
 
   init(jsonConfig: ChartStructure, treeId: number) {
     return this.reset(jsonConfig, treeId);
@@ -130,17 +152,20 @@ export class Tree {
     this.id = treeId;
 
     this.CONFIG = this.util.extend(this.CONFIG, jsonConfig.chart);
-    this.drawArea = this.util.findEl(this.CONFIG.container, true) as HTMLElement;
+    this.drawArea = this.util.findEl(
+      this.CONFIG.container,
+      true
+    ) as HTMLElement;
     if (!this.drawArea) {
       throw new Error(
         'Failed to find element by selector "' + this.CONFIG.container + '"'
       );
     }
 
-    this.util.addClass(this.drawArea, "Treant");
+    this.util.addClass(this.drawArea, 'Treant');
 
     // kill of any child elements that may be there
-    this.drawArea.innerHTML = "";
+    this.drawArea.innerHTML = '';
 
     this.nodeDB = this.nodeDBClass.init(jsonConfig.nodeStructure, this);
 
@@ -202,8 +227,8 @@ export class Tree {
       }
 
       if (!this.loaded) {
-        this.util.addClass(this.drawArea, "Treant-loaded"); // nodes are hidden until .loaded class is added
-        if (Object.prototype.toString.call(callback) === "[object Function]") {
+        this.util.addClass(this.drawArea, 'Treant-loaded'); // nodes are hidden until .loaded class is added
+        if (Object.prototype.toString.call(callback) === '[object Function]') {
           callback(self);
         }
         self.CONFIG.callback.onTreeLoaded.apply(self, [root]);
@@ -254,7 +279,6 @@ export class Tree {
       var midPoint = node.childrenCenter() - node.size() / 2;
 
       if (leftSibling) {
-
         node.prelim =
           leftSibling.prelim +
           leftSibling.size() +
@@ -319,7 +343,12 @@ export class Tree {
       // find the gap between two trees and apply it to subTrees
       // and matching smaller gaps to smaller subtrees
 
-      var totalGap = firstChildLeftNeighbor.prelim + modifierSumLeft + firstChildLeftNeighbor.size() + this.CONFIG.subTeeSeparation - (firstChild.prelim + modifierSumRight);
+      var totalGap =
+        firstChildLeftNeighbor.prelim +
+        modifierSumLeft +
+        firstChildLeftNeighbor.size() +
+        this.CONFIG.subTeeSeparation -
+        (firstChild.prelim + modifierSumRight);
 
       if (totalGap > 0) {
         var subtreeAux = node,
@@ -378,13 +407,13 @@ export class Tree {
       levelHeight,
       nodesizeTmp;
 
-    if (orient === "NORTH" || orient === "SOUTH") {
+    if (orient === 'NORTH' || orient === 'SOUTH') {
       levelHeight = this.levelMaxDim[level].height;
       nodesizeTmp = node.height;
       if (node.pseudo) {
         node.height = levelHeight;
       } // assign a new size to pseudo nodes
-    } else if (orient === "WEST" || orient === "EAST") {
+    } else if (orient === 'WEST' || orient === 'EAST') {
       levelHeight = this.levelMaxDim[level].width;
       nodesizeTmp = node.width;
       if (node.pseudo) {
@@ -396,29 +425,29 @@ export class Tree {
 
     if (node.pseudo) {
       // pseudo nodes need to be properly aligned, otherwise position is not correct in some examples
-      if (orient === "NORTH" || orient === "WEST") {
+      if (orient === 'NORTH' || orient === 'WEST') {
         node.Y = yTmp; // align "BOTTOM"
-      } else if (orient === "SOUTH" || orient === "EAST") {
+      } else if (orient === 'SOUTH' || orient === 'EAST') {
         node.Y = yTmp + (levelHeight - nodesizeTmp); // align "TOP"
       }
     } else {
       node.Y =
-        align === "CENTER"
+        align === 'CENTER'
           ? yTmp + (levelHeight - nodesizeTmp) / 2
-          : align === "TOP"
+          : align === 'TOP'
             ? yTmp + (levelHeight - nodesizeTmp)
             : yTmp;
     }
 
-    if (orient === "WEST" || orient === "EAST") {
+    if (orient === 'WEST' || orient === 'EAST') {
       var swapTmp = node.X;
       node.X = node.Y;
       node.Y = swapTmp;
     }
 
-    if (orient === "SOUTH") {
+    if (orient === 'SOUTH') {
       node.Y = -node.Y - nodesizeTmp;
-    } else if (orient === "EAST") {
+    } else if (orient === 'EAST') {
       node.X = -node.X - nodesizeTmp;
     }
 
@@ -449,8 +478,8 @@ export class Tree {
   positionNodes() {
     var self = this,
       treeSize = {
-        x: self.nodeDB.getMinMaxCoord("X", null, null),
-        y: self.nodeDB.getMinMaxCoord("Y", null, null),
+        x: self.nodeDB.getMinMaxCoord('X', null, null),
+        y: self.nodeDB.getMinMaxCoord('Y', null, null),
       },
       treeWidth = treeSize.x.max - treeSize.x.min,
       treeHeight = treeSize.y.max - treeSize.y.min,
@@ -517,8 +546,8 @@ export class Tree {
         node.show();
       } else {
         // inicijalno stvaranje nodeova, postavi lokaciju
-        node.nodeDOM.style.left = node.X + "px";
-        node.nodeDOM.style.top = node.Y + "px";
+        node.nodeDOM.style.left = node.X + 'px';
+        node.nodeDOM.style.top = node.Y + 'px';
         node.positioned = true;
       }
 
@@ -559,42 +588,46 @@ export class Tree {
 
     this._R.setSize(viewWidth, viewHeight);
 
-    if (this.CONFIG.scrollbar === "resize") {
+    if (this.CONFIG.scrollbar === 'resize') {
       this.util.setDimensions(this.drawArea, viewWidth, viewHeight);
     } else if (
       !this.util.isjQueryAvailable() ||
-      this.CONFIG.scrollbar === "native"
+      this.CONFIG.scrollbar === 'native'
     ) {
       if (this.drawArea.clientWidth < treeWidth) {
         // is overflow-x necessary
-        this.drawArea.style.overflowX = "auto";
+        this.drawArea.style.overflowX = 'auto';
       }
 
       if (this.drawArea.clientHeight < treeHeight) {
         // is overflow-y necessary
-        this.drawArea.style.overflowY = "auto";
+        this.drawArea.style.overflowY = 'auto';
       }
     }
     // Fancy scrollbar relies heavily on jQuery, so guarding with if ( $ )
-    else if (this.CONFIG.scrollbar === "fancy") {
+    else if (this.CONFIG.scrollbar === 'fancy') {
       var jq_drawArea: JQuery = $(this.drawArea);
-      if (jq_drawArea.hasClass("ps-container")) {
+      if (jq_drawArea.hasClass('ps-container')) {
         // znaci da je 'fancy' vec inicijaliziran, treba updateat
-        jq_drawArea.find(".Treant").css({
+        jq_drawArea.find('.Treant').css({
           width: viewWidth,
           height: viewHeight,
         });
-        const perfectScrollbar = new PerfectScrollbar(jq_drawArea.context as HTMLElement);
+        const perfectScrollbar = new PerfectScrollbar(
+          jq_drawArea.context as HTMLElement
+        );
         perfectScrollbar.update();
       } else {
         var mainContainer = jq_drawArea.wrapInner('<div class="Treant"/>'),
-          child = mainContainer.find(".Treant");
+          child = mainContainer.find('.Treant');
 
         child.css({
           width: viewWidth,
           height: viewHeight,
         });
-        const perfectScrollbar = new PerfectScrollbar(mainContainer.context as HTMLElement);
+        const perfectScrollbar = new PerfectScrollbar(
+          mainContainer.context as HTMLElement
+        );
         perfectScrollbar.update();
       }
     } // else this.CONFIG.scrollbar == 'None'
@@ -610,7 +643,9 @@ export class Tree {
   setConnectionToParent(treeNode: TreeNode, hidePoint: Coordinate) {
     var stacked = treeNode.stackParentId ? true : false,
       connLine: RaphaelPathExtended,
-      parent = stacked ? this.nodeDB.get(treeNode.stackParentId) : treeNode.parent(),
+      parent = stacked
+        ? this.nodeDB.get(treeNode.stackParentId)
+        : treeNode.parent(),
       pathString = hidePoint
         ? this.getPointPathString(hidePoint)
         : this.getPathString(parent, treeNode, stacked);
@@ -625,10 +660,10 @@ export class Tree {
 
       // don't show connector arrows por pseudo nodes
       if (treeNode.pseudo) {
-        delete parent.connStyle.style["arrow-end"];
+        delete parent.connStyle.style['arrow-end'];
       }
       if (parent.pseudo) {
-        delete parent.connStyle.style["arrow-start"];
+        delete parent.connStyle.style['arrow-start'];
       }
 
       connLine.attr(parent.connStyle.style);
@@ -650,18 +685,18 @@ export class Tree {
    */
   getPointPathString(hidePoint: Coordinate) {
     return [
-      "_M",
+      '_M',
       hidePoint.x,
-      ",",
+      ',',
       hidePoint.y,
-      "L",
+      'L',
       hidePoint.x,
-      ",",
+      ',',
       hidePoint.y,
       hidePoint.x,
-      ",",
+      ',',
       hidePoint.y,
-    ].join(" ");
+    ].join(' ');
   }
 
   /**
@@ -673,7 +708,7 @@ export class Tree {
    * @returns {Tree}
    */
   animatePath(path: RaphaelPathExtended, pathString: string) {
-    if (path.hidden && pathString.charAt(0) !== "_") {
+    if (path.hidden && pathString.charAt(0) !== '_') {
       // path will be shown, so show it
       path.show();
       path.hidden = false;
@@ -683,12 +718,12 @@ export class Tree {
     path.animate(
       {
         path:
-          pathString.charAt(0) === "_" ? pathString.substring(1) : pathString, // remove the "_" prefix if it exists
+          pathString.charAt(0) === '_' ? pathString.substring(1) : pathString, // remove the "_" prefix if it exists
       },
       this.CONFIG.animation.connectorsSpeed,
       this.CONFIG.animation.connectorsAnimation,
       function () {
-        if (pathString.charAt(0) === "_") {
+        if (pathString.charAt(0) === '_') {
           // animation is hiding the path, hide it at the and of animation
           path.hide();
           path.hidden = true;
@@ -713,12 +748,12 @@ export class Tree {
       P1: Coordinate = { x: 0, y: 0 },
       P2: Coordinate = { x: 0, y: 0 };
 
-    if (orientation === "NORTH" || orientation === "SOUTH") {
+    if (orientation === 'NORTH' || orientation === 'SOUTH') {
       P1.y = P2.y = (startPoint.y + endPoint.y) / 2;
 
       P1.x = startPoint.x;
       P2.x = endPoint.x;
-    } else if (orientation === "EAST" || orientation === "WEST") {
+    } else if (orientation === 'EAST' || orientation === 'WEST') {
       P1.x = P2.x = (startPoint.x + endPoint.x) / 2;
 
       P1.y = startPoint.y;
@@ -726,11 +761,11 @@ export class Tree {
     }
 
     // sp, p1, pm, p2, ep == "x,y"
-    var sp = startPoint.x + "," + startPoint.y,
-      p1 = P1.x + "," + P1.y,
-      p2 = P2.x + "," + P2.y,
-      ep = endPoint.x + "," + endPoint.y,
-      pm = (P1.x + P2.x) / 2 + "," + (P1.y + P2.y) / 2,
+    var sp = startPoint.x + ',' + startPoint.y,
+      p1 = P1.x + ',' + P1.y,
+      p2 = P2.x + ',' + P2.y,
+      ep = endPoint.x + ',' + endPoint.y,
+      pm = (P1.x + P2.x) / 2 + ',' + (P1.y + P2.y) / 2,
       pathString: string[],
       stackPoint;
 
@@ -738,41 +773,41 @@ export class Tree {
       // STACKED CHILDREN
 
       stackPoint =
-        orientation === "EAST" || orientation === "WEST"
-          ? endPoint.x + "," + startPoint.y
-          : startPoint.x + "," + endPoint.y;
+        orientation === 'EAST' || orientation === 'WEST'
+          ? endPoint.x + ',' + startPoint.y
+          : startPoint.x + ',' + endPoint.y;
 
-      if (connType === "step" || connType === "straight") {
-        pathString = ["M", sp, "L", stackPoint, "L", ep];
-      } else if (connType === "curve" || connType === "bCurve") {
+      if (connType === 'step' || connType === 'straight') {
+        pathString = ['M', sp, 'L', stackPoint, 'L', ep];
+      } else if (connType === 'curve' || connType === 'bCurve') {
         var helpPoint, // used for nicer curve lines
           indent = from_node.connStyle.stackIndent;
 
-        if (orientation === "NORTH") {
-          helpPoint = endPoint.x - indent + "," + (endPoint.y - indent);
-        } else if (orientation === "SOUTH") {
-          helpPoint = endPoint.x - indent + "," + (endPoint.y + indent);
-        } else if (orientation === "EAST") {
-          helpPoint = endPoint.x + indent + "," + startPoint.y;
-        } else if (orientation === "WEST") {
-          helpPoint = endPoint.x - indent + "," + startPoint.y;
+        if (orientation === 'NORTH') {
+          helpPoint = endPoint.x - indent + ',' + (endPoint.y - indent);
+        } else if (orientation === 'SOUTH') {
+          helpPoint = endPoint.x - indent + ',' + (endPoint.y + indent);
+        } else if (orientation === 'EAST') {
+          helpPoint = endPoint.x + indent + ',' + startPoint.y;
+        } else if (orientation === 'WEST') {
+          helpPoint = endPoint.x - indent + ',' + startPoint.y;
         }
-        pathString = ["M", sp, "L", helpPoint, "S", stackPoint, ep];
+        pathString = ['M', sp, 'L', helpPoint, 'S', stackPoint, ep];
       }
     } else {
       // NORMAL CHILDREN
-      if (connType === "step") {
-        pathString = ["M", sp, "L", p1, "L", p2, "L", ep];
-      } else if (connType === "curve") {
-        pathString = ["M", sp, "C", p1, p2, ep];
-      } else if (connType === "bCurve") {
-        pathString = ["M", sp, "Q", p1, pm, "T", ep];
-      } else if (connType === "straight") {
-        pathString = ["M", sp, "L", sp, ep];
+      if (connType === 'step') {
+        pathString = ['M', sp, 'L', p1, 'L', p2, 'L', ep];
+      } else if (connType === 'curve') {
+        pathString = ['M', sp, 'C', p1, p2, ep];
+      } else if (connType === 'bCurve') {
+        pathString = ['M', sp, 'Q', p1, pm, 'T', ep];
+      } else if (connType === 'straight') {
+        pathString = ['M', sp, 'L', sp, ep];
       }
     }
 
-    return pathString.join(" ");
+    return pathString.join(' ');
   }
 
   /**

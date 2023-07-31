@@ -1,9 +1,9 @@
-import { PointlineJS } from "@pointlinejs/PointlineJS";
-import { ChartConfigType } from "@treantjs/Treant";
-import "./styles/no-parent.css";
+import { PointlineJS } from '@pointlinejs/PointlineJS';
+import { ChartConfigType } from '@treantjs/Treant';
+import './styles/no-parent.css';
 
 var config = {
-    container: "#OrganiseChart1",
+    container: '#OrganiseChart1',
     rootOrientation: 'NORTH', // NORTH || EAST || WEST || SOUTH
     hideRootNode: true,
     // levelSeparation: 30,
@@ -11,114 +11,112 @@ var config = {
     subTeeSeparation: 30,
 
     connectors: {
-        type: 'curve'
+      type: 'curve',
     },
     node: {
-        HTMLclass: 'nodeExample1'
-    }
-},
-    root = {},
-
-    cto = {
-        parent: root,
-        text: {
-            name: "Joe Linux",
-            title: "Board member",
-            contact: "email: we@aregreat.com"
-        },
-        stackChildren: true,
-        HTMLid: "coo"
+      HTMLclass: 'nodeExample1',
     },
-    cbo = {
-        parent: root,
-        stackChildren: true,
-        text: {
-            name: "Linda May",
-            title: "Board member",
-            contact: "email: we@aregreat.com"
-        },
-        HTMLid: "cbo"
+  },
+  root = {},
+  cto = {
+    parent: root,
+    text: {
+      name: 'Joe Linux',
+      title: 'Board member',
+      contact: 'email: we@aregreat.com',
     },
-    cdo = {
-        parent: root,
-        text: {
-            name: "John Green",
-            title: "Board member, CEO",
-            contact: "email: we@aregreat.com"
-        },
-        HTMLid: "cdo"
+    stackChildren: true,
+    HTMLid: 'coo',
+  },
+  cbo = {
+    parent: root,
+    stackChildren: true,
+    text: {
+      name: 'Linda May',
+      title: 'Board member',
+      contact: 'email: we@aregreat.com',
     },
-    cio = {
-        parent: cto,
-        text: {
-            name: "Ron Blomquist",
-            title: "Chief Information Security Officer",
-            contact: "email: we@aregreat.com"
-        },
-        HTMLid: "cio"
+    HTMLid: 'cbo',
+  },
+  cdo = {
+    parent: root,
+    text: {
+      name: 'John Green',
+      title: 'Board member, CEO',
+      contact: 'email: we@aregreat.com',
     },
-    ciso = {
-        parent: cto,
-        text: {
-            name: "Michael Rubin",
-            title: "Chief Innovation Officer",
-            contact: "email: we@aregreat.com"
-        },
-        HTMLid: "ciso"
+    HTMLid: 'cdo',
+  },
+  cio = {
+    parent: cto,
+    text: {
+      name: 'Ron Blomquist',
+      title: 'Chief Information Security Officer',
+      contact: 'email: we@aregreat.com',
     },
-    cio2 = {
-        parent: cdo,
-        text: {
-            name: "Erica Reel",
-            title: "Chief Customer Officer",
-            contact: "email: we@aregreat.com"
-        },
-        link: {
-            href: "www.google.com"
-        },
-        HTMLid: "cio2"
+    HTMLid: 'cio',
+  },
+  ciso = {
+    parent: cto,
+    text: {
+      name: 'Michael Rubin',
+      title: 'Chief Innovation Officer',
+      contact: 'email: we@aregreat.com',
     },
-    ciso2 = {
-        parent: cbo,
-        text: {
-            name: "Alice Lopez",
-            title: "Chief Communications Officer",
-            contact: "email: we@aregreat.com"
-        },
-        HTMLid: "ciso2"
+    HTMLid: 'ciso',
+  },
+  cio2 = {
+    parent: cdo,
+    text: {
+      name: 'Erica Reel',
+      title: 'Chief Customer Officer',
+      contact: 'email: we@aregreat.com',
     },
-    ciso3 = {
-        parent: cbo,
-        text: {
-            name: "Mary Johnson",
-            title: "Chief Brand Officer",
-            contact: "email: we@aregreat.com"
-        },
-        HTMLid: "ciso2"
+    link: {
+      href: 'www.google.com',
     },
-    ciso4 = {
-        parent: cbo,
-        text: {
-            name: "Kirk Douglas",
-            title: "Chief Business Development Officer",
-            contact: "email: we@aregreat.com"
-        },
-        HTMLid: "ciso2"
+    HTMLid: 'cio2',
+  },
+  ciso2 = {
+    parent: cbo,
+    text: {
+      name: 'Alice Lopez',
+      title: 'Chief Communications Officer',
+      contact: 'email: we@aregreat.com',
     },
-    ALTERNATIVE = [
-        config,
-        root,
-        cto,
-        cbo,
-        cdo,
-        cio,
-        ciso,
-        cio2,
-        ciso2,
-        ciso3,
-        ciso4
-    ];
-
+    HTMLid: 'ciso2',
+  },
+  ciso3 = {
+    parent: cbo,
+    text: {
+      name: 'Mary Johnson',
+      title: 'Chief Brand Officer',
+      contact: 'email: we@aregreat.com',
+    },
+    HTMLid: 'ciso2',
+  },
+  ciso4 = {
+    parent: cbo,
+    text: {
+      name: 'Kirk Douglas',
+      title: 'Chief Business Development Officer',
+      contact: 'email: we@aregreat.com',
+    },
+    HTMLid: 'ciso2',
+  },
+  ALTERNATIVE = [
+    config,
+    root,
+    cto,
+    cbo,
+    cdo,
+    cio,
+    ciso,
+    cio2,
+    ciso2,
+    ciso3,
+    ciso4,
+  ];
 
 const graphJS = new PointlineJS(ALTERNATIVE as unknown as ChartConfigType);
 graphJS.draw();
