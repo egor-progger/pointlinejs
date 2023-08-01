@@ -2,6 +2,11 @@ body {
   margin: 0;
 }
 
+a {
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
 $success-color: #84c89d;
 $success-color-dark: #43ac6a;
 $white-color: white;
@@ -69,4 +74,40 @@ code {
   height: 0.2rem;
   background-color: $success-color;
   width: 100%;
+}
+.success-button {
+  display: block;
+  width: 100%;
+  background-color: $success-color-dark;
+  color: $white-color;
+}
+.grid-card-layout {
+  li {
+    position: relative;
+    list-style: none;
+    width: 13rem;
+    height: auto;
+    border: 0.1rem $success-color-dark solid;
+    border-radius: 5%;
+    text-align: center;
+    overflow: hidden;
+    .card-header {
+      padding: 0.2rem 0 0.2rem 0;
+      background-color: $success-color;
+    }
+    .card-body {
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .card-footer {
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      position: absolute;
+      bottom: 0;
+    }
+  }
+  display: grid;
+  grid-template-columns: repeat(6, auto);
+  grid-gap: 1.5rem;
 }
