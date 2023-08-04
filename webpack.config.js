@@ -175,6 +175,10 @@ module.exports = {
           from: 'src/examples/test_ground/slika-manja.jpg',
           to: 'examples/test_ground/slika-manja.jpg',
         },
+        {
+          from: 'src/documentation/images',
+          to: 'documentation/images',
+        },
       ],
     }),
   ],

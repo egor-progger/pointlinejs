@@ -81,6 +81,12 @@ code {
   background-color: $success-color-dark;
   color: $white-color;
 }
+.example-screenshot {
+  object-fit: contain;
+  img {
+    width: 100%;
+  }
+}
 .grid-card-layout {
   li {
     position: relative;
