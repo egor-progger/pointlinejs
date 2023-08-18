@@ -37,7 +37,7 @@ const entries = [
     type: entryType.withTypescript,
   },
   { name: 'examples/tennis-draw/tennis-draw', type: entryType.withTypescript },
-  { name: 'examples/test_ground/test_ground', type: entryType.withTypescript },
+  { name: 'examples/test-ground/test-ground', type: entryType.withTypescript },
   { name: 'examples/timeline/timeline', type: entryType.withTypescript },
   { name: 'documentation/documentation', type: entryType.withTypescript },
 ];
@@ -85,7 +85,7 @@ function generateHtmlPlugin(entries) {
 
 const generatedEntries = generateEntries(entries);
 const htmlPlugins = generateHtmlPlugin(entries);
-// return;
+
 module.exports = {
   mode: 'development',
   target: 'web',
@@ -168,16 +168,20 @@ module.exports = {
           to: 'examples/tennis-draw/trophy.png',
         },
         {
-          from: 'src/examples/test_ground/image.png',
-          to: 'examples/test_ground/image.png',
+          from: 'src/examples/test-ground/image.png',
+          to: 'examples/test-ground/image.png',
         },
         {
-          from: 'src/examples/test_ground/slika-manja.jpg',
-          to: 'examples/test_ground/slika-manja.jpg',
+          from: 'src/examples/test-ground/slika-manja.jpg',
+          to: 'examples/test-ground/slika-manja.jpg',
         },
         {
           from: 'src/documentation/images',
           to: 'documentation/images',
+        },
+        {
+          from: 'src/documentation/api',
+          to: 'documentation/api',
         },
       ],
     }),

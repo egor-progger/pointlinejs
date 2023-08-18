@@ -1,6 +1,6 @@
 import { PointlineJS } from '@pointlinejs/PointlineJS';
 import { ChartConfigType } from '@treantjs/Treant';
-import './styles/test_ground.css';
+import './styles/test-ground.css';
 import { UTIL } from '@treantjs/Util';
 
 // img_examples/example4
@@ -287,12 +287,12 @@ var example1 = {
 // #####################################
 
 var config = {
-    container: '#OrganiseChart5',
-    //rootOrientation:	'NORTH', // NORTH || EAST || WEST || SOUTH
-    // levelSeparation:	30,
-    // siblingSeparation:	30,
-    // subTeeSeparation:	30,
-  },
+  container: '#OrganiseChart5',
+  //rootOrientation:	'NORTH', // NORTH || EAST || WEST || SOUTH
+  // levelSeparation:	30,
+  // siblingSeparation:	30,
+  // subTeeSeparation:	30,
+},
   rootNode = {
     text: {
       name: 'C1',

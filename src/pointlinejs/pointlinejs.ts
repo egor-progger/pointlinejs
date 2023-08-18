@@ -27,6 +27,7 @@ require('jquery.easing');
 export class PointlineJS {
   private treant: Treant;
   private chartConfig: ChartConfigType;
+  private tree: Promise<Tree>;
 
   constructor(chartConfig: ChartConfigType) {
     const container = new Container();
@@ -44,6 +45,10 @@ export class PointlineJS {
   }
 
   draw() {
-    this.treant.init(this.chartConfig);
+    this.tree = this.treant.init(this.chartConfig);
+  }
+
+  getTree() {
+    return this.tree;
   }
 }

@@ -9,16 +9,10 @@ For Docs, Examples, and everything else see: /_ TODO _/
 
 `npx webpack --config webpack.config.js`
 
-# Examples
-
-1. compile project:
-   `npx webpack --config webpack.config.js`
-2. open index.html from `dist\examples` folder in browser
-
 # Dev-server
 
 1. `npx webpack serve`
-2. open `http://localhost:9000/documentation` in browser
+2. open `http://localhost:9000/documentation/` in browser
 
 # Build package for import from tarball locally
 
@@ -26,10 +20,10 @@ For Docs, Examples, and everything else see: /_ TODO _/
 2. `npm pack`
 3. copy pointlinejs-[package version].tgz to your other project.
 4. add in your other project in package.json in section `dependencies` this code:
-   `"treantjs": "file:./treantjs-1.0.0.tgz"`
+   `"pointlinejs": "file:./pointlinejs-[package version].tgz"`
 5. run `npm install --save`
 6. include PoinlineJS library in your code like this:
    ```
-   import { PointlineJS } from 'treantjs';
+   import { PointlineJS } from 'pointlinejs';
    const test = new PointlineJS(null);
    ```

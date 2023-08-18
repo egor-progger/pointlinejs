@@ -15,7 +15,8 @@
     "build": "tsc -p tsconfig-lib.json && tsc -p tsconfig-es.json",
     "watch": "webpack --mode development",
     "start": "npx webpack serve",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "doc": "typedoc --options typedoc.json"
   },
   "keywords": [
     "pointlinejs",
@@ -66,6 +67,7 @@
     "sass": "^1.63.6",
     "sass-loader": "^13.3.2",
     "tailwindcss": "^3.3.2",
+    "typedoc": "^0.24.8",
     "typescript": "^5.0.4",
     "url-loader": "^4.1.1",
     "webpack": "^5.88.1",
