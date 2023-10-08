@@ -8,4 +8,5 @@ export const DI_LIST = {
   imageLoader: Symbol.for('ImageLoader'),
   nodeDBState: Symbol.for('NodeDBState'),
   jsonConfig: Symbol.for('JSONconfig'),
+  pointlineChart: Symbol.for('pointlineChart'),
 };

@@ -16,13 +16,12 @@ For Docs, Examples, and everything else see: /_ TODO _/
 
 # Build package for import from tarball locally
 
-1. `npm run build`
-2. `npm pack`
-3. copy pointlinejs-[package version].tgz to your other project.
-4. add in your other project in package.json in section `dependencies` this code:
+1. `npm run pack`
+2. copy pointlinejs-[package version].tgz to your other project.
+3. add in your other project in package.json in section `dependencies` this code:
    `"pointlinejs": "file:./pointlinejs-[package version].tgz"`
-5. run `npm install --save`
-6. include PoinlineJS library in your code like this:
+4. run `npm install --save`
+5. include PoinlineJS library in your code like this:
    ```
    import { PointlineJS } from 'pointlinejs';
    const test = new PointlineJS(null);
