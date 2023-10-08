@@ -128,9 +128,7 @@ module.exports = {
       eve: 'eve-raphael/eve',
       jQuery: 'jquery/src/jquery',
       $: 'jquery/src/jquery',
-      '@treantjs': path.resolve(__dirname, './src/treant'),
       '@pointlinejs': path.resolve(__dirname, './src/pointlinejs'),
-      '@raphael': path.resolve(__dirname, './src/raphael'),
     },
   },
   plugins: [

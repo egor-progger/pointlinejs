@@ -1,22 +1,22 @@
-import { ChartConfigType } from '@treantjs/Treant';
+import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import { PointlineJS } from '@pointlinejs/PointlineJS';
 import './styles/example8.css';
 
 var config = {
-    container: '#OrganiseChart8',
-    levelSeparation: 70,
-    siblingSeparation: 60,
-    nodeAlign: 'BOTTOM',
-    connectors: {
-      type: 'step',
-      style: {
-        'stroke-width': 2,
-        stroke: '#ccc',
-        'stroke-dasharray': '--', //"", "-", ".", "-.", "-..", ". ", "- ", "--", "- .", "--.", "--.."
-        'arrow-end': 'classic-wide-long',
-      },
+  container: '#OrganiseChart8',
+  levelSeparation: 70,
+  siblingSeparation: 60,
+  nodeAlign: 'BOTTOM',
+  connectors: {
+    type: 'step',
+    style: {
+      'stroke-width': 2,
+      stroke: '#ccc',
+      'stroke-dasharray': '--', //"", "-", ".", "-.", "-..", ". ", "- ", "--", "- .", "--.", "--.."
+      'arrow-end': 'classic-wide-long',
     },
   },
+},
   first_post = {
     innerHTML: '#first-post',
   },

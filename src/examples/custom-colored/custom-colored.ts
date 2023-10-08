@@ -1,19 +1,19 @@
 import { PointlineJS } from '@pointlinejs/PointlineJS';
-import { ChartConfigType } from '@treantjs/Treant';
+import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/custom-colored.css';
 
 var config = {
-    container: '#custom-colored',
+  container: '#custom-colored',
 
-    nodeAlign: 'BOTTOM',
+  nodeAlign: 'BOTTOM',
 
-    connectors: {
-      type: 'step',
-    },
-    node: {
-      HTMLclass: 'nodeExample1',
-    },
+  connectors: {
+    type: 'step',
   },
+  node: {
+    HTMLclass: 'nodeExample1',
+  },
+},
   ceo = {
     text: {
       name: 'Mark Hill',

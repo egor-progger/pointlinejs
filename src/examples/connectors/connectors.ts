@@ -2,7 +2,7 @@
 // https://github.com/DmitryBaranovskiy/raphael/issues/471
 
 import { PointlineJS } from '@pointlinejs/PointlineJS';
-import { ChartConfigType } from '@treantjs/Treant';
+import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/connectors.css';
 
 var chart_config = {

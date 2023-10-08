@@ -1,5 +1,5 @@
 import { PointlineJS } from '@pointlinejs/PointlineJS';
-import { ChartConfigType } from '@treantjs/Treant';
+import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/collapsable.css';
 
 const chart_config = {

@@ -3,7 +3,7 @@
 
 import { PointlineJS } from '@pointlinejs/PointlineJS';
 import './styles/tennis-draw.css';
-import { ChartConfigType } from '@treantjs/Treant';
+import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 
 var tree_structure = {
   chart: {

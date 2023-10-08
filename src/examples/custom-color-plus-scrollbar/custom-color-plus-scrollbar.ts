@@ -1,22 +1,22 @@
 import { PointlineJS } from '@pointlinejs/PointlineJS';
-import { ChartConfigType } from '@treantjs/Treant';
+import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/custom-color-plus-scrollbar.css';
 
 var config = {
-    container: '#OrganiseChart1',
-    rootOrientation: 'WEST', // NORTH || EAST || WEST || SOUTH
-    // levelSeparation: 30,
-    siblingSeparation: 20,
-    subTeeSeparation: 60,
-    scrollbar: 'fancy',
+  container: '#OrganiseChart1',
+  rootOrientation: 'WEST', // NORTH || EAST || WEST || SOUTH
+  // levelSeparation: 30,
+  siblingSeparation: 20,
+  subTeeSeparation: 60,
+  scrollbar: 'fancy',
 
-    connectors: {
-      type: 'step',
-    },
-    node: {
-      HTMLclass: 'nodeExample1',
-    },
+  connectors: {
+    type: 'step',
   },
+  node: {
+    HTMLclass: 'nodeExample1',
+  },
+},
   ceo = {
     text: {
       name: 'Mark Hill',

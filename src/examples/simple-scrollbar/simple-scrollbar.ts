@@ -1,22 +1,22 @@
 import { PointlineJS } from '@pointlinejs/PointlineJS';
-import { ChartConfigType } from '@treantjs/Treant';
+import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/simple-scrollbar.css';
 
 var config = {
-    container: '#OrganiseChart1',
-    rootOrientation: 'NORTH', // NORTH || EAST || WEST || SOUTH
-    scrollbar: 'fancy',
-    // levelSeparation: 30,
-    siblingSeparation: 20,
-    subTeeSeparation: 60,
+  container: '#OrganiseChart1',
+  rootOrientation: 'NORTH', // NORTH || EAST || WEST || SOUTH
+  scrollbar: 'fancy',
+  // levelSeparation: 30,
+  siblingSeparation: 20,
+  subTeeSeparation: 60,
 
-    connectors: {
-      type: 'step',
-    },
-    node: {
-      HTMLclass: 'nodeExample1',
-    },
+  connectors: {
+    type: 'step',
   },
+  node: {
+    HTMLclass: 'nodeExample1',
+  },
+},
   ceo = {
     text: {
       name: 'Mark Hill',

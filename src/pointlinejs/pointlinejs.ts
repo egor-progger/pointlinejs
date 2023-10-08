@@ -10,15 +10,15 @@
  * Egor Fedoseev, https://github.com/egor-progger/pointlinejs
  */
 
-import { ImageLoader } from '@treantjs/ImageLoader';
+import { ImageLoader } from './vendor/treant/ImageLoader';
 import { DI_LIST } from '@pointlinejs/InjectableList';
-import { JSONconfig } from '@treantjs/JSONConfig';
-import { NodeDB, NodeDBState } from '@treantjs/NodeDB';
-import { ChartConfigType, Treant } from '@treantjs/Treant';
-import { Tree } from '@treantjs/Tree';
-import { TreeNode } from '@treantjs/TreeNode';
-import { TreeStore } from '@treantjs/TreeStore';
-import { UTIL } from '@treantjs/Util';
+import { JSONconfig } from './vendor/treant/JSONConfig';
+import { NodeDB, NodeDBState } from './vendor/treant/NodeDB';
+import { ChartConfigType, Treant } from './vendor/treant/Treant';
+import { Tree } from './vendor/treant/Tree';
+import { TreeNode } from './vendor/treant/TreeNode';
+import { TreeStore } from './vendor/treant/TreeStore';
+import { UTIL } from './vendor/treant/Util';
 import { Container } from 'inversify';
 import 'reflect-metadata';
 window.jQuery = window.$ = require('jquery');

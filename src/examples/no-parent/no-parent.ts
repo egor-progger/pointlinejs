@@ -1,22 +1,22 @@
 import { PointlineJS } from '@pointlinejs/PointlineJS';
-import { ChartConfigType } from '@treantjs/Treant';
+import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/no-parent.css';
 
 var config = {
-    container: '#OrganiseChart1',
-    rootOrientation: 'NORTH', // NORTH || EAST || WEST || SOUTH
-    hideRootNode: true,
-    // levelSeparation: 30,
-    siblingSeparation: 40,
-    subTeeSeparation: 30,
+  container: '#OrganiseChart1',
+  rootOrientation: 'NORTH', // NORTH || EAST || WEST || SOUTH
+  hideRootNode: true,
+  // levelSeparation: 30,
+  siblingSeparation: 40,
+  subTeeSeparation: 30,
 
-    connectors: {
-      type: 'curve',
-    },
-    node: {
-      HTMLclass: 'nodeExample1',
-    },
+  connectors: {
+    type: 'curve',
   },
+  node: {
+    HTMLclass: 'nodeExample1',
+  },
+},
   root = {},
   cto = {
     parent: root,

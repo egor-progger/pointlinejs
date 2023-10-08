@@ -1,9 +1,9 @@
 import { ImageLoader } from './ImageLoader';
 import { NodeDB } from './NodeDB';
 import { UTIL } from './Util';
-import Raphael from '@raphael/raphael.no-deps.js';
+import Raphael from '../raphael/raphael.no-deps.js';
 import { RaphaelPaper } from 'raphael';
-import { DI_LIST } from '../pointlinejs/InjectableList';
+import { DI_LIST } from '../../InjectableList';
 import { inject, injectable } from 'inversify';
 import { RaphaelPathExtended, TreeNode } from './TreeNode';
 import $ from 'jquery';

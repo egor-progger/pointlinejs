@@ -1,17 +1,17 @@
 import './styles/basic-example.css';
 import { PointlineJS } from '@pointlinejs/PointlineJS';
-import { ChartConfigType } from '@treantjs/Treant';
+import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 
 var config = {
-    container: '#basic-example',
+  container: '#basic-example',
 
-    connectors: {
-      type: 'step',
-    },
-    node: {
-      HTMLclass: 'nodeExample1',
-    },
+  connectors: {
+    type: 'step',
   },
+  node: {
+    HTMLclass: 'nodeExample1',
+  },
+},
   ceo = {
     text: {
       name: 'Mark Hill',

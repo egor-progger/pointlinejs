@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 import { TreeNode } from './TreeNode';
-import { DI_LIST } from '../pointlinejs/InjectableList';
+import { DI_LIST } from '../../InjectableList';
 import { UTIL } from './Util';
 import 'reflect-metadata';
 

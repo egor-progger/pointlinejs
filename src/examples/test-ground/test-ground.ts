@@ -1,7 +1,7 @@
 import { PointlineJS } from '@pointlinejs/PointlineJS';
-import { ChartConfigType } from '@treantjs/Treant';
+import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/test-ground.css';
-import { UTIL } from '@treantjs/Util';
+import { UTIL } from '@pointlinejs/vendor/treant/Util';
 
 // img_examples/example4
 var example1 = {

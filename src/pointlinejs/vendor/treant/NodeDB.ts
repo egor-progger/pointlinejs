@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { TreeNode } from './TreeNode';
 import { UTIL } from './Util';
-import { DI_LIST } from '../pointlinejs/InjectableList';
+import { DI_LIST } from '../../InjectableList';
 import { NodeInterface } from './Treant';
 import { Tree } from './Tree';
 
@@ -22,7 +22,7 @@ export class NodeDB {
   protected util: UTIL = new UTIL();
   private db: TreeNode[] = [];
 
-  constructor(@inject(DI_LIST.nodeDBState) public nodeDBState: NodeDBState) {}
+  constructor(@inject(DI_LIST.nodeDBState) public nodeDBState: NodeDBState) { }
 
   get size(): number {
     return this.db.length;
