@@ -1,8 +1,8 @@
 {
   "include": [
-    "./src/raphael/*.js",
-    "./src/treant/*.ts",
-    "./src/pointlinejs/*.ts"
+    "./src/pointlinejs/**/*.ts",
+    "./src/pointlinejs/**/*.js",
+    "./src/pointlinejs/**/*.css"
   ],
   "extends": "./tsconfig.json",
   "compilerOptions": {

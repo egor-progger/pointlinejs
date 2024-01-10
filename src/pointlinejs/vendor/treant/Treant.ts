@@ -22,7 +22,7 @@ import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import { JSONconfig } from './JSONConfig';
 import { TreeStore } from './TreeStore';
 import { inject, injectable } from 'inversify';
-import { DI_LIST } from '@pointlinejs/InjectableList';
+import { DI_LIST } from '../../InjectableList';
 import 'reflect-metadata';
 import { Tree } from './Tree';
 import { NodeDB } from './NodeDB';
