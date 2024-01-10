@@ -1,29 +1,337 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-  <h1 class="text-3xl font-bold underline">
-    PointlineJS
-  </h1>
-  <p>PointlineJS is an SVG based JS library for drawing tree diagrams.
-    It relies on Treant-JS, Raphael for handling SVG and animations, JQuery.</p>
-    <ol>
-      <li><a href="./examples/basic-example/">Basic example</a></li>
-      <li><a href="./examples/collapsable/">Collapsable</a></li>
-      <li><a href="./examples/comments/">Comments</a></li>
-      <li><a href="./examples/connectors/">Connectors</a></li>
-      <li><a href="./examples/custom-color-plus-scrollbar/">Custom color plus scrollbar</a></li>
-      <li><a href="./examples/custom-colored/">Custom colored</a></li>
-      <li><a href="./examples/evolution-tree/">Evolution tree</a></li>
-      <li><a href="./examples/no-parent/">No parent</a></li>
-      <li><a href="./examples/simple-scrollbar/">Simple scrollbar</a></li>
-      <li><a href="./examples/super-simple/">Super simple</a></li>
-      <li><a href="./examples/tennis-draw/">Tennis draw</a></li>
-      <li><a href="./examples/test_ground/">Test ground</a></li>
-      <li><a href="./examples/timeline/">Timeline</a></li>
-    </ol>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./documentation.css" />
+  </head>
+
+  <body>
+    <div class="layout-column center-align">
+      <div class="layout-column center-align">
+        <h1 class="header">PointlineJS</h1>
+      </div>
+      <div class="layout-column center-align">
+        <p>
+          PointlineJS is an SVG based JS library for drawing tree diagrams. It
+          relies on Treant-JS, Raphael for handling SVG and animations, JQuery.
+        </p>
+      </div>
+      <nav class="layout-column center-align nav-menu">
+        <ul>
+          <li class="nav-item">
+            <a class="nav-item-link" href="#installation">Installation</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-item-link" href="#quick_start">Quick start</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-item-link" href="#examples">Examples</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-item-link" href="./api/">API documentation</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-item-link" href="#support">Support</a>
+          </li>
+        </ul>
+      </nav>
+      <div class="layout-column wrapper">
+        <h4 id="installation">Installation</h4>
+        <p>
+          You can get the latest release and the type definitions using npm:
+        </p>
+        <code>npm install pointlinejs --save</code>
+      </div>
+      <div class="delimider"></div>
+      <div class="layout-column wrapper">
+        <h4 id="support">Quick start</h4>
+        <p>1. Import in your project PointlineJS:</p>
+        <pre class="code-block">
+          <code class="language-javascript">
+            import { PointlineJS } from "pointlinejs";
+            const simple_chart_config = {
+              chart: {
+                  container: "#tree-simple"
+              },
+
+              nodeStructure: {
+                  text: { name: "Parent node" },
+                  children: [
+                      {
+                          text: { name: "First child" }
+                      },
+                      {
+                          text: { name: "Second child" }
+                      }
+                  ]
+              }
+            };
+            const test = new PointlineJS(simple_chart_config);
+            test.getTree();
+            test.draw();
+          </code>
+        </pre>
+        <p>2. Add div in your html. Example based on index.html:</p>
+        <pre class="code-block">
+          <code class="language-html">
+            &lt;!DOCTYPE html&gt;
+            &lt;html&gt;
+              &lt;head&gt;
+                &lt;meta charset="utf-8" /&gt;
+                &lt;title&gt;PointlineJS Example&lt;/title&gt;
+              &lt;/head&gt;
+              &lt;body&gt;
+                  &lt;div id="tree-simple" style="height: 600px; width: 900px"&gt;&lt;/div&gt;
+              &lt;/body&gt;
+            &lt;/html&gt;
+          </code>
+        </pre>
+      </div>
+      <div class="delimider"></div>
+      <div class="layout-column wrapper">
+        <h4 id="examples">Examples</h4>
+        <ol class="grid-card-layout">
+          <li>
+            <div class="card-header">Basic example</div>
+            <div class="card-body">
+              <div class="example-description">
+                Organizational chart of the company structure along with
+                pictures and basic information about each member.
+                <div class="example-screenshot">
+                  <img src="./images/basic-example.png" />
+                </div>
+              </div>
+              <div class="card-footer">
+                <a class="success-button" href="/examples/basic-example/"
+                  >View example</a
+                >
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="card-header">Collapsable</div>
+            <div class="card-body">
+              Here is an example that shows how to make an interactive,
+              collapsible chart.
+              <div class="example-screenshot">
+                <img src="./images/collapsable.gif" />
+              </div>
+            </div>
+            <div class="card-footer">
+              <a class="success-button" href="/examples/collapsable/"
+                >View example</a
+              >
+            </div>
+          </li>
+          <li>
+            <div class="card-header">Comments</div>
+            <div class="card-body">
+              Treant can be SEO friendly. This example shows how a static HTML
+              can be used for node content.
+              <div class="example-screenshot">
+                <img src="./images/comments.png" />
+              </div>
+            </div>
+            <div class="card-footer">
+              <a class="success-button" href="/examples/comments/"
+                >View example</a
+              >
+            </div>
+          </li>
+          <li>
+            <div class="card-header">Connectors</div>
+            <div class="card-body">
+              Using vendor/raphael.js as a SVG drawing library, all types and
+              styles for connectors are possible.
+              <div class="example-screenshot">
+                <img src="./images/connectors.png" />
+              </div>
+            </div>
+            <div class="card-footer">
+              <a class="success-button" href="/examples/connectors/"
+                >View example</a
+              >
+            </div>
+          </li>
+          <li>
+            <div class="card-header">Custom color plus scrollbar</div>
+            <div class="card-body">
+              Root node can be positioned in all four mayor directions. A
+              scrollbar is only displayed where needed.
+              <div class="example-screenshot">
+                <img src="./images/custom-color-plus-scrollbar.png" />
+              </div>
+            </div>
+            <div class="card-footer">
+              <a
+                class="success-button"
+                href="/examples/custom-color-plus-scrollbar/"
+                >View example</a
+              >
+            </div>
+          </li>
+          <li>
+            <div class="card-header">Custom colored</div>
+            <div class="card-body">
+              This is a demo displaying how the use of colors can represent each
+              department in the company structure. It is simple and easy to
+              understand. Anyone could easily visualize their departments in
+              this type of chart.
+              <div class="example-screenshot">
+                <img src="./images/custom-colored.png" />
+              </div>
+            </div>
+            <div class="card-footer">
+              <a class="success-button" href="/examples/custom-colored/"
+                >View example</a
+              >
+            </div>
+          </li>
+          <li>
+            <div class="card-header">Evolution tree</div>
+            <div class="card-body">
+              This is a very simple and effective representation of an evolution
+              branch. It shows the use of scroller
+              <div class="example-screenshot">
+                <img src="./images/evolution-tree.png" />
+              </div>
+            </div>
+            <div class="card-footer">
+              <a class="success-button" href="/examples/evolution-tree/"
+                >View example</a
+              >
+            </div>
+          </li>
+          <li>
+            <div class="card-header">No parent</div>
+            <div class="card-body">
+              Root nodes are optional and can easily be omitted.
+              <div class="example-screenshot">
+                <img src="./images/no-parent.png" />
+              </div>
+            </div>
+            <div class="card-footer">
+              <a class="success-button" href="/examples/no-parent/"
+                >View example</a
+              >
+            </div>
+          </li>
+          <li>
+            <div class="card-header">Simple scrollbar</div>
+            <div class="card-body">
+              When having trouble with a big and more complex chart, a good
+              looking scrollbar can be used to access hidden content.
+              <div class="example-screenshot">
+                <img src="./images/simple-scrollbar.png" />
+              </div>
+            </div>
+            <div class="card-footer">
+              <a class="success-button" href="/examples/simple-scrollbar/"
+                >View example</a
+              >
+            </div>
+          </li>
+          <li>
+            <div class="card-header">Super simple</div>
+            <div class="card-body">
+              An extra simple example. Just to get you started.
+              <div class="example-screenshot">
+                <img src="./images/super-simple.png" />
+              </div>
+            </div>
+            <div class="card-footer">
+              <a class="success-button" href="/examples/super-simple/"
+                >View example</a
+              >
+            </div>
+          </li>
+          <li>
+            <div class="card-header">Tennis draw</div>
+            <div class="card-body">
+              Tennis results are displayed in a classic tree structure. Tree
+              structure is an adequate method of representation for any type of
+              bracketed events.
+              <div class="example-screenshot">
+                <img src="./images/tennis-draw.png" />
+              </div>
+            </div>
+            <div class="card-footer">
+              <a class="success-button" href="/examples/tennis-draw/"
+                >View example</a
+              >
+            </div>
+          </li>
+          <li>
+            <div class="card-header">Test ground</div>
+            <div class="card-body">
+              Test multiple tree on one page
+              <div class="example-screenshot">
+                <img src="./images/test-ground.png" />
+              </div>
+            </div>
+            <div class="card-footer">
+              <a class="success-button" href="/examples/test-ground/"
+                >View example</a
+              >
+            </div>
+          </li>
+          <li>
+            <div class="card-header">Timeline</div>
+            <div class="card-body">
+              An interactive timeline can be made.
+              <div class="example-screenshot">
+                <img src="./images/timeline.gif" />
+              </div>
+            </div>
+            <div class="card-footer">
+              <a class="success-button" href="/examples/timeline/"
+                >View example</a
+              >
+            </div>
+          </li>
+        </ol>
+      </div>
+      <div class="delimider"></div>
+      <div class="layout-column wrapper">
+        <h4 id="support">Support</h4>
+        <p>
+          If you are experience any kind of issues we will be happy to help. You
+          can report an issue using the
+          <a href="https://github.com/egor-progger/pointlinejs/issues"
+            >issues page</a
+          >
+        </p>
+        <p>
+          If you want to share your thoughts with the development team or join
+          us you will be able to do so using the Gitter chat. You can check out
+          the wiki to learn more about InversifyJS internals.
+        </p>
+      </div>
+      <div class="delimider"></div>
+      <div class="layout-column wrapper">
+        <h4 id="support">License</h4>
+        <p>
+          License License under the MIT License (MIT) Copyright © 2023 - 2023
+          Egor Fedoseev Permission is hereby granted, free of charge, to any
+          person obtaining a copy of this software and associated documentation
+          files (the "Software"), to deal in the Software without restriction,
+          including without limitation the rights to use, copy, modify, merge,
+          publish, distribute, sublicense, and/or sell copies of the Software,
+          and to permit persons to whom the Software is furnished to do so,
+          subject to the following conditions: The above copyright notice and
+          this permission notice shall be included in all copies or substantial
+          portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT
+          WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+          THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
+          AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+          HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+          IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+          IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+          SOFTWARE.
+        </p>
+      </div>
+    </div>
+    <script src="./documentation.js"></script>
+  </body>
 </html>

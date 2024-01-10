@@ -1,57 +1,57 @@
-import { PointlineJS } from "@pointlinejs/PointlineJS";
-import { ChartConfigType } from "@treantjs/Treant";
-import "./styles/collapsable.css";
+import { PointlineJS } from '@pointlinejs/PointlineJS';
+import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
+import './styles/collapsable.css';
 
 const chart_config = {
-    chart: {
-        container: "#collapsable-example",
+  chart: {
+    container: '#collapsable-example',
 
-        animateOnInit: true,
+    animateOnInit: true,
 
-        node: {
-            collapsable: true
-        },
-        animation: {
-            nodeAnimation: "easeOutBounce",
-            nodeSpeed: 700,
-            connectorsAnimation: "bounce",
-            connectorsSpeed: 700
-        }
+    node: {
+      collapsable: true,
     },
-    nodeStructure: {
-        image: "img/malory.png",
+    animation: {
+      nodeAnimation: 'easeOutBounce',
+      nodeSpeed: 700,
+      connectorsAnimation: 'bounce',
+      connectorsSpeed: 700,
+    },
+  },
+  nodeStructure: {
+    image: 'img/malory.png',
+    children: [
+      {
+        image: 'img/lana.png',
+        collapsed: true,
         children: [
-            {
-                image: "img/lana.png",
-                collapsed: true,
-                children: [
-                    {
-                        image: "img/figgs.png"
-                    }
-                ]
-            },
-            {
-                image: "img/sterling.png",
-                childrenDropLevel: 1,
-                children: [
-                    {
-                        image: "img/woodhouse.png"
-                    }
-                ]
-            },
-            {
-                pseudo: true,
-                children: [
-                    {
-                        image: "img/cheryl.png"
-                    },
-                    {
-                        image: "img/pam.png"
-                    }
-                ]
-            }
-        ]
-    }
+          {
+            image: 'img/figgs.png',
+          },
+        ],
+      },
+      {
+        image: 'img/sterling.png',
+        childrenDropLevel: 1,
+        children: [
+          {
+            image: 'img/woodhouse.png',
+          },
+        ],
+      },
+      {
+        pseudo: true,
+        children: [
+          {
+            image: 'img/cheryl.png',
+          },
+          {
+            image: 'img/pam.png',
+          },
+        ],
+      },
+    ],
+  },
 };
 
 /* Array approach

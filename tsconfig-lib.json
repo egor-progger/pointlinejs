@@ -1,0 +1,14 @@
+{
+  "include": [
+    "./src/pointlinejs/**/*.ts",
+    "./src/pointlinejs/**/*.js",
+    "./src/pointlinejs/**/*.css"
+  ],
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "outDir": "./dist/lib",
+    "rootDir": "./src"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "include": [
+    "./src/pointlinejs/**/*.ts",
+    "./src/pointlinejs/**/*.js",
+    "./src/pointlinejs/**/*.css"
+  ],
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/es",
+    "rootDir": "./src",
+    "module": "es2015"
+  }
+}

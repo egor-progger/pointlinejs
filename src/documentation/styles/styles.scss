@@ -1,3 +1,121 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+body {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+$success-color: #84c89d;
+$success-color-dark: #43ac6a;
+$white-color: white;
+
+.layout {
+  display: flex;
+  &-row {
+    @extend .layout;
+    flex-direction: row;
+    &.center-align {
+      align-items: center;
+    }
+  }
+  &-column {
+    @extend .layout;
+    flex-direction: column;
+    &.center-align {
+      align-items: center;
+    }
+  }
+}
+.wrapper {
+  width: 100rem;
+}
+.nav-menu {
+  background-color: $success-color;
+  width: 100%;
+  & > ul {
+    margin: 0;
+  }
+  .nav-item {
+    line-height: 2rem;
+    padding: 0.5rem;
+    border: $success-color-dark solid 1px;
+    cursor: pointer;
+    a {
+      text-decoration: none;
+      color: $white-color;
+      font-size: 1.2rem;
+    }
+    &:not(.active) {
+      background-color: $success-color;
+    }
+    &.active {
+      background-color: $success-color-dark;
+    }
+    &:hover {
+      background-color: $success-color-dark;
+    }
+  }
+  ul {
+    display: flex;
+    padding: 0;
+    list-style: none;
+  }
+}
+code {
+  white-space: pre;
+  padding: 0.5rem;
+  color: $white-color;
+}
+.code-block {
+  background-color: $success-color-dark;
+}
+.delimider {
+  margin-top: 0.5rem;
+  height: 0.2rem;
+  background-color: $success-color;
+  width: 100%;
+}
+.success-button {
+  display: block;
+  width: 100%;
+  background-color: $success-color-dark;
+  color: $white-color;
+}
+.example-screenshot {
+  object-fit: contain;
+  img {
+    width: 100%;
+  }
+}
+.grid-card-layout {
+  li {
+    position: relative;
+    list-style: none;
+    width: 13rem;
+    height: auto;
+    border: 0.1rem $success-color-dark solid;
+    border-radius: 5%;
+    text-align: center;
+    overflow: hidden;
+    .card-header {
+      padding: 0.2rem 0 0.2rem 0;
+      background-color: $success-color;
+    }
+    .card-body {
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .card-footer {
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      position: absolute;
+      bottom: 0;
+    }
+  }
+  display: grid;
+  grid-template-columns: repeat(6, auto);
+  grid-gap: 1.5rem;
+}

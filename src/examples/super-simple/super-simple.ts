@@ -1,26 +1,26 @@
-import { PointlineJS } from "@pointlinejs/PointlineJS";
-import { ChartConfigType } from "@treantjs/Treant";
+import { PointlineJS } from '@pointlinejs/PointlineJS';
+import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/super-simple.css';
 
 var simple_chart_config = {
-	chart: {
-		container: "#OrganiseChart-simple"
-	},
+  chart: {
+    container: '#OrganiseChart-simple',
+  },
 
-	nodeStructure: {
-		text: { name: "Parent node" },
-		children: [
-			{
-				text: { name: "First child" }
-			},
-			{
-				text: { name: "Second child" }
-			}
-		]
-	}
+  nodeStructure: {
+    text: { name: 'Parent node' },
+    children: [
+      {
+        text: { name: 'First child' },
+      },
+      {
+        text: { name: 'Second child' },
+      },
+    ],
+  },
 };
 
-// // // // // // // // // // // // // // // // // // // // // // // // 
+// // // // // // // // // // // // // // // // // // // // // // // //
 
 // var config = {
 // 	container: "#OrganiseChart-simple"
@@ -42,8 +42,10 @@ var simple_chart_config = {
 
 // var simple_chart_config = [
 // 	config, parent_node,
-// 		first_child, second_child 
+// 		first_child, second_child
 // ];
 
-const graphJS = new PointlineJS(simple_chart_config as unknown as ChartConfigType);
+const graphJS = new PointlineJS(
+  simple_chart_config as unknown as ChartConfigType
+);
 graphJS.draw();
