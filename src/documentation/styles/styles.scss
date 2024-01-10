@@ -65,9 +65,11 @@ $white-color: white;
 }
 code {
   white-space: pre;
-  background-color: $success-color-dark;
   padding: 0.5rem;
   color: $white-color;
+}
+.code-block {
+  background-color: $success-color-dark;
 }
 .delimider {
   margin-top: 0.5rem;

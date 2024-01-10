@@ -46,14 +46,47 @@
       <div class="delimider"></div>
       <div class="layout-column wrapper">
         <h4 id="support">Quick start</h4>
-        <p>Import in your project PointlineJS:</p>
-        <code>
-          import { PointlineJS } from 'pointlinejs'; const chartConfig = {
-          chart: { container: "#tree-simple" }, nodeStructure: { text: { name:
-          "Parent node" }, children: [ { text: { name: "First child" } }, {
-          text: { name: "Second child" } } ] } }; const test = new
-          PointlineJS(null);
-        </code>
+        <p>1. Import in your project PointlineJS:</p>
+        <pre class="code-block">
+          <code class="language-javascript">
+            import { PointlineJS } from "pointlinejs";
+            const simple_chart_config = {
+              chart: {
+                  container: "#tree-simple"
+              },
+
+              nodeStructure: {
+                  text: { name: "Parent node" },
+                  children: [
+                      {
+                          text: { name: "First child" }
+                      },
+                      {
+                          text: { name: "Second child" }
+                      }
+                  ]
+              }
+            };
+            const test = new PointlineJS(simple_chart_config);
+            test.getTree();
+            test.draw();
+          </code>
+        </pre>
+        <p>2. Add div in your html. Example based on index.html:</p>
+        <pre class="code-block">
+          <code class="language-html">
+            &lt;!DOCTYPE html&gt;
+            &lt;html&gt;
+              &lt;head&gt;
+                &lt;meta charset="utf-8" /&gt;
+                &lt;title&gt;PointlineJS Example&lt;/title&gt;
+              &lt;/head&gt;
+              &lt;body&gt;
+                  &lt;div id="tree-simple" style="height: 600px; width: 900px"&gt;&lt;/div&gt;
+              &lt;/body&gt;
+            &lt;/html&gt;
+          </code>
+        </pre>
       </div>
       <div class="delimider"></div>
       <div class="layout-column wrapper">
