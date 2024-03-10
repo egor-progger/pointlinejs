@@ -144,6 +144,10 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new CopyPlugin({
       patterns: [
+        {
+          from: 'src/jquery-migrate/jquery-migrate.js',
+          to: 'examples/jquery-migrate',
+        },
         { from: 'src/examples/headshots', to: 'examples/headshots' },
         {
           from: 'src/examples/collapsable/img',

@@ -1,6 +1,6 @@
 
 import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
-import { PointlineJS } from '../PointlineJS';
+import { PointlineJS } from '@pointlinejs/pointlinejs';
 import { LitElement, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
