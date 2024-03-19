@@ -67,7 +67,7 @@ export class TreeNode {
   treeId: number;
   meta: object;
 
-  constructor(private tree: Tree) {}
+  constructor(private tree: Tree) { }
 
   init(
     nodeStructure: Partial<NodeInterface> | 'pseudo',
@@ -121,7 +121,7 @@ export class TreeNode {
         nodeStructureValue.drawLineThrough === false
           ? false
           : nodeStructureValue.drawLineThrough ||
-            tree.CONFIG.node.drawLineThrough;
+          tree.CONFIG.node.drawLineThrough;
 
       this.collapsable =
         nodeStructureValue.collapsable === false
@@ -706,8 +706,8 @@ export class TreeNode {
               val
                 ? val
                 : textValue instanceof Object
-                ? "'val' param missing!"
-                : (this.text[keyTyped] as string)
+                  ? "'val' param missing!"
+                  : (this.text[keyTyped] as string)
             )
           );
 

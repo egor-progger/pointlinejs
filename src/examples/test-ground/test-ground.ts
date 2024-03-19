@@ -1,4 +1,4 @@
-import { PointlineJS } from '@pointlinejs/PointlineJS';
+import { PointlineJS } from '@pointlinejs/pointlinejs';
 import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/test-ground.css';
 import { UTIL } from '@pointlinejs/vendor/treant/Util';

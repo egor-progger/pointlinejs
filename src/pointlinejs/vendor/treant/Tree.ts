@@ -614,7 +614,7 @@ export class Tree {
           height: viewHeight,
         });
         const perfectScrollbar = new PerfectScrollbar(
-          jq_drawArea.context as HTMLElement
+          jq_drawArea[0] as HTMLElement
         );
         perfectScrollbar.update();
       } else {
@@ -626,7 +626,7 @@ export class Tree {
           height: viewHeight,
         });
         const perfectScrollbar = new PerfectScrollbar(
-          mainContainer.context as HTMLElement
+          mainContainer[0] as HTMLElement
         );
         perfectScrollbar.update();
       }

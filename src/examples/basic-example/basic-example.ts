@@ -1,5 +1,5 @@
 import './styles/basic-example.css';
-import { PointlineJS } from '@pointlinejs/PointlineJS';
+import { PointlineJS } from '@pointlinejs/pointlinejs';
 import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 
 var config = {
