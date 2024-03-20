@@ -26,7 +26,7 @@ export class UTIL {
             applyFrom[attr] as Record<string, object>
           );
         } else {
-          applyTo[attr] = applyFrom[attr];
+          applyTo[attr] = { ...applyFrom[attr] };
         }
       }
     }
@@ -139,11 +139,11 @@ export class UTIL {
     } else {
       return Math.ceil(
         element.clientHeight +
-          (this.getStyle(element, 'border-top-width', true) as number) +
-          (this.getStyle(element, 'border-bottom-width', true) as number) +
-          (this.getStyle(element, 'padding-top', true) as number) +
-          (this.getStyle(element, 'padding-bottom', true) as number) +
-          nRoundingCompensation
+        (this.getStyle(element, 'border-top-width', true) as number) +
+        (this.getStyle(element, 'border-bottom-width', true) as number) +
+        (this.getStyle(element, 'padding-top', true) as number) +
+        (this.getStyle(element, 'padding-bottom', true) as number) +
+        nRoundingCompensation
       );
     }
   }
@@ -157,11 +157,11 @@ export class UTIL {
     } else {
       return Math.ceil(
         element.clientWidth +
-          (this.getStyle(element, 'border-left-width', true) as number) +
-          (this.getStyle(element, 'border-right-width', true) as number) +
-          (this.getStyle(element, 'padding-left', true) as number) +
-          (this.getStyle(element, 'padding-right', true) as number) +
-          nRoundingCompensation
+        (this.getStyle(element, 'border-left-width', true) as number) +
+        (this.getStyle(element, 'border-right-width', true) as number) +
+        (this.getStyle(element, 'padding-left', true) as number) +
+        (this.getStyle(element, 'padding-right', true) as number) +
+        nRoundingCompensation
       );
     }
   }
