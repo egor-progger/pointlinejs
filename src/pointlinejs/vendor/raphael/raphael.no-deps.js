@@ -8653,9 +8653,9 @@
                   s.fontSize = fontSize * m + 'px';
                   res.textpath.string &&
                     (span.innerHTML = Str(res.textpath.string)
+                      .replace(/&/g, '&#38;')
                       .replace(/</g, '&#60;')
-                      .replace(/\n/g, '<br>')
-                      .replace(/&/g, '&#38;'));
+                      .replace(/\n/g, '<br>'));
                   var brect = span.getBoundingClientRect();
                   res.W = a.w = (brect.right - brect.left) / m;
                   res.H = a.h = (brect.bottom - brect.top) / m;
