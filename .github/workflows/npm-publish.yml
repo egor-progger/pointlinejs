@@ -16,7 +16,10 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
-      - run: npm test
+      - run: npm run clean
+      - run: npm run build
+      - run: npm run copy-css-to-es
+      - run: npm run copy-css-to-lib
 
   publish-npm:
     needs: build
