@@ -3,18 +3,43 @@
 PointlineJS is an SVG based JS library for drawing tree diagrams.
 It relies on Treant-JS, Raphael for handling SVG and animations, JQuery.
 
-For Docs, Examples, and everything else see: /_ TODO _/
+# Quick start
 
-# Compile
+1. clone repository with command:
+
+```
+$ git clone https://github.com/egor-progger/pointlinejs-quick-start
+```
+
+2. to run this example you need to install some dependencies:
+
+```
+$ cd pointlinejs-quick-start
+$ npm install
+```
+
+3. start local web-server:
+
+```
+$ run npx webpack serve
+```
+
+4. open in browser address http://localhost:9001
+
+For Docs, Examples, and everything else see: /_ TODO create gitbut io pages _/
+
+# Development
+
+## How to compile sources
 
 `npx webpack --config webpack.config.js`
 
-# Dev-server
+## How to run dev-server for debugging
 
 1. `npm run start`
 2. open `http://localhost:9000/documentation/` in browser
 
-# Build package for import from tarball locally
+## How to build package for import from tarball locally
 
 1. `npm run pack`
 2. copy pointlinejs-[package version].tgz to your other project.
