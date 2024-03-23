@@ -26,7 +26,7 @@ export class UTIL {
             applyFrom[attr] as Record<string, object>
           );
         } else {
-          applyTo[attr] = { ...applyFrom[attr] };
+          applyTo[attr] = applyFrom[attr];
         }
       }
     }
