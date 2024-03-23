@@ -101,13 +101,15 @@ export type RaphaelAttributesExtended = Partial<RaphaelAttributes> & {
   'arrow-start'?: string;
 };
 
+export type ConnectorTypeValues = 'curve' | 'bCurve' | 'step' | 'straight';
+
 export type ConnectorType = {
   /**
    * type defines which type of connector line should be drawn between a parent node and its children. Several possibilities are available, their appearance is the following:
    * 
    * ![connector-types](/documentation/images/connector-types.png)
    */
-  type: 'curve' | 'bCurve' | 'step' | 'straight';
+  type: ConnectorTypeValues;
   /**
    * style parameter requires you to define an object.
    * Its definition can be found at [RaphaelJS documentation](https://dmitrybaranovskiy.github.io/raphael/reference.html#Element.attr) under possible parameters section. 
