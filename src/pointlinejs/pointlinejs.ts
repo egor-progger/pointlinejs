@@ -21,7 +21,6 @@ import { TreeStore } from './vendor/treant/TreeStore';
 import { UTIL } from './vendor/treant/Util';
 import { Container } from 'inversify';
 import 'reflect-metadata';
-import { PointlineChart } from './components/pointline-chart';
 window.jQuery = window.$ = require('jquery');
 require('jquery.easing');
 
@@ -53,5 +52,3 @@ export class PointlineJS {
     return this.tree;
   }
 }
-
-export class PointlineChartTemplate extends PointlineChart { };
