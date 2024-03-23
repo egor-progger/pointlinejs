@@ -21,7 +21,8 @@
     "copy-css-to-es": "copyfiles -u 5 src/pointlinejs/vendor/treant/styles/Treant.css dist/es/pointlinejs/vendor/treant/styles",
     "copy-css-to-lib": "copyfiles -u 5 src/pointlinejs/vendor/treant/styles/Treant.css dist/lib/pointlinejs/vendor/treant/styles",
     "clean": "rimraf dist/",
-    "publish": "npm run clean && npm run build && npm run copy-css-to-es && npm run copy-css-to-lib"
+    "prepare-publish": "npm run clean && npm run build && npm run copy-css-to-es && npm run copy-css-to-lib",    
+    "publish": "npm publish --access public"
   },
   "keywords": [
     "pointlinejs",
