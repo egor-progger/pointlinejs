@@ -21,7 +21,7 @@ $ npm install
 3. start local web-server:
 
 ```
-$ run npx webpack serve
+$ npx webpack serve
 ```
 
 4. open in browser address http://localhost:9001

@@ -4,6 +4,7 @@ import { ElementWithSupportIE } from './Treant';
 
 @injectable()
 export class UTIL {
+  private readonly hasOwnProperty = Object.prototype.hasOwnProperty;
   /**
    * Directly updates, recursively/deeply, the first object with all properties in the second object
    * @param {object} applyTo
@@ -25,7 +26,7 @@ export class UTIL {
             applyTo[attr] as Record<string, object>,
             applyFrom[attr] as Record<string, object>
           );
-        } else {
+        } else if (typeof applyFrom[attr] === 'object' && this.hasOwnProperty.call(applyFrom, attr)) {
           applyTo[attr] = applyFrom[attr];
         }
       }
@@ -35,6 +36,7 @@ export class UTIL {
 
   /**
    * Returns a new object by merging the two supplied objects
+   * @deprecated
    * @param {object} obj1
    * @param {object} obj2
    * @returns {object}
