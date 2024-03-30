@@ -180,6 +180,7 @@ module.exports = {
         {
           from: 'src/documentation/api',
           to: 'documentation/api',
+          noErrorOnMissing: true,
         },
       ],
     }),
