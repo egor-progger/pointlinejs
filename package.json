@@ -21,7 +21,7 @@
     "copy-css-to-es": "copyfiles -u 5 src/pointlinejs/vendor/treant/styles/Treant.css dist/es/pointlinejs/vendor/treant/styles",
     "copy-css-to-lib": "copyfiles -u 5 src/pointlinejs/vendor/treant/styles/Treant.css dist/lib/pointlinejs/vendor/treant/styles",
     "clean": "rimraf dist/",
-    "prepare-publish": "npm run clean && npm run build && npm run copy-css-to-es && npm run copy-css-to-lib",    
+    "prepare-publish": "npm run clean && npm run build && npm run copy-css-to-es && npm run copy-css-to-lib",
     "publish": "npm publish --access public"
   },
   "keywords": [
@@ -49,8 +49,8 @@
     "eve-raphael": "^0.5.0",
     "highlight.js": "^11.8.0",
     "inversify": "^6.0.1",
-    "jquery.easing": "^1.4.1",
     "jquery": "^3.7.1",
+    "jquery.easing": "^1.4.1",
     "lit": "^2.8.0",
     "mini-css-extract-plugin": "^1.6.2",
     "perfect-scrollbar": "^1.3.0",
@@ -80,9 +80,9 @@
     "typedoc": "^0.24.8",
     "typescript": "^5.0.4",
     "url-loader": "^4.1.1",
-    "webpack": "^5.88.1",
-    "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.15.0"
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4"
   },
   "main": "dist/lib/pointlinejs/PointlineJS.js",
   "module": "dist/es/pointlinejs/PointlineJS.js",

@@ -30,6 +30,10 @@ For Docs, Examples, and everything else see: /_ TODO create gitbut io pages _/
 
 # Development
 
+## Requirements
+
+Node version: minimum 18.12.0
+
 ## How to compile sources
 
 `npx webpack --config webpack.config.js`
