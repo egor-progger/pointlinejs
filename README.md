@@ -26,7 +26,7 @@ $ npx webpack serve
 
 4. open in browser address http://localhost:9001
 
-For Docs, Examples, and everything else see: /_ TODO create gitbut io pages _/
+For Docs, Examples, and everything else see: https://egor-progger.github.io/pointlinejs/documentation/
 
 # Development
 
