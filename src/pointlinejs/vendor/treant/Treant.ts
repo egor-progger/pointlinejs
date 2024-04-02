@@ -121,6 +121,8 @@ export type ConnectorType = {
   stackIndent: number;
 };
 
+export type NodeTypeLink = { target: '_self' };
+
 export type NodeType = {
   /**
    * A string can be entered under HTMLclass. That class will be given to each node in the cart along with the default .node class. 
@@ -137,7 +139,7 @@ export type NodeType = {
   /**
    * If you are planning of making a lot of \<a\> nodes then here is the possibility to assign target="_blank" to each of those nodes in one blow.
    */
-  link: { target: '_self' };
+  link: NodeTypeLink;
 };
 
 export type AnimationType = {
