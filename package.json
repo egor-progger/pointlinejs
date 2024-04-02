@@ -82,7 +82,7 @@
     "url-loader": "^4.1.1",
     "webpack": "^5.88.1",
     "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.15.0"
+    "webpack-dev-server": "^4.15.2"
   },
   "main": "dist/lib/pointlinejs/PointlineJS.js",
   "module": "dist/es/pointlinejs/PointlineJS.js",
