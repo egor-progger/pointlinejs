@@ -10,8 +10,6 @@ import $ from 'jquery';
 import PerfectScrollbar from 'perfect-scrollbar';
 import {
   Coordinate,
-  ChartInterface,
-  NodeInterface,
   ChartStructure,
 } from './Treant';
 
@@ -40,95 +38,7 @@ export class Tree {
   lastNodeOnLevel: { [key: number]: number };
   levelMaxDim: LevelMaxDim[];
   inAnimation: boolean;
-  CONFIG: Partial<ChartInterface> = {
-    maxDepth: 100,
-    rootOrientation: 'NORTH', // NORTH || EAST || WEST || SOUTH
-    nodeAlign: 'CENTER', // CENTER || TOP || BOTTOM
-    levelSeparation: 30,
-    siblingSeparation: 30,
-    subTeeSeparation: 30,
-
-    hideRootNode: false,
-
-    animateOnInit: false,
-    animateOnInitDelay: 500,
-
-    padding: 15, // the difference is seen only when the scrollbar is shown
-    scrollbar: 'native', // "native" || "fancy" || "None" (PS: "fancy" requires jquery and perfect-scrollbar)
-
-    connectors: {
-      type: 'curve', // 'curve' || 'step' || 'straight' || 'bCurve'
-      style: {
-        stroke: 'black',
-      },
-      stackIndent: 15,
-    },
-
-    node: {
-      // each node inherits this, it can all be overridden in node config
-
-      // HTMLclass: 'node',
-      // drawLineThrough: false,
-      // collapsable: false,
-      link: {
-        target: '_self',
-      },
-    },
-
-    animation: {
-      // each node inherits this, it can all be overridden in node config
-      nodeSpeed: 450,
-      nodeAnimation: 'linear',
-      connectorsSpeed: 450,
-      connectorsAnimation: 'linear',
-    },
-
-    callback: {
-      onCreateNode: function (
-        treeNode: TreeNode,
-        treeNodeDom: HTMLAnchorElement | HTMLDivElement
-      ) { }, // this = Tree
-      onCreateNodeCollapseSwitch: function (
-        treeNode: TreeNode,
-        treeNodeDom: HTMLAnchorElement | HTMLDivElement,
-        switchDom: HTMLAnchorElement | HTMLDivElement
-      ) { }, // this = Tree
-      onAfterAddNode: function (
-        newTreeNode: TreeNode,
-        parentTreeNode: TreeNode,
-        nodeStructure: Partial<NodeInterface>
-      ) { }, // this = Tree
-      onBeforeAddNode: function (
-        parentTreeNode: TreeNode,
-        nodeStructure: Partial<NodeInterface>
-      ) { }, // this = Tree
-      onAfterPositionNode: function (
-        treeNode: TreeNode,
-        nodeDbIndex: number,
-        containerCenter: Coordinate,
-        treeCenter: Coordinate
-      ) { }, // this = Tree
-      onBeforePositionNode: function (
-        treeNode: TreeNode,
-        nodeDbIndex: number,
-        containerCenter: Coordinate,
-        treeCenter: Coordinate
-      ) { }, // this = Tree
-      onToggleCollapseFinished: function (
-        treeNode: TreeNode,
-        bIsCollapsed: boolean
-      ) { }, // this = Tree
-      onAfterClickCollapseSwitch: function (
-        nodeSwitch: Element | JQuery,
-        event: Event
-      ) { }, // this = TreeNode
-      onBeforeClickCollapseSwitch: function (
-        nodeSwitch: Element | JQuery,
-        event: Event
-      ) { }, // this = TreeNode
-      onTreeLoaded: function (rootTreeNode: TreeNode) { }, // this = Tree
-    },
-  };
+  CONFIG = this.util.getDefaultChartConfig();
   nodeDB: NodeDB = {} as NodeDB;
 
   constructor(
@@ -151,7 +61,10 @@ export class Tree {
 
     this.id = treeId;
 
-    this.CONFIG = this.util.extend(this.CONFIG, jsonConfig.chart);
+    this.CONFIG = this.util.mergeChartConfigWithDefaultConfig(jsonConfig.chart);
+    console.log('reset');
+    console.log(treeId);
+    console.log(this.CONFIG);
     this.drawArea = this.util.findEl(
       this.CONFIG.container,
       true
@@ -641,14 +554,14 @@ export class Tree {
    * @returns {Tree}
    */
   setConnectionToParent(treeNode: TreeNode, hidePoint: Coordinate) {
-    var stacked = treeNode.stackParentId ? true : false,
-      connLine: RaphaelPathExtended,
-      parent = stacked
-        ? this.nodeDB.get(treeNode.stackParentId)
-        : treeNode.parent(),
-      pathString = hidePoint
-        ? this.getPointPathString(hidePoint)
-        : this.getPathString(parent, treeNode, stacked);
+    const stacked = treeNode.stackParentId ? true : false;
+    let connLine: RaphaelPathExtended;
+    const parent = stacked
+      ? this.nodeDB.get(treeNode.stackParentId)
+      : treeNode.parent();
+    const pathString = hidePoint
+      ? this.getPointPathString(hidePoint)
+      : this.getPathString(parent, treeNode, stacked);
 
     if (this.connectionStore[treeNode.id]) {
       // connector already exists, update the connector geometry
@@ -741,12 +654,23 @@ export class Tree {
    * @returns {string}
    */
   getPathString(from_node: TreeNode, to_node: TreeNode, stacked: boolean) {
-    var startPoint = from_node.connectorPoint(true),
-      endPoint = to_node.connectorPoint(false),
-      orientation = this.CONFIG.rootOrientation,
-      connType = from_node.connStyle.type,
-      P1: Coordinate = { x: 0, y: 0 },
-      P2: Coordinate = { x: 0, y: 0 };
+    console.log('getPathString begin');
+    console.log('from_node');
+    console.log(from_node);
+    console.log('to_node');
+    console.log(to_node);
+    const startPoint = from_node.connectorPoint(true);
+    const endPoint = to_node.connectorPoint(false);
+    const orientation = this.CONFIG.rootOrientation;
+    const connType = from_node.connStyle.type;
+    const P1: Coordinate = { x: 0, y: 0 };
+    const P2: Coordinate = { x: 0, y: 0 };
+    console.log('orientation');
+    console.log(orientation);
+    console.log('startPoint');
+    console.log(startPoint);
+    console.log('endPoint');
+    console.log(endPoint);
 
     if (orientation === 'NORTH' || orientation === 'SOUTH') {
       P1.y = P2.y = (startPoint.y + endPoint.y) / 2;
@@ -768,6 +692,11 @@ export class Tree {
       pm = (P1.x + P2.x) / 2 + ',' + (P1.y + P2.y) / 2,
       pathString: string[],
       stackPoint;
+
+    console.log('stacked');
+    console.log(stacked);
+    console.log(`p1`, p1);
+    console.log(`p2`, p2);
 
     if (stacked) {
       // STACKED CHILDREN
@@ -797,6 +726,7 @@ export class Tree {
     } else {
       // NORMAL CHILDREN
       if (connType === 'step') {
+        console.log(`connType === 'step'`);
         pathString = ['M', sp, 'L', p1, 'L', p2, 'L', ep];
       } else if (connType === 'curve') {
         pathString = ['M', sp, 'C', p1, p2, ep];
@@ -806,6 +736,10 @@ export class Tree {
         pathString = ['M', sp, 'L', sp, ep];
       }
     }
+
+    console.log(pathString);
+
+    console.log('getPathString end');
 
     return pathString.join(' ');
   }

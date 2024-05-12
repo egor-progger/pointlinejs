@@ -34,6 +34,9 @@ export class JSONconfig {
 
     this.findChildren(configArray);
 
+    console.log('this.jsonStructure');
+    console.log(this.jsonStructure);
+
     return this.jsonStructure;
   }
 

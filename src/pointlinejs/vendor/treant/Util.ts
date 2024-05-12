@@ -1,10 +1,101 @@
 import { injectable } from 'inversify';
 import $ from 'jquery';
-import { ElementWithSupportIE } from './Treant';
+import { ChartInterface, Coordinate, ElementWithSupportIE, NodeInterface } from './Treant';
+import { TreeNode } from './TreeNode';
 
 @injectable()
 export class UTIL {
   private readonly hasOwnProperty = Object.prototype.hasOwnProperty;
+  private readonly defaultChartConfig: Partial<ChartInterface> = {
+    maxDepth: 100,
+    rootOrientation: 'NORTH', // NORTH || EAST || WEST || SOUTH
+    nodeAlign: 'CENTER', // CENTER || TOP || BOTTOM
+    levelSeparation: 30,
+    siblingSeparation: 30,
+    subTeeSeparation: 30,
+
+    hideRootNode: false,
+
+    animateOnInit: false,
+    animateOnInitDelay: 500,
+
+    padding: 15, // the difference is seen only when the scrollbar is shown
+    scrollbar: 'native', // "native" || "fancy" || "None" (PS: "fancy" requires jquery and perfect-scrollbar)
+
+    connectors: {
+      type: 'curve', // 'curve' || 'step' || 'straight' || 'bCurve'
+      style: {
+        stroke: 'black',
+      },
+      stackIndent: 15,
+    },
+
+    node: {
+      // each node inherits this, it can all be overridden in node config
+
+      // HTMLclass: 'node',
+      // drawLineThrough: false,
+      // collapsable: false,
+      link: {
+        target: '_self',
+      },
+    },
+
+    animation: {
+      // each node inherits this, it can all be overridden in node config
+      nodeSpeed: 450,
+      nodeAnimation: 'linear',
+      connectorsSpeed: 450,
+      connectorsAnimation: 'linear',
+    },
+
+    callback: {
+      onCreateNode: function (
+        treeNode: TreeNode,
+        treeNodeDom: HTMLAnchorElement | HTMLDivElement
+      ) { }, // this = Tree
+      onCreateNodeCollapseSwitch: function (
+        treeNode: TreeNode,
+        treeNodeDom: HTMLAnchorElement | HTMLDivElement,
+        switchDom: HTMLAnchorElement | HTMLDivElement
+      ) { }, // this = Tree
+      onAfterAddNode: function (
+        newTreeNode: TreeNode,
+        parentTreeNode: TreeNode,
+        nodeStructure: Partial<NodeInterface>
+      ) { }, // this = Tree
+      onBeforeAddNode: function (
+        parentTreeNode: TreeNode,
+        nodeStructure: Partial<NodeInterface>
+      ) { }, // this = Tree
+      onAfterPositionNode: function (
+        treeNode: TreeNode,
+        nodeDbIndex: number,
+        containerCenter: Coordinate,
+        treeCenter: Coordinate
+      ) { }, // this = Tree
+      onBeforePositionNode: function (
+        treeNode: TreeNode,
+        nodeDbIndex: number,
+        containerCenter: Coordinate,
+        treeCenter: Coordinate
+      ) { }, // this = Tree
+      onToggleCollapseFinished: function (
+        treeNode: TreeNode,
+        bIsCollapsed: boolean
+      ) { }, // this = Tree
+      onAfterClickCollapseSwitch: function (
+        nodeSwitch: Element | JQuery,
+        event: Event
+      ) { }, // this = TreeNode
+      onBeforeClickCollapseSwitch: function (
+        nodeSwitch: Element | JQuery,
+        event: Event
+      ) { }, // this = TreeNode
+      onTreeLoaded: function (rootTreeNode: TreeNode) { }, // this = Tree
+    },
+  };
+
   /**
    * Directly updates, recursively/deeply, the first object with all properties in the second object
    * @param {object} applyTo
@@ -55,6 +146,7 @@ export class UTIL {
   /**
    * Takes any number of arguments
    * @returns {*}
+   * @deprecated
    */
   extend(...args: any) {
     if (typeof $ !== 'undefined') {
@@ -63,6 +155,12 @@ export class UTIL {
     } else {
       return this.createMerge.apply(this, args);
     }
+  }
+
+  mergeChartConfigWithDefaultConfig(destination: Partial<ChartInterface>): Partial<ChartInterface> {
+    console.log('mergeChartConfig');
+    console.log({ ...this.defaultChartConfig, ...destination });
+    return { ...{}, ...this.defaultChartConfig, ...destination };
   }
 
   // /**
@@ -233,5 +331,9 @@ export class UTIL {
 
   isjQueryAvailable() {
     return typeof $ !== 'undefined' && $;
+  }
+
+  getDefaultChartConfig() {
+    return this.defaultChartConfig;
   }
 }

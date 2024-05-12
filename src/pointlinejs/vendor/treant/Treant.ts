@@ -368,6 +368,8 @@ export class Treant {
     return Promise.all([this.tree, this.nodeDB.nodeDBState.dbReady]).then(
       ([tree, dbReady]) => {
         if (dbReady) {
+          console.log('dbReady');
+          console.log(this.treeStore.tree);
           return tree.positionTree(callback);
         }
         return null;

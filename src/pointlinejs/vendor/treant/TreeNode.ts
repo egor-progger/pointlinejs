@@ -112,10 +112,11 @@ export class TreeNode {
       this.meta = nodeStructureValue.meta || {};
       this.image = nodeStructureValue.image || null;
 
-      this.connStyle = this.util.createMerge(
-        tree.CONFIG.connectors,
-        nodeStructureValue.connectors
-      );
+      this.connStyle = {
+        ...{},
+        ...tree.CONFIG.connectors,
+        ...nodeStructureValue.connectors
+      };
 
       this.drawLineThrough =
         nodeStructureValue.drawLineThrough === false
@@ -337,6 +338,7 @@ export class TreeNode {
 
   // returns start or the end point of the connector line, origin is upper-left
   connectorPoint(startPoint: boolean) {
+    console.log('connectorPoint begin');
     let orient = this.getTree().CONFIG.rootOrientation;
     const point: Coordinate = { x: 0, y: 0 };
 
@@ -348,9 +350,12 @@ export class TreeNode {
         orient = 'NORTH';
       }
     }
+    console.log('orient', orient);
 
     // if pseudo, a virtual center is used
     if (orient === 'NORTH') {
+      console.log('this.X + this.width / 2');
+      console.log(this.X, this.width);
       point.x = this.pseudo
         ? this.X - this.getTree().CONFIG.subTeeSeparation / 2
         : this.X + this.width / 2;
@@ -366,11 +371,14 @@ export class TreeNode {
         ? this.Y - this.getTree().CONFIG.subTeeSeparation / 2
         : this.Y + this.height / 2;
     } else if (orient === 'WEST') {
+      console.log('this.X + this.width');
+      console.log(this.X, this.width);
       point.x = startPoint ? this.X + this.width : this.X;
       point.y = this.pseudo
         ? this.Y - this.getTree().CONFIG.subTeeSeparation / 2
         : this.Y + this.height / 2;
     }
+    console.log('connectorPoint end');
     return point;
   }
 
