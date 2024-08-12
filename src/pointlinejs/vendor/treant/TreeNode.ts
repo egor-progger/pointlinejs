@@ -418,7 +418,7 @@ export class TreeNode {
   }
 
   private addSwitchEvent(nodeSwitch: Element | JQuery) {
-    var self = this;
+    const self = this;
     this.util.addEvent(
       nodeSwitch as Element,
       'click',
@@ -806,6 +806,8 @@ export class TreeNode {
       }
     }
 
+    this.addClickEventForNode(node);
+
     tree.CONFIG.callback.onCreateNode.apply(tree, [this, node]);
 
     /////////// APPEND all //////////////
@@ -847,5 +849,23 @@ export class TreeNode {
       ]);
     }
     return nodeSwitchEl;
+  }
+
+  /**
+   * @param nodeElement 
+   */
+  private addClickEventForNode(nodeElement: Element | JQuery): void {
+    const self = this;
+    this.util.addEvent(
+      nodeElement as Element,
+      'click',
+      (e: Event): void | boolean => {
+        e.preventDefault();
+
+        self
+          .getTreeConfig()
+          .callback.onClickNode.apply(self, [nodeElement, e]);
+      }
+    );
   }
 }

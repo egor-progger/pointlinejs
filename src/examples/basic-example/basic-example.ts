@@ -1,8 +1,8 @@
 import './styles/basic-example.css';
 import { PointlineJS } from '@pointlinejs/pointlinejs';
-import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
+import { ChartConfigType, ChartInterface } from '@pointlinejs/vendor/treant/Treant';
 
-var config = {
+var config: Partial<ChartInterface> = {
   container: '#basic-example',
 
   connectors: {
@@ -11,6 +11,14 @@ var config = {
   node: {
     HTMLclass: 'nodeExample1',
   },
+
+  callback: {
+    onClickNode: (node, event) => {
+      console.log('onClickNode');
+      console.log(node);
+      console.log(event);
+    }
+  }
 },
   ceo = {
     text: {
@@ -181,3 +189,7 @@ var config = {
 
 const graphJS = new PointlineJS(chart_config as unknown as ChartConfigType);
 graphJS.draw();
+const tree = graphJS.getTree();
+console.log(tree);
+graphJS.destroy();
+graphJS.reload();

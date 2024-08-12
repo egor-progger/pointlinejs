@@ -51,4 +51,12 @@ export class PointlineJS {
   getTree() {
     return this.tree;
   }
+
+  destroy() {
+    this.treant.destroy();
+  }
+
+  async reload() {
+    (await this.tree).reload();
+  }
 }

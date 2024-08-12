@@ -76,6 +76,13 @@ export type CallbackFunction = {
     nodeSwitch: Element | JQuery,
     event: Event
   ) => void | boolean;
+  /**
+   * @description be carefull with click event, you can reset collapse, expand events
+   * @param node 
+   * @param event 
+   * @returns 
+   */
+  onClickNode: (node: Element | JQuery, event: Event) => void | boolean,
   onTreeLoaded: (rootTreeNode: TreeNode) => void;
 };
 
@@ -317,6 +324,7 @@ export interface NodeInterface {
   position: string;
   _json_id: number;
   parent: Partial<NodeInterface>;
+  clickEvent: () => void;
 }
 
 export type ChartStructure = {
@@ -343,7 +351,7 @@ export class Treant {
   ) { }
 
   destroy() {
-    this.tree.then((tree) => this.treeStore.destroy(tree.id));
+    this.tree.then((tree) => this.treeStore.destroy(tree.initTreeId));
   }
 
   init(
