@@ -184,7 +184,9 @@ export class Tree {
    * @returns {Tree}
    */
   reload() {
-    this.reset(this.initJsonConfig, this.initTreeId).redraw();
+    if (this.initJsonConfig !== null) {
+      this.reset(this.initJsonConfig, this.initTreeId).redraw();
+    }
     return this;
   }
 
@@ -654,7 +656,7 @@ export class Tree {
       // connector already exists, update the connector geometry
       connLine = this.connectionStore[treeNode.id];
       this.animatePath(connLine, pathString);
-    } else {
+    } else if (this._R.path(pathString)) {
       connLine = this._R.path(pathString);
       this.connectionStore[treeNode.id] = connLine;
 
