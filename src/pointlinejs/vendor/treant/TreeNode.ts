@@ -34,7 +34,6 @@ export class TreeNode {
   private link: NodeLink;
   private collapsable: boolean;
   private collapsed: boolean;
-  private text: Partial<NodeText>;
   private nodeInnerHTML: string;
   private nodeHTMLclass: string;
   private nodeHTMLid: number;
@@ -45,6 +44,7 @@ export class TreeNode {
   };
 
   id: number;
+  text: Partial<NodeText>;
   prelim: number;
   modifier: number;
   leftNeighborId: number | null;
@@ -752,6 +752,7 @@ export class TreeNode {
    * @param {Tree} tree
    */
   createGeometry(tree: Tree) {
+    console.log('createGeometry');
     if (this.id === 0 && tree.CONFIG.hideRootNode) {
       this.width = 0;
       this.height = 0;
@@ -811,6 +812,9 @@ export class TreeNode {
     tree.CONFIG.callback.onCreateNode.apply(tree, [this, node]);
 
     /////////// APPEND all //////////////
+    console.log(node);
+    console.log('drawArea');
+    console.log(drawArea);
     drawArea.appendChild(node);
     this.width = node.offsetWidth;
     this.height = node.offsetHeight;
@@ -822,9 +826,9 @@ export class TreeNode {
    * @param {Tree} tree
    * @param {HTMLAnchorElement | HTMLDivElement} nodeEl
    */
-  private createSwitchGeometry(
+  public createSwitchGeometry(
     tree: Tree,
-    nodeEl: HTMLAnchorElement | HTMLDivElement
+    nodeEl?: HTMLAnchorElement | HTMLDivElement
   ) {
     nodeEl = nodeEl || this.nodeDOM;
 

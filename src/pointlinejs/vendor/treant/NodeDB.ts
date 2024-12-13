@@ -20,7 +20,7 @@ export class NodeDBState {
 @injectable()
 export class NodeDB {
   protected util: UTIL = new UTIL();
-  private db: TreeNode[] = [];
+  public db: TreeNode[] = [];
 
   constructor(@inject(DI_LIST.nodeDBState) public nodeDBState: NodeDBState) { }
 
@@ -151,11 +151,11 @@ export class NodeDB {
    * @param {number} stackParentId
    * @returns {TreeNode}
    */
-  private createNode(
+  public createNode(
     nodeStructure: Partial<NodeInterface> | 'pseudo',
     parentId: number,
     tree: Tree,
-    stackParentId: number | null
+    stackParentId?: number | null
   ) {
     const node = new TreeNode(tree).init(
       nodeStructure,
