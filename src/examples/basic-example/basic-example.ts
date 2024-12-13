@@ -18,7 +18,9 @@ var config: Partial<ChartInterface> = {
       console.log(node);
       console.log(event);
     }
-  }
+  },
+
+  actionsId: 'guiButtons',
 },
   ceo = {
     text: {
@@ -187,9 +189,10 @@ var config: Partial<ChartInterface> = {
 //     }
 // };
 
-const graphJS = new PointlineJS(chart_config as unknown as ChartConfigType);
-graphJS.draw();
-const tree = graphJS.getTree();
+const pointlinejs = new PointlineJS(chart_config as unknown as ChartConfigType, 'guiButtons');
+await pointlinejs.draw();
+const tree = pointlinejs.getTree();
+console.log('tree');
 console.log(tree);
-graphJS.destroy();
-graphJS.reload();
+// pointlinejs.destroy();
+// pointlinejs.reload();

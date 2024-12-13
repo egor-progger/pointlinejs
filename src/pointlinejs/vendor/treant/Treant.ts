@@ -214,6 +214,7 @@ export interface ChartInterface {
   node: Partial<NodeType>;
   animation: AnimationType;
   maxDepth: number;
+  actionsId: string;
 }
 
 /**
@@ -379,5 +380,13 @@ export class Treant {
         return null;
       }
     );
+  }
+
+  /**
+   * 
+   * @returns  {NodeDB}
+   */
+  async getNodeDb() {
+    return (await this.tree).getNodeDb();
   }
 }

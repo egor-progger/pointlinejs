@@ -29,6 +29,10 @@ export interface LevelMaxDim {
 @injectable()
 export class Tree {
   private util: UTIL = new UTIL();
+  private treeReady: (value: boolean) => void;
+  treePositioned = new Promise((resolve) => {
+    this.treeReady = resolve;
+  });
 
   initJsonConfig: ChartStructure;
   initTreeId: number = 0;
@@ -146,6 +150,7 @@ export class Tree {
    * @returns {Tree}
    */
   reset(jsonConfig: ChartStructure, treeId: number) {
+    console.log('reset');
     this.initJsonConfig = { ...this.initJsonConfig, ...jsonConfig };
     this.initTreeId = treeId;
 
@@ -165,9 +170,14 @@ export class Tree {
     this.util.addClass(this.drawArea, 'Treant');
 
     // kill of any child elements that may be there
-    this.drawArea.innerHTML = '';
+    while (this.drawArea.firstChild) {
+      this.drawArea.removeChild(this.drawArea.lastChild);
+    }
+    // this.drawArea.innerHTML = '';
 
     this.nodeDB = this.nodeDBClass.init(jsonConfig.nodeStructure, this);
+    console.log('this.nodeDB');
+    console.log(this.nodeDB);
 
     // key store for storing reference to node connectors,
     // key = nodeId where the connector ends
@@ -184,6 +194,8 @@ export class Tree {
    * @returns {Tree}
    */
   reload() {
+    console.log('reload tree');
+    console.log(this.initJsonConfig);
     if (this.initJsonConfig !== null) {
       this.reset(this.initJsonConfig, this.initTreeId).redraw();
     }
@@ -201,6 +213,7 @@ export class Tree {
    * @returns {Tree}
    */
   redraw() {
+    console.log('redraw');
     this.positionTree();
     return this;
   }
@@ -210,9 +223,11 @@ export class Tree {
    * @returns {Tree}
    */
   positionTree(callback?: (tree: Tree) => void) {
+    console.log('positionTree');
     var self = this;
 
     if (this.imageLoader.isNotLoading() === true) {
+      console.log('this.imageLoader.isNotLoading');
       const root = this.root();
 
       this.resetLevelData();
@@ -235,6 +250,7 @@ export class Tree {
         }
         self.CONFIG.callback.onTreeLoaded.apply(self, [root]);
         this.loaded = true;
+        this.treeReady(true);
       }
     } else {
       setTimeout(function () {
@@ -478,6 +494,7 @@ export class Tree {
    * @returns {Tree}
    */
   positionNodes() {
+    console.log('positionNodes');
     var self = this,
       treeSize = {
         x: self.nodeDB.getMinMaxCoord('X', null, null),
@@ -504,6 +521,8 @@ export class Tree {
       i,
       len,
       node: TreeNode;
+
+    console.log(containerCenter);
 
     // position all the nodes
     for (i = 0, len = this.nodeDB.size; i < len; i++) {
@@ -562,6 +581,9 @@ export class Tree {
         // drawlinethrough is performed for for the root node also
         node.drawLineThroughMe();
       }
+
+      console.log('node');
+      console.log(node);
 
       self.CONFIG.callback.onAfterPositionNode.apply(self, [
         node,
@@ -861,5 +883,25 @@ export class Tree {
    */
   root() {
     return this.nodeDB.get(0);
+  }
+
+  /**
+        * @param {TreeNode} parentTreeNode
+        * @param {object} nodeDefinition
+        * @returns {TreeNode}
+        */
+  addNode(parentTreeNode: TreeNode, nodeDefinition: Partial<NodeInterface>): TreeNode {
+    this.CONFIG.callback.onBeforeAddNode.apply(this, [parentTreeNode, nodeDefinition]);
+
+    var oNewNode = this.nodeDB.createNode(nodeDefinition, parentTreeNode.id, this);
+    oNewNode.createGeometry(this);
+
+    oNewNode.parent().createSwitchGeometry(this);
+
+    this.positionTree();
+
+    this.CONFIG.callback.onAfterAddNode.apply(this, [oNewNode, parentTreeNode, nodeDefinition]);
+
+    return oNewNode;
   }
 }

@@ -19,18 +19,23 @@ import { Tree } from './vendor/treant/Tree';
 import { TreeNode } from './vendor/treant/TreeNode';
 import { TreeStore } from './vendor/treant/TreeStore';
 import { UTIL } from './vendor/treant/Util';
-import { Container } from 'inversify';
+import { PointlineActions } from './components/pointline-actions';
+import { Container, injectable } from 'inversify';
 import 'reflect-metadata';
 window.jQuery = window.$ = require('jquery');
 require('jquery.easing');
 
+@injectable()
 export class PointlineJS {
   private treant: Treant;
   private chartConfig: ChartConfigType;
-  private tree: Promise<Tree>;
+  private tree: Tree;
+  private actionsId: string;
+  private actions: PointlineActions;
 
-  constructor(chartConfig: ChartConfigType) {
+  constructor(chartConfig: ChartConfigType, actionsId?: string) {
     const container = new Container();
+    container.bind(DI_LIST.pointlineJS).to(PointlineJS).inSingletonScope();
     container.bind(DI_LIST.treeStore).to(TreeStore).inSingletonScope();
     container.bind(DI_LIST.util).to(UTIL).inSingletonScope();
     container.bind(DI_LIST.imageLoader).to(ImageLoader).inSingletonScope();
@@ -40,15 +45,39 @@ export class PointlineJS {
     container.bind(DI_LIST.treeNode).to(TreeNode);
     container.bind(DI_LIST.tree).to(Tree);
     container.bind(DI_LIST.treant).to(Treant);
+    container.bind(DI_LIST.pointlineActions).to(PointlineActions);
     this.treant = container.get<Treant>(DI_LIST.treant);
+    this.actions = container.get<PointlineActions>(DI_LIST.pointlineActions);
     this.chartConfig = chartConfig;
+    this.actionsId = actionsId;
   }
 
-  draw() {
-    this.tree = this.treant.init(this.chartConfig);
+  // private treePositionedCallback(tree: Tree) {
+  //   console.log('treePositionedCallback');
+  //   console.log(tree);
+  //   // this.treePositionedResolve(true);
+  // }
+
+  async draw() {
+    const tree = await this.treant.init(this.chartConfig);
+    console.log('draw');
+    console.log(tree);
+    if (tree) {
+      this.tree = tree;
+      if (this.actionsId) {
+        const treePositioned = await tree.treePositioned;
+        if (treePositioned) {
+          this.actions.init(this.actionsId, this);
+        }
+      }
+    }
+    console.log('draw');
+    console.log(this.tree);
   }
 
   getTree() {
+    console.log('getTree');
+    console.log(this.tree);
     return this.tree;
   }
 
@@ -56,7 +85,8 @@ export class PointlineJS {
     this.treant.destroy();
   }
 
-  async reload() {
-    (await this.tree).reload();
+  reload() {
+    console.log('reload');
+    this.tree.reload();
   }
 }
