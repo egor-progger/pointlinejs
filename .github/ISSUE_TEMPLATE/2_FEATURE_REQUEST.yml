@@ -1,0 +1,33 @@
+name: Feature request
+description: Use this template for suggest new idea or feature.
+title: '[Feature]: '
+labels: ['enhancement']
+projects: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to create your suggestion!
+  - type: textarea
+    id: idea
+    attributes:
+      label: Description new feature
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots with your idea of feature
+      description: Add screenshots for more undestanding idea.
+  - type: textarea
+    id: code_example
+    attributes:
+      label: Code example
+      description: Add code example in Typescript
+      render: Typescript
+  - type: textarea
+    id: links
+    attributes:
+      label: Links to solution what can help to reproduce/solve feature
+      description: If you know examples text link here please
