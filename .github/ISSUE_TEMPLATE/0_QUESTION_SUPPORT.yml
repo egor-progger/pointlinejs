@@ -1,0 +1,31 @@
+name: Question
+description: Use this template for ask question about using PointlineJS.
+title: '[Question]: '
+labels: ['question']
+projects: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to asking! Thanks for using PointlineJS!
+  - type: textarea
+    id: question
+    attributes:
+      label: Describe your question
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Add screenshots for more undestanding question.
+  - type: textarea
+    id: code_example
+    attributes:
+      label: Code example
+      description: Add code example in Typescript
+      render: Typescript
+  - type: textarea
+    id: links
+    attributes:
+      label: Links to resources what can help undestanding better
