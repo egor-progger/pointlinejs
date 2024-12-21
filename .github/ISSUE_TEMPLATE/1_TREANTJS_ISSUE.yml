@@ -1,0 +1,19 @@
+name: TreantJS Issue
+description: Issue from treantjs.
+title: '[Treantjs]: '
+labels: ['treantjs', 'good first issue', 'help wanted']
+projects: ['egor-progger/3']
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description from treantjs issue
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Treantjs issue link
+      value: 'https://github.com/fperucic/treant-js/issues/'
+    validations:
+      required: true
