@@ -1,6 +1,6 @@
 {
   "name": "pointlinejs",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "JavaScipt library for visualization of tree diagrams",
   "directories": {
     "example": "examples"
@@ -21,8 +21,7 @@
     "copy-css-to-es": "copyfiles -u 5 src/pointlinejs/vendor/treant/styles/Treant.css dist/es/pointlinejs/vendor/treant/styles",
     "copy-css-to-lib": "copyfiles -u 5 src/pointlinejs/vendor/treant/styles/Treant.css dist/lib/pointlinejs/vendor/treant/styles",
     "clean": "rimraf dist/",
-    "prepare-publish": "npm run clean && npm run build && npm run copy-css-to-es && npm run copy-css-to-lib",
-    "publish": "npm publish --access public"
+    "prepare-publish": "npm run clean && npm run build && npm run copy-css-to-es && npm run copy-css-to-lib"
   },
   "keywords": [
     "pointlinejs",
