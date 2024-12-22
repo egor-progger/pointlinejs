@@ -14,6 +14,5 @@ body:
     id: link
     attributes:
       label: Treantjs issue link
-      value: 'https://github.com/fperucic/treant-js/issues/'
     validations:
       required: true
