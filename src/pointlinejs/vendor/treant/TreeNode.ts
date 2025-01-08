@@ -752,7 +752,6 @@ export class TreeNode {
    * @param {Tree} tree
    */
   createGeometry(tree: Tree) {
-    console.log('createGeometry');
     if (this.id === 0 && tree.CONFIG.hideRootNode) {
       this.width = 0;
       this.height = 0;
@@ -812,9 +811,6 @@ export class TreeNode {
     tree.CONFIG.callback.onCreateNode.apply(tree, [this, node]);
 
     /////////// APPEND all //////////////
-    console.log(node);
-    console.log('drawArea');
-    console.log(drawArea);
     drawArea.appendChild(node);
     this.width = node.offsetWidth;
     this.height = node.offsetHeight;
