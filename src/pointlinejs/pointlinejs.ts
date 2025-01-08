@@ -60,8 +60,6 @@ export class PointlineJS {
 
   async draw() {
     const tree = await this.treant.init(this.chartConfig);
-    console.log('draw');
-    console.log(tree);
     if (tree) {
       this.tree = tree;
       if (this.actionsId) {
@@ -71,13 +69,9 @@ export class PointlineJS {
         }
       }
     }
-    console.log('draw');
-    console.log(this.tree);
   }
 
   getTree() {
-    console.log('getTree');
-    console.log(this.tree);
     return this.tree;
   }
 
@@ -86,7 +80,10 @@ export class PointlineJS {
   }
 
   reload() {
-    console.log('reload');
     this.tree.reload();
+  }
+
+  exportTreeToJSON() {
+    return this.treant.exportTreeToJSON();
   }
 }

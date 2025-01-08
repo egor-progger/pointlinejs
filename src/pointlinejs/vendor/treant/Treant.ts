@@ -355,6 +355,13 @@ export class Treant {
     this.tree.then((tree) => this.treeStore.destroy(tree.initTreeId));
   }
 
+  /**
+   * 
+   * @param jsonConfig 
+   * @param callback 
+   * @param jQuery 
+   * @returns 
+   */
   init(
     jsonConfig: ChartConfigType,
     callback?: (tree: Tree) => void,
@@ -388,5 +395,13 @@ export class Treant {
    */
   async getNodeDb() {
     return (await this.tree).getNodeDb();
+  }
+
+  /**
+   * 
+   * @returns {Tree}
+   */
+  exportTreeToJSON() {
+    return this.treeStore.tree.initJsonConfig;
   }
 }

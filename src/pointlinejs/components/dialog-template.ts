@@ -1,4 +1,4 @@
-export const AddNodeDialogTemplate = `<div class="mdc-dialog">
+export const DialogTemplate = `<div class="mdc-dialog">
         <div class="mdc-dialog__container">
           <div
             class="mdc-dialog__surface"
@@ -8,8 +8,9 @@ export const AddNodeDialogTemplate = `<div class="mdc-dialog">
             aria-describedby="my-dialog-content"
             tabindex="-1"
           >
-            <div class="mdc-dialog__content" id="my-dialog-content">
-              Add child node to selected?
+            <h2 class="mdc-dialog__title" id="dialog-title">[title]</h2>
+            <div class="mdc-dialog__content" id="dialog-content">
+              [content]
             </div>
             <div class="mdc-dialog__actions">
               <button

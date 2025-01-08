@@ -3,6 +3,10 @@
 PointlineJS is an SVG based JS library for drawing tree diagrams.
 It relies on Treant-JS, Raphael for handling SVG and animations, JQuery.
 
+# Build status
+
+[![Node.js Package](https://github.com/egor-progger/pointlinejs/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/egor-progger/pointlinejs/actions/workflows/npm-publish.yml)
+
 # Quick start
 
 1. clone repository with command:
