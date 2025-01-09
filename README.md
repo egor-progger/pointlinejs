@@ -6,6 +6,10 @@ It relies on Treant-JS, Raphael for handling SVG and animations, JQuery.
 # Build status
 
 [![Node.js Package](https://github.com/egor-progger/pointlinejs/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/egor-progger/pointlinejs/actions/workflows/npm-publish.yml)
+[![NPM Downloads](https://img.shields.io/npm/dm/pointlinejs?label=npm%20downloads)](https://www.npmjs.com/package/pointlinejs)
+[![NPM Version](https://img.shields.io/npm/v/pointlinejs?label=Current%20version)](https://www.npmjs.com/package/pointlinejs)
+[![Static Badge](https://img.shields.io/badge/Documentation-green)](https://egor-progger.github.io/pointlinejs/documentation/)
+[![Quick start example](https://img.shields.io/badge/Quick_start_example-blue)](https://github.com/egor-progger/pointlinejs-quick-start/)
 
 # Quick start
 
