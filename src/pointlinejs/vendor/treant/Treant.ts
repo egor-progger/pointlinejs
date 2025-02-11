@@ -323,7 +323,7 @@ export interface NodeInterface {
   children: Partial<NodeInterface>[];
   meta: object;
   position: string;
-  _json_id: number;
+  idInNodeDB: number;
   parent: Partial<NodeInterface>;
   clickEvent: () => void;
 }

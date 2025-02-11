@@ -877,17 +877,35 @@ export class Tree {
         * @returns {TreeNode}
         */
   addNode(parentTreeNode: TreeNode, nodeDefinition: Partial<NodeInterface>): TreeNode {
-    this.CONFIG.callback.onBeforeAddNode.apply(this, [parentTreeNode, nodeDefinition]);
+    const searchItem = this.searchNodeByIdInConfig(parentTreeNode, this.initJsonConfig.nodeStructure);
+    if (searchItem) {
+      if (searchItem.children?.length > 0) {
+        searchItem.children.push({ text: { name: 'test', title: 'test' } });
+      } else {
+        searchItem.children = [];
+        searchItem.children.push({ text: { name: 'test', title: 'test' } });
+      }
+    }
+    return parentTreeNode;
+  }
 
-    var oNewNode = this.nodeDB.createNode(nodeDefinition, parentTreeNode.id, this);
-    oNewNode.createGeometry(this);
+  private searchNodeByIdInConfig(nodeFromDb: TreeNode, domNodeItem: Partial<NodeInterface>): Partial<NodeInterface> {
+    if (nodeFromDb.id === domNodeItem.idInNodeDB) {
+      return domNodeItem;
+    } else {
+      if (domNodeItem.children) {
+        for (const childItem of domNodeItem.children) {
+          const searchItem = this.searchNodeByIdInConfig(nodeFromDb, childItem);
+          if (searchItem) {
+            return searchItem;
+          }
+        }
+      }
+    }
+    return null;
+  }
 
-    oNewNode.parent().createSwitchGeometry(this);
-
-    this.positionTree();
-
-    this.CONFIG.callback.onAfterAddNode.apply(this, [oNewNode, parentTreeNode, nodeDefinition]);
-
-    return oNewNode;
+  removeChildren(treeNode: TreeNode) {
+    this.nodeDB.removeChildren(treeNode.id);
   }
 }

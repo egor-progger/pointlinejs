@@ -864,7 +864,7 @@ export class TreeNode {
 
         self
           .getTreeConfig()
-          .callback.onClickNode.apply(self, [nodeElement, e]);
+          .callback.onClickNode?.apply(self, [nodeElement, e]);
       }
     );
   }

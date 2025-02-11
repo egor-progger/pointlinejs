@@ -39,6 +39,10 @@ const entries = [
   { name: 'examples/tennis-draw/tennis-draw', type: entryType.withTypescript },
   { name: 'examples/test-ground/test-ground', type: entryType.withTypescript },
   { name: 'examples/timeline/timeline', type: entryType.withTypescript },
+  {
+    name: 'examples/action-buttons/action-buttons',
+    type: entryType.withTypescript,
+  },
   { name: 'documentation/documentation', type: entryType.withTypescript },
 ];
 /**

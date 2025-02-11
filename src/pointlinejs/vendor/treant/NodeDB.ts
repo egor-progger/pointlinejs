@@ -47,14 +47,15 @@ export class NodeDB {
     parentId: number,
     tree?: Tree
   ) {
-    var newNode = this.createNode(node, parentId, tree, null);
+    let newNode = this.createNode(node, parentId, tree, null);
+    node.idInNodeDB = newNode.id;
 
     if (node.children) {
       // pseudo node is used for descending children to the next level
       if (node.childrenDropLevel && node.childrenDropLevel > 0) {
         while (node.childrenDropLevel--) {
           // pseudo node needs to inherit the connection style from its parent for continuous connectors
-          var connStyle = this.util.cloneObj(newNode.connStyle);
+          const connStyle = this.util.cloneObj(newNode.connStyle);
           newNode = this.createNode('pseudo', newNode.id, tree, null);
           newNode.connStyle = connStyle;
           newNode.children = [];
@@ -210,6 +211,10 @@ export class NodeDB {
     }
 
     return node;
+  }
+
+  public removeChildren(nodeId: number) {
+    this.db[nodeId].children = [];
   }
 
   getMinMaxCoord(
