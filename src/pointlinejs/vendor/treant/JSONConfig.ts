@@ -28,7 +28,7 @@ export class JSONconfig {
 
       if (!node.hasOwnProperty('parent') && !node.hasOwnProperty('container')) {
         this.jsonStructure.nodeStructure = node as Partial<NodeInterface>;
-        (node as Partial<NodeInterface>)._json_id = 0;
+        (node as Partial<NodeInterface>).idInNodeDB = 0;
       }
     }
 
@@ -43,23 +43,21 @@ export class JSONconfig {
     while (parents.length) {
       const parentId: number = parents.pop() as number;
       const parent = this.findNode(this.jsonStructure.nodeStructure, parentId);
-      var i = 0,
-        len = nodes.length,
-        children = [];
+      const children = [];
 
-      for (; i < len; i++) {
+      for (let i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         if ((node as Partial<NodeInterface>)['parent']) {
           const nodeValue = node as NodeInterface;
-          if (nodeValue.parent && nodeValue.parent._json_id === parentId) {
+          if (nodeValue.parent && nodeValue.parent.idInNodeDB === parentId) {
             // skip config and root nodes
 
-            nodeValue._json_id = this.getID();
+            nodeValue.idInNodeDB = this.getID();
 
             delete nodeValue.parent;
 
             children.push(node);
-            parents.push(nodeValue._json_id);
+            parents.push(nodeValue.idInNodeDB);
           }
         }
       }
@@ -76,7 +74,7 @@ export class JSONconfig {
   ): Partial<NodeInterface> {
     var childrenLen, found;
 
-    if (node._json_id === nodeId) {
+    if (node.idInNodeDB === nodeId) {
       return node;
     } else if (node.children) {
       childrenLen = node.children.length;
