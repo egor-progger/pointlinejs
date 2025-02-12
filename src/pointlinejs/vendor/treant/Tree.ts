@@ -880,13 +880,33 @@ export class Tree {
     const searchItem = this.searchNodeByIdInConfig(parentTreeNode, this.initJsonConfig.nodeStructure);
     if (searchItem) {
       if (searchItem.children?.length > 0) {
-        searchItem.children.push({ text: { name: 'test', title: 'test' } });
+        searchItem.children.push(nodeDefinition);
       } else {
         searchItem.children = [];
-        searchItem.children.push({ text: { name: 'test', title: 'test' } });
+        searchItem.children.push(nodeDefinition);
       }
     }
     return parentTreeNode;
+  }
+
+  /**
+        * @param {TreeNode} parentTreeNode
+        * @param {object} nodeDefinition
+        * @returns {TreeNode}
+        */
+  addParentForNode(selectedNode: TreeNode, nodeDefinition: Partial<NodeInterface>): Partial<NodeInterface> {
+    let searchItem = this.searchNodeByIdInConfig(selectedNode.parent(), this.initJsonConfig.nodeStructure);
+    for (const [childIndex, childItem] of searchItem.children.entries()) {
+      if (childItem.idInNodeDB === selectedNode.id) {
+        const replacedItem: Partial<NodeInterface> = {
+          ...nodeDefinition,
+          ...{ children: [childItem] }
+        };
+        searchItem.children.splice(childIndex, 1, replacedItem);
+        break;
+      }
+    }
+    return searchItem;
   }
 
   private searchNodeByIdInConfig(nodeFromDb: TreeNode, domNodeItem: Partial<NodeInterface>): Partial<NodeInterface> {

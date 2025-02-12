@@ -12,17 +12,15 @@ export const BUTTON_CALLBACK = {
     EXPORT_TO_JSON_BUTTON: exportToJSONBtnClickEvent
 }
 
-function addParentNodeBtnClickEvent(pointlineJS: PointlineJS, selectedEl: HTMLElement) {
+async function addParentNodeBtnClickEvent(pointlineJS: PointlineJS, selectedEl: HTMLElement) {
     const tree = pointlineJS.getTree();
     const nodeDb = tree.getNodeDb().db;
     for (var key in nodeDb) {
         var nodeTree = nodeDb[key];
         if (nodeTree.text.name == selectedEl.textContent) {
-            console.log(nodeTree);
-            console.log(nodeTree.parent());
-            const selectedNodeTree = nodeTree.parent();
-            nodeTree.children = [];
-            tree.addNode(selectedNodeTree, { text: { name: 'test' } });
+            tree.addParentForNode(nodeTree, { text: { name: 'test' } });
+            pointlineJS.reload();
+            await pointlineJS.draw();
             break;
         }
     }
