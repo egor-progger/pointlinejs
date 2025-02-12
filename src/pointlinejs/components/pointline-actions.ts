@@ -36,9 +36,9 @@ class ButtonItem implements ButtonAction {
 
 
 const defaultButtons: ButtonItem[] = [
-    // new ButtonItem(
-    //     'addParentNodeBtn', 'Add parent node to selected', BUTTON_TYPE.ADD_PARENT_BUTTON
-    // ),
+    new ButtonItem(
+        'addParentNodeBtn', 'Add parent node to selected', BUTTON_TYPE.ADD_PARENT_BUTTON
+    ),
     new ButtonItem(
         'addChildNodeBtn', 'Add child node to selected', BUTTON_TYPE.ADD_CHILD_BUTTON
     ),
@@ -79,10 +79,10 @@ export class PointlineActions {
             var btn = document.createElement('button');
             btn.setAttribute("id", btnData.id);
             btn.innerHTML = btnData.text;
-            // if (btnData.type === BUTTON_TYPE.ADD_PARENT_BUTTON) {
-            //     dialogElements.push(this.createDivWithContentForModal(this.actionsDiv, modalId));
-            //     btn.addEventListener("click", () => this.showAddParentNodeModal(this.pointlineJS, this.selectedEl, modalId));
-            // }
+            if (btnData.type === BUTTON_TYPE.ADD_PARENT_BUTTON) {
+                dialogElements.push(this.createDivWithContentForModal(this.actionsDiv, modalId));
+                btn.addEventListener("click", () => this.showAddParentNodeModal(this.pointlineJS, this.selectedEl, modalId));
+            }
             if (btnData.type === BUTTON_TYPE.ADD_CHILD_BUTTON) {
                 dialogElements.push(this.createDivWithContentForModal(this.actionsDiv, modalId));
                 btn.addEventListener("click", () => this.showAddChildNodeModal(this.pointlineJS, this.selectedEl, modalId));
@@ -91,10 +91,17 @@ export class PointlineActions {
                 dialogElements.push(this.createDivWithContentForModal(this.actionsDiv, modalId));
                 btn.addEventListener("click", () => this.showExportJSONModal(this.pointlineJS, modalId));
             }
-            if (btnData.type === BUTTON_TYPE.ADD_CHILD_BUTTON) {
-                if (!this.selectedEl) {
-                    btn.setAttribute('disabled', 'true');
-                }
+            switch (btnData.type) {
+                case BUTTON_TYPE.ADD_PARENT_BUTTON:
+                    if (!this.selectedEl) {
+                        btn.setAttribute('disabled', 'true');
+                    }
+                    break;
+                case BUTTON_TYPE.ADD_CHILD_BUTTON:
+                    if (!this.selectedEl) {
+                        btn.setAttribute('disabled', 'true');
+                    }
+                    break;
             }
             this.actionsDiv.append(btn);
         }
@@ -105,12 +112,14 @@ export class PointlineActions {
         if (typeof this.selectedEl !== 'undefined') {
             $(this.selectedEl).css("background-color", "");
             this.disableAddNodeButton();
+            this.disableAddParentNodeButton();
             this.selectedEl = undefined;
         } else {
             const nodeName = $(nodeEl).find(".node-name");
             nodeName.css("background-color", this.options.selectedElBackgroundColor);
             this.selectedEl = nodeName[0];
             this.enableAddNodeButton();
+            this.enableAddParentNodeButton();
         }
     }
 
@@ -126,6 +135,18 @@ export class PointlineActions {
         buttomElement.setAttribute("disabled", "");
     }
 
+    private enableAddParentNodeButton() {
+        const addNodeButton = defaultButtons.find((item) => item.type === BUTTON_TYPE.ADD_PARENT_BUTTON);
+        const buttomElement = document.getElementById(addNodeButton.id);
+        buttomElement.removeAttribute("disabled");
+    }
+
+    private disableAddParentNodeButton() {
+        const addNodeButton = defaultButtons.find((item) => item.type === BUTTON_TYPE.ADD_PARENT_BUTTON);
+        const buttomElement = document.getElementById(addNodeButton.id);
+        buttomElement.setAttribute("disabled", "");
+    }
+
     private createDivWithContentForModal(parentElement: HTMLElement, modalId: string) {
         let modalWin = document.getElementById(modalId);
         if (!modalWin || typeof modalWin === 'undefined') {
@@ -136,20 +157,20 @@ export class PointlineActions {
         return modalWin;
     }
 
-    // private showAddParentNodeModal(pointlineJS: PointlineJS, selectedEl: HTMLElement, modalId: string) {
-    //     const dialogElement = document.getElementById(modalId);
-    //     const dialogTitle = dialogElement.querySelector('#dialog-title');
-    //     dialogTitle.innerHTML = 'Add parent node to selected?';
-    //     const dialogContent = dialogElement.querySelector('#dialog-content');
-    //     dialogContent.innerHTML = '';
-    //     const dialog = new MDCDialog(document.querySelector(`#${modalId} .mdc-dialog`));
-    //     dialog.open();
-    //     dialog.listen('MDCDialog:closed', (event: MDCDialogCloseEvent) => {
-    //         if (event.detail.action === 'accept') {
-    //             BUTTON_CALLBACK.ADD_PARENT_BUTTON(pointlineJS, selectedEl);
-    //         }
-    //     })
-    // }
+    private showAddParentNodeModal(pointlineJS: PointlineJS, selectedEl: HTMLElement, modalId: string) {
+        const dialogElement = document.getElementById(modalId);
+        const dialogTitle = dialogElement.querySelector('#dialog-title');
+        dialogTitle.innerHTML = 'Add parent node to selected?';
+        const dialogContent = dialogElement.querySelector('#dialog-content');
+        dialogContent.innerHTML = '';
+        const dialog = new MDCDialog(document.querySelector(`#${modalId} .mdc-dialog`));
+        dialog.open();
+        dialog.listen('MDCDialog:closed', (event: MDCDialogCloseEvent) => {
+            if (event.detail.action === 'accept') {
+                BUTTON_CALLBACK.ADD_PARENT_BUTTON(pointlineJS, selectedEl);
+            }
+        })
+    }
 
     private showAddChildNodeModal(pointlineJS: PointlineJS, selectedEl: HTMLElement, modalId: string) {
         const dialogElement = document.getElementById(modalId);
