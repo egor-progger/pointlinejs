@@ -1,7 +1,7 @@
 /*
  * PointlineJS
  *
- * (c) 2023 Egor Fedoseev
+ * (c) 2023-2025 Egor Fedoseev
  * PointlineJS may be freely distributed under the MIT license.
  *
  * PointlineJS is an open-source JavaScript library for visualization of tree diagrams.
@@ -14,7 +14,7 @@ import { ImageLoader } from './vendor/treant/ImageLoader';
 import { DI_LIST } from './InjectableList';
 import { JSONconfig } from './vendor/treant/JSONConfig';
 import { NodeDB, NodeDBState } from './vendor/treant/NodeDB';
-import { ChartConfigType, Treant } from './vendor/treant/Treant';
+import { ChartConfigType, NodeInterface, Treant } from './vendor/treant/Treant';
 import { Tree } from './vendor/treant/Tree';
 import { TreeNode } from './vendor/treant/TreeNode';
 import { TreeStore } from './vendor/treant/TreeStore';
@@ -52,12 +52,6 @@ export class PointlineJS {
     this.actionsId = actionsId;
   }
 
-  // private treePositionedCallback(tree: Tree) {
-  //   console.log('treePositionedCallback');
-  //   console.log(tree);
-  //   // this.treePositionedResolve(true);
-  // }
-
   async draw() {
     const tree = await this.treant.init(this.chartConfig);
     if (tree) {
@@ -71,6 +65,11 @@ export class PointlineJS {
     }
   }
 
+
+  /**
+   * 
+   * @returns {Tree}
+   */
   getTree() {
     return this.tree;
   }
@@ -83,7 +82,61 @@ export class PointlineJS {
     this.tree.reload();
   }
 
+  resetActions() {
+    this.actions.init(this.actionsId, this);
+  }
+
+  /**
+   * 
+   * @returns {ChartStructure}
+   */
+
   exportTreeToJSON() {
     return this.treant.exportTreeToJSON();
+  }
+
+  /**
+   * 
+   * @param {selectedEl} HTMLElement
+   * @param {nodeStructure} Partial<NodeInterface>
+   * @returns {Promise<Partial<NodeInterface>>}
+   */
+
+  async addParentNode(selectedEl: HTMLElement, nodeStructure: Partial<NodeInterface>): Promise<Partial<NodeInterface>> {
+    const tree = this.getTree();
+    const nodeDb = tree.getNodeDb().db;
+    for (var key in nodeDb) {
+      var nodeTree = nodeDb[key];
+      if (nodeTree.text.name == selectedEl.textContent) {
+        const addedNode = await tree.addParentForNode(nodeTree, nodeStructure);
+        this.reload();
+        this.resetActions();
+        return addedNode;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * 
+   * @param {selectedEl} HTMLElement
+   * @param {nodeStructure} Partial<NodeInterface>
+   * @returns {Promise<Partial<NodeInterface>>}
+   */
+
+  async addChildNode(selectedEl: HTMLElement, nodeStructure: Partial<NodeInterface>): Promise<Partial<NodeInterface>> {
+    const tree = this.getTree();
+    const nodeDb = tree.getNodeDb().db;
+    for (var key in nodeDb) {
+      var nodeTree = nodeDb[key];
+      if (nodeTree.text.name == selectedEl.textContent) {
+        const selectedNodeTree = nodeTree;
+        const addedNode = await tree.addChildToNode(selectedNodeTree, nodeStructure);
+        this.reload();
+        this.resetActions();
+        return addedNode;
+      }
+    }
+    return null;
   }
 }

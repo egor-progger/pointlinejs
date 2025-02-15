@@ -19,6 +19,7 @@ export class NodeDBState {
 
 @injectable()
 export class NodeDB {
+  protected readonly maxStackedChilren = 1;
   protected util: UTIL = new UTIL();
   public db: TreeNode[] = [];
 
@@ -62,7 +63,7 @@ export class NodeDB {
         }
       }
 
-      var stack =
+      const stack =
         node.stackChildren && !this.hasGrandChildren(node) ? newNode.id : null;
 
       // children are positioned on separate levels, one beneath the other
@@ -70,13 +71,9 @@ export class NodeDB {
         newNode.stackChildren = [];
       }
 
-      for (var i = 0, len = node.children.length; i < len; i++) {
-        if (stack !== null) {
+      for (let i = 0, len = node.children.length; i < len; i++) {
+        if (stack !== null && node.children.length <= this.maxStackedChilren) {
           newNode = this.createNode(node.children[i], newNode.id, tree, stack);
-          if (i + 1 < len) {
-            // last node cant have children
-            newNode.children = [];
-          }
         } else {
           this.iterateChildren(node.children[i], newNode.id, tree);
         }
