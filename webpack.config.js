@@ -185,10 +185,6 @@ module.exports = {
           from: 'src/documentation/index.html',
           to: 'documentation',
         },
-        {
-          from: 'src/documentation/index.html',
-          to: 'documentation',
-        },
       ],
     }),
   ],
