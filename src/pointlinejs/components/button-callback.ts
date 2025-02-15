@@ -13,33 +13,12 @@ export const BUTTON_CALLBACK = {
 }
 
 async function addParentNodeBtnClickEvent(pointlineJS: PointlineJS, selectedEl: HTMLElement) {
-    const tree = pointlineJS.getTree();
-    const nodeDb = tree.getNodeDb().db;
-    for (var key in nodeDb) {
-        var nodeTree = nodeDb[key];
-        if (nodeTree.text.name == selectedEl.textContent) {
-            tree.addParentForNode(nodeTree, { text: { name: 'test' } });
-            pointlineJS.reload();
-            await pointlineJS.draw();
-            break;
-        }
-    }
+    pointlineJS.addParentNode(selectedEl, { text: { name: 'test' } });
 }
 
 
 async function addChildNodeBtnClickEvent(pointlineJS: PointlineJS, selectedEl: HTMLElement) {
-    const tree = pointlineJS.getTree();
-    const nodeDb = tree.getNodeDb().db;
-    for (var key in nodeDb) {
-        var nodeTree = nodeDb[key];
-        if (nodeTree.text.name == selectedEl.textContent) {
-            const selectedNodeTree = nodeTree;
-            tree.addNode(selectedNodeTree, { text: { name: 'test' } });
-            pointlineJS.reload();
-            await pointlineJS.draw();
-            break;
-        }
-    }
+    pointlineJS.addChildNode(selectedEl, { text: { name: 'test' } });
 }
 
 function exportToJSONBtnClickEvent(pointlineJS: PointlineJS) {

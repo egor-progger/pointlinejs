@@ -872,13 +872,29 @@ export class Tree {
   }
 
   /**
-        * @param {TreeNode} parentTreeNode
+        * @param {TreeNode} selectedNode
         * @param {object} nodeDefinition
         * @returns {TreeNode}
         */
-  addNode(parentTreeNode: TreeNode, nodeDefinition: Partial<NodeInterface>): TreeNode {
-    const searchItem = this.searchNodeByIdInConfig(parentTreeNode, this.initJsonConfig.nodeStructure);
+  addChildToNode(selectedNode: TreeNode, nodeDefinition: Partial<NodeInterface>): Partial<NodeInterface> {
+    console.log('selectedNode');
+    console.log(selectedNode);
+    console.log('this.initJsonConfig.nodeStructure');
+    console.log(this.initJsonConfig.nodeStructure);
+    const searchItem = this.searchNodeByIdInConfig(selectedNode, this.initJsonConfig.nodeStructure);
+    console.log('searchItem');
+    console.log(searchItem);
     if (searchItem) {
+      // for (const [childIndex, childItem] of searchItem.parent.children.entries()) {
+      //   if (childItem.idInNodeDB === selectedNode.id) {
+      //     const replacedItem: Partial<NodeInterface> = {
+      //       ...searchItem,
+      //       ...{ children: [nodeDefinition] }
+      //     };
+      //     searchItem.parent.children.splice(childIndex, 1, replacedItem);
+      //     break;
+      //   }
+      // }
       if (searchItem.children?.length > 0) {
         searchItem.children.push(nodeDefinition);
       } else {
@@ -886,7 +902,7 @@ export class Tree {
         searchItem.children.push(nodeDefinition);
       }
     }
-    return parentTreeNode;
+    return searchItem;
   }
 
   /**
@@ -895,15 +911,21 @@ export class Tree {
         * @returns {TreeNode}
         */
   addParentForNode(selectedNode: TreeNode, nodeDefinition: Partial<NodeInterface>): Partial<NodeInterface> {
+    console.log('selectedNode');
+    console.log(selectedNode);
+    console.log('this.initJsonConfig.nodeStructure');
+    console.log(this.initJsonConfig.nodeStructure);
     let searchItem = this.searchNodeByIdInConfig(selectedNode.parent(), this.initJsonConfig.nodeStructure);
-    for (const [childIndex, childItem] of searchItem.children.entries()) {
-      if (childItem.idInNodeDB === selectedNode.id) {
-        const replacedItem: Partial<NodeInterface> = {
-          ...nodeDefinition,
-          ...{ children: [childItem] }
-        };
-        searchItem.children.splice(childIndex, 1, replacedItem);
-        break;
+    if (searchItem) {
+      for (const [childIndex, childItem] of searchItem.children.entries()) {
+        if (childItem.idInNodeDB === selectedNode.id) {
+          const replacedItem: Partial<NodeInterface> = {
+            ...nodeDefinition,
+            ...{ children: [childItem] }
+          };
+          searchItem.children.splice(childIndex, 1, replacedItem);
+          break;
+        }
       }
     }
     return searchItem;
