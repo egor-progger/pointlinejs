@@ -40,7 +40,7 @@ For Docs, Examples, and everything else see: https://egor-progger.github.io/poin
 
 ## Requirements
 
-Node version: minimum 18.12.0
+Node version: minimum 20.18.1
 
 ## How to compile sources
 

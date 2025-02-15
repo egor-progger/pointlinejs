@@ -185,6 +185,10 @@ module.exports = {
           from: 'src/documentation/api',
           to: 'documentation/api',
         },
+        {
+          from: 'src/documentation/index.html',
+          to: 'documentation',
+        },
       ],
     }),
   ],
