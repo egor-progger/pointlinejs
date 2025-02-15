@@ -182,8 +182,8 @@ module.exports = {
           to: 'documentation/images',
         },
         {
-          from: 'src/documentation/api',
-          to: 'documentation/api',
+          from: 'src/documentation/index.html',
+          to: 'documentation',
         },
         {
           from: 'src/documentation/index.html',

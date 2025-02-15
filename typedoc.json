@@ -4,5 +4,5 @@
     "./src/pointlinejs/pointlinejs.ts",
     "./src/pointlinejs/vendor/treant/Treant.ts"
   ],
-  "out": "src/documentation/api"
+  "out": "dist/documentation/api"
 }
