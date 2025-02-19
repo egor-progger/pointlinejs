@@ -43,6 +43,10 @@ const entries = [
     name: 'examples/action-buttons/action-buttons',
     type: entryType.withTypescript,
   },
+  {
+    name: 'examples/mouse-events/mouse-events',
+    type: entryType.withTypescript,
+  },
   { name: 'documentation/documentation', type: entryType.withTypescript },
 ];
 /**

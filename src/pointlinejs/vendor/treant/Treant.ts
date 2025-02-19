@@ -83,6 +83,8 @@ export type CallbackFunction = {
    * @returns 
    */
   onClickNode: (node: Element | JQuery, event: Event) => void | boolean,
+  onMouseoverNode: (node: Element | JQuery, event: Event) => void,
+  onMouseoutNode: (node: Element | JQuery, event: Event) => void,
   onTreeLoaded: (rootTreeNode: TreeNode) => void;
 };
 
