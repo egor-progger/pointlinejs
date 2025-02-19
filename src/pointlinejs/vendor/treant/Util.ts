@@ -40,7 +40,7 @@ export class UTIL {
    * @returns {object}
    */
   createMerge(obj1: any, obj2: any) {
-    var newObj = {};
+    const newObj = {};
     if (obj1) {
       this.inheritAttrs(newObj, this.cloneObj(obj1));
     }
@@ -71,8 +71,8 @@ export class UTIL {
     if (Object(obj) !== obj) {
       return obj;
     }
-    var res = new (obj as { constructor: new () => object }).constructor();
-    for (var key in obj) {
+    const res = new (obj as { constructor: new () => object }).constructor();
+    for (let key in obj) {
       if (typeof obj === 'object' && obj.hasOwnProperty(key)) {
         (res as Record<string, object>)[key] = this.cloneObj(
           (obj as Record<string, object>)[key] as Record<string, object>
@@ -95,7 +95,7 @@ export class UTIL {
       el.addEventListener(eventType, handler, false);
     } else if ((el as ElementWithSupportIE)['attachEvent']) {
       // IE <= 8
-      let elementInOldIE = el as ElementWithSupportIE;
+      const elementInOldIE = el as ElementWithSupportIE;
       elementInOldIE.attachEvent('on' + eventType, handler);
     } else {
       // ancient browsers

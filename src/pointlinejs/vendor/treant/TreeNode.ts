@@ -807,6 +807,8 @@ export class TreeNode {
     }
 
     this.addClickEventForNode(node);
+    this.addMouseoverEventForNode(node);
+    this.addMouseoutEventForNode(node);
 
     tree.CONFIG.callback.onCreateNode.apply(tree, [this, node]);
 
@@ -865,6 +867,42 @@ export class TreeNode {
         self
           .getTreeConfig()
           .callback.onClickNode?.apply(self, [nodeElement, e]);
+      }
+    );
+  }
+
+  /**
+   * @param nodeElement 
+   */
+  private addMouseoverEventForNode(nodeElement: Element | JQuery): void {
+    const self = this;
+    this.util.addEvent(
+      nodeElement as Element,
+      'mouseover',
+      (e: Event): void | boolean => {
+        e.preventDefault();
+
+        self
+          .getTreeConfig()
+          .callback.onMouseoverNode?.apply(self, [nodeElement, e]);
+      }
+    );
+  }
+
+  /**
+   * @param nodeElement 
+   */
+  private addMouseoutEventForNode(nodeElement: Element | JQuery): void {
+    const self = this;
+    this.util.addEvent(
+      nodeElement as Element,
+      'mouseout',
+      (e: Event): void | boolean => {
+        e.preventDefault();
+
+        self
+          .getTreeConfig()
+          .callback.onMouseoutNode?.apply(self, [nodeElement, e]);
       }
     );
   }

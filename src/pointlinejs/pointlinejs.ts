@@ -56,6 +56,8 @@ export class PointlineJS {
     const tree = await this.treant.init(this.chartConfig);
     if (tree) {
       this.tree = tree;
+      console.log('this.actionsId');
+      console.log(this.actionsId);
       if (this.actionsId) {
         const treePositioned = await tree.treePositioned;
         if (treePositioned) {
