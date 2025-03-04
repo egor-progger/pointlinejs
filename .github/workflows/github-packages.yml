@@ -6,14 +6,25 @@ name: Github Package
 on: workflow_dispatch
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: Github-packages
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20.18.1
+      - run: npm ci
+      - run: npm run prepare-publish
   publish:
+    needs: build
     runs-on: ubuntu-latest
     environment: Github-packages
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - uses: jaywcjlove/github-action-package@main
-      - uses: ferluisxd/create-npmrc@3
+      - uses: uses: ferluisxd/create-npmrc@3
         with:
           node-version: 20.18.1
           data: |
@@ -25,6 +36,4 @@ jobs:
             }
           auth_token: ${{secrets.GH_TOKEN}}
           org_name: egor-progger
-      - run: npm ci
-      - run: npm run prepare-publish
       - run: npm publish
