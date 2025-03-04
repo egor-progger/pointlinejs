@@ -29,6 +29,7 @@ jobs:
           node-version: 20.18.1
           data: |
             {
+              "name": "@egor-progger/pointlinejs",
               "publishConfig": {
                 "@egor-progger:registry": "https://npm.pkg.github.com"
               },
