@@ -31,11 +31,11 @@ jobs:
             {
               "name": "@egor-progger/pointlinejs",
               "publishConfig": {
-                "@egor-progger:registry": "https://npm.pkg.github.com"
+                "registry": "https://npm.pkg.github.com/egor-progger"
               },
               "repository": {
                 "type": "git",
-                "url": "https://github.com/egor-progger/pointlinejs.git"
+                "url": "https://github.com/egor-progger/pointlinejs"
               }
             }
           auth_token: ${GH_TOKEN}
