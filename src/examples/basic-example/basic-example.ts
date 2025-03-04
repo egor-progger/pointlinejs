@@ -192,3 +192,4 @@ await pointlinejs.draw();
 const tree = pointlinejs.getTree();
 console.log('tree');
 console.log(tree);
+pointlinejs.positionToCenterOfTree();
