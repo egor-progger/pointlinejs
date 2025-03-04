@@ -862,8 +862,6 @@ export class TreeNode {
       nodeElement as Element,
       'click',
       (e: Event): void | boolean => {
-        e.preventDefault();
-
         self
           .getTreeConfig()
           .callback.onClickNode?.apply(self, [nodeElement, e]);
