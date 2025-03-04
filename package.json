@@ -42,9 +42,6 @@
     "type": "git",
     "url": "git+https://github.com/egor-progger/pointlinejs.git"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "bugs": {
     "url": "https://github.com/egor-progger/pointlinejs/issues"
   },
