@@ -9,6 +9,7 @@ environment: Github-packages
 
 jobs:
   build:
+    environment: Github-packages
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,6 +19,7 @@ jobs:
       - run: npm ci
       - run: npm run prepare-publish
   publish:
+    environment: Github-packages
     needs: build
     runs-on: ubuntu-latest
     steps:
