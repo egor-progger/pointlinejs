@@ -30,10 +30,13 @@ jobs:
           data: |
             {
               "publishConfig": {
-                "registry": "https://npm.pkg.github.com"
+                "@egor-progger:registry": "https://npm.pkg.github.com"
               },
-              "repository": "https://github.com/egor-progger/pointlinejs.git"
+              "repository": {
+                "type": "git",
+                "url": "https://github.com/egor-progger/pointlinejs.git"
+              }
             }
-          auth_token: ${{secrets.GH_TOKEN}}
+          auth_token: ${{GH_TOKEN}}
           org_name: egor-progger
       - run: npm publish
