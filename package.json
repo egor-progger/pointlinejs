@@ -1,6 +1,6 @@
 {
   "name": "pointlinejs",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "JavaScipt library for visualization of tree diagrams",
   "directories": {
     "example": "examples"
