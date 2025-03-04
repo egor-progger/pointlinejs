@@ -406,4 +406,12 @@ export class Treant {
   exportTreeToJSON() {
     return this.treeStore.tree.initJsonConfig;
   }
+
+  /**
+   * 
+   * @returns {ChartStructure}
+   */
+  getJsonConfig() {
+    return this.jsonConfig;
+  }
 }

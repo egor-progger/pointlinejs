@@ -28,6 +28,10 @@ require('jquery.easing');
 @injectable()
 export class PointlineJS {
   private treant: Treant;
+  /**
+   * @deprecated Array<Partial<ChartInterface> | Partial<NodeInterface>>
+   * use ChartStructure type
+   */
   private chartConfig: ChartConfigType;
   private tree: Tree;
   private actionsId: string;
@@ -56,8 +60,6 @@ export class PointlineJS {
     const tree = await this.treant.init(this.chartConfig);
     if (tree) {
       this.tree = tree;
-      console.log('this.actionsId');
-      console.log(this.actionsId);
       if (this.actionsId) {
         const treePositioned = await tree.treePositioned;
         if (treePositioned) {
@@ -140,5 +142,11 @@ export class PointlineJS {
       }
     }
     return null;
+  }
+
+  positionToCenterOfTree(): void {
+    const chartConfig = this.treant.getJsonConfig();
+    const container = document.querySelector(chartConfig.chart.container);
+    container.scrollLeft = container.scrollWidth / 2 - container.clientWidth / 2;
   }
 }
