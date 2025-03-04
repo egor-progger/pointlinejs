@@ -13,6 +13,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - uses: jaywcjlove/github-action-package@main
+      - uses: bikutadesu/create-npmrc@v1.0.0
         with:
           node-version: 20.18.1
           registry-url: https://npm.pkg.github.com
@@ -23,8 +24,7 @@ jobs:
               },
               "repository": "https://github.com/egor-progger/pointlinejs.git"
             }
+          auth_token: ${{secrets.GH_TOKEN}}
       - run: npm ci
       - run: npm run prepare-publish
       - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
