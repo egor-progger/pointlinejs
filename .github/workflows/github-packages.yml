@@ -12,8 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
+        uses: jaywcjlove/github-action-package@main
         with:
           node-version: 20.18.1
+          registry-url: https://npm.pkg.github.com
+          rename: 'https://github.com/egor-progger/pointlinejs.git'
       - run: npm ci
       - run: npm run prepare-publish
       - run: npm publish
