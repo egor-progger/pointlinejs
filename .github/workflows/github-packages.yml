@@ -37,6 +37,6 @@ jobs:
                 "url": "https://github.com/egor-progger/pointlinejs.git"
               }
             }
-          auth_token: ${{GH_TOKEN}}
+          auth_token: ${GH_TOKEN}
           org_name: egor-progger
       - run: npm publish
