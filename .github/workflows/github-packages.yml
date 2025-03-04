@@ -5,6 +5,8 @@ name: Github Package
 
 on: workflow_dispatch
 
+environment: Github-packages
+
 jobs:
   build:
     environment: Github-packages
