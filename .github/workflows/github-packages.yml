@@ -5,10 +5,11 @@ name: Github Package
 
 on: workflow_dispatch
 
+environment: Github-packages
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: Github-packages
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -19,7 +20,6 @@ jobs:
   publish:
     needs: build
     runs-on: ubuntu-latest
-    environment: Github-packages
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
