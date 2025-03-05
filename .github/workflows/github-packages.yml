@@ -33,11 +33,8 @@ jobs:
               "publishConfig": {
                 "registry": "https://npm.pkg.github.com"
               },
-              "repository": {
-                "type": "git",
-                "url": "https://github.com/egor-progger/pointlinejs.git"
-              }
+              "repository": "https://github.com/egor-progger/pointlinejs.git"
             }
           auth_token: ${GH_TOKEN}
-          org_name: egor-progger/pointlinejs
+          org_name: egor-progger
       - run: npm publish
