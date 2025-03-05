@@ -39,5 +39,5 @@ jobs:
               }
             }
           auth_token: ${GH_TOKEN}
-          org_name: egor-progger
+          org_name: egor-progger/pointlinejs
       - run: npm publish
