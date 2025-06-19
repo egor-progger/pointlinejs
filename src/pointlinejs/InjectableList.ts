@@ -9,6 +9,7 @@ export const DI_LIST = {
   nodeDBState: Symbol.for('NodeDBState'),
   jsonConfig: Symbol.for('JSONconfig'),
   pointlineChart: Symbol.for('pointlineChart'),
+  selection: Symbol.for('selection'),
   pointlineActions: Symbol.for('pointlineActions'),
   pointlineJS: Symbol.for('pointlineJS'),
 };
