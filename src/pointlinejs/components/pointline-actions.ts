@@ -1,8 +1,10 @@
 import { PointlineJS } from "@pointlinejs/pointlinejs";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { BUTTON_CALLBACK, BUTTON_TYPE } from "./button-callback";
 import { MDCDialog, MDCDialogCloseEvent } from '@material/dialog';
 import { DialogTemplate } from "./dialog-template";
+import { Selection } from "../selection/selection";
+import { DI_LIST } from "@pointlinejs/InjectableList";
 
 interface ButtonAction {
     id: string;
@@ -53,14 +55,12 @@ export type PointlineAction = {
 
 @injectable()
 export class PointlineActions {
-    private selectedEl: HTMLElement;
-    private readonly options = {
-        selectedElBackgroundColor: "grey"
-    };
     private actionsDiv: HTMLElement;
     private pointlineJS: PointlineJS;
 
-    constructor() {
+    constructor(
+        @inject(DI_LIST.selection) private selection: Selection
+    ) {
     }
 
     async init(idDiv: string, pointlineJS: PointlineJS) {
@@ -70,7 +70,7 @@ export class PointlineActions {
         this.pointlineJS = pointlineJS;
         $('.node').each((index, element) => {
             $(element).click(
-                () => this.selectFunc(element)
+                () => this.clickFunc(element)
             );
         });
         for (var key in defaultButtons) {
@@ -81,11 +81,11 @@ export class PointlineActions {
             btn.innerHTML = btnData.text;
             if (btnData.type === BUTTON_TYPE.ADD_PARENT_BUTTON) {
                 dialogElements.push(this.createDivWithContentForModal(this.actionsDiv, modalId));
-                btn.addEventListener("click", () => this.showAddParentNodeModal(this.pointlineJS, this.selectedEl, modalId));
+                btn.addEventListener("click", () => this.showAddParentNodeModal(this.pointlineJS, this.selection?.selectedElement, modalId));
             }
             if (btnData.type === BUTTON_TYPE.ADD_CHILD_BUTTON) {
                 dialogElements.push(this.createDivWithContentForModal(this.actionsDiv, modalId));
-                btn.addEventListener("click", () => this.showAddChildNodeModal(this.pointlineJS, this.selectedEl, modalId));
+                btn.addEventListener("click", () => this.showAddChildNodeModal(this.pointlineJS, this.selection?.selectedElement, modalId));
             }
             if (btnData.type === BUTTON_TYPE.EXPORT_TO_JSON_BUTTON) {
                 dialogElements.push(this.createDivWithContentForModal(this.actionsDiv, modalId));
@@ -93,12 +93,12 @@ export class PointlineActions {
             }
             switch (btnData.type) {
                 case BUTTON_TYPE.ADD_PARENT_BUTTON:
-                    if (!this.selectedEl) {
+                    if (!this.selection?.hasSelectedElement) {
                         btn.setAttribute('disabled', 'true');
                     }
                     break;
                 case BUTTON_TYPE.ADD_CHILD_BUTTON:
-                    if (!this.selectedEl) {
+                    if (!this.selection?.hasSelectedElement) {
                         btn.setAttribute('disabled', 'true');
                     }
                     break;
@@ -108,16 +108,16 @@ export class PointlineActions {
         dialogElements.forEach((dialog) => this.actionsDiv.append(dialog));
     }
 
-    selectFunc(nodeEl: EventTarget) {
-        if (typeof this.selectedEl !== 'undefined') {
-            $(this.selectedEl).css("background-color", "");
+    get selectedElement() {
+        return this.selection.selectedElement;
+    }
+
+    private clickFunc(nodeEl: EventTarget) {
+        this.selection.selectFunc(nodeEl);
+        if (typeof this.selection?.hasSelectedElement !== 'undefined') {
             this.disableAddNodeButton();
             this.disableAddParentNodeButton();
-            this.selectedEl = undefined;
         } else {
-            const nodeName = $(nodeEl).find(".node-name");
-            nodeName.css("background-color", this.options.selectedElBackgroundColor);
-            this.selectedEl = nodeName[0];
             this.enableAddNodeButton();
             this.enableAddParentNodeButton();
         }
@@ -199,6 +199,6 @@ export class PointlineActions {
 
     private resetActionsDiv(): void {
         this.actionsDiv.replaceChildren();
-        this.selectedEl = undefined;
+        this.selection?.clearSelection();
     }
 }

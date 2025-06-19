@@ -13,6 +13,7 @@ import {
   ChartInterface,
   NodeInterface,
   ChartStructure,
+  NodeText,
 } from './Treant';
 
 export interface LevelMaxDim {
@@ -877,24 +878,8 @@ export class Tree {
         * @returns {TreeNode}
         */
   addChildToNode(selectedNode: TreeNode, nodeDefinition: Partial<NodeInterface>): Partial<NodeInterface> {
-    console.log('selectedNode');
-    console.log(selectedNode);
-    console.log('this.initJsonConfig.nodeStructure');
-    console.log(this.initJsonConfig.nodeStructure);
     const searchItem = this.searchNodeByIdInConfig(selectedNode, this.initJsonConfig.nodeStructure);
-    console.log('searchItem');
-    console.log(searchItem);
     if (searchItem) {
-      // for (const [childIndex, childItem] of searchItem.parent.children.entries()) {
-      //   if (childItem.idInNodeDB === selectedNode.id) {
-      //     const replacedItem: Partial<NodeInterface> = {
-      //       ...searchItem,
-      //       ...{ children: [nodeDefinition] }
-      //     };
-      //     searchItem.parent.children.splice(childIndex, 1, replacedItem);
-      //     break;
-      //   }
-      // }
       if (searchItem.children?.length > 0) {
         searchItem.children.push(nodeDefinition);
       } else {
@@ -908,13 +893,9 @@ export class Tree {
   /**
         * @param {TreeNode} parentTreeNode
         * @param {object} nodeDefinition
-        * @returns {TreeNode}
+        * @returns {Partial<NodeInterface>}
         */
   addParentForNode(selectedNode: TreeNode, nodeDefinition: Partial<NodeInterface>): Partial<NodeInterface> {
-    console.log('selectedNode');
-    console.log(selectedNode);
-    console.log('this.initJsonConfig.nodeStructure');
-    console.log(this.initJsonConfig.nodeStructure);
     let searchItem = this.searchNodeByIdInConfig(selectedNode.parent(), this.initJsonConfig.nodeStructure);
     if (searchItem) {
       for (const [childIndex, childItem] of searchItem.children.entries()) {
@@ -931,6 +912,26 @@ export class Tree {
     return searchItem;
   }
 
+  /**
+   * 
+   * @param selectedNode 
+   * @param nodeData 
+   * @returns {Partial<NodeInterface>}
+   */
+  updateNode(selectedNode: TreeNode, nodeData: Partial<NodeText>): Partial<NodeInterface> {
+    let searchItem = this.searchNodeByIdInConfig(selectedNode, this.initJsonConfig.nodeStructure);
+    searchItem.text = nodeData;
+    return searchItem;
+  }
+
+  /**
+   * 
+   * @param treeNode 
+   */
+  removeChildren(treeNode: TreeNode): void {
+    this.nodeDB.removeChildren(treeNode.id);
+  }
+
   private searchNodeByIdInConfig(nodeFromDb: TreeNode, domNodeItem: Partial<NodeInterface>): Partial<NodeInterface> {
     if (nodeFromDb.id === domNodeItem.idInNodeDB) {
       return domNodeItem;
@@ -945,9 +946,5 @@ export class Tree {
       }
     }
     return null;
-  }
-
-  removeChildren(treeNode: TreeNode) {
-    this.nodeDB.removeChildren(treeNode.id);
   }
 }

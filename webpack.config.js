@@ -47,6 +47,10 @@ const entries = [
     name: 'examples/mouse-events/mouse-events',
     type: entryType.withTypescript,
   },
+  {
+    name: 'examples/update-example/update-example',
+    type: entryType.withTypescript,
+  },
   { name: 'documentation/documentation', type: entryType.withTypescript },
 ];
 /**
