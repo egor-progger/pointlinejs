@@ -2,6 +2,8 @@
 # For more information see: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-to-github-packages
 
 name: Github Package
+permissions:
+  contents: read
 
 on: workflow_dispatch
 
