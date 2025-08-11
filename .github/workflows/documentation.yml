@@ -5,6 +5,7 @@ name: Deploy static content to Pages
 permissions:
   contents: read
   pages: write
+  id-token: write
 
 on:
   # Runs on pushes targeting the default branch
