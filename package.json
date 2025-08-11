@@ -52,6 +52,7 @@
     "@types/raphael": "^2.3.3",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
+    "brace-expansion": "^2.0.2",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^6.4.1",
     "copyfiles": "^2.4.1",
@@ -64,6 +65,7 @@
     "highlight.js": "^11.8.0",
     "html-webpack-injector": "^1.1.4",
     "html-webpack-plugin": "^4.5.2",
+    "http-proxy-middleware": "^2.0.9",
     "inversify": "^6.0.1",
     "inversify-inject-decorators": "^3.1.0",
     "jquery": "^3.7.1",
@@ -90,9 +92,5 @@
   },
   "main": "dist/lib/pointlinejs/PointlineJS.js",
   "module": "dist/es/pointlinejs/PointlineJS.js",
-  "types": "dist/lib/pointlinejs/PointlineJS.d.ts",
-  "dependencies": {
-    "brace-expansion": "^2.0.2",
-    "http-proxy-middleware": "^2.0.9"
-  }
+  "types": "dist/lib/pointlinejs/PointlineJS.d.ts"
 }
