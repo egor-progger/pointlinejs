@@ -32,7 +32,7 @@ jobs:
           data: |
             {
               "publishConfig": {
-                registry": "https://npm.pkg.github.com/egor-progger"
+                "registry": "https://npm.pkg.github.com/egor-progger"
               }
             }
       - run: npm publish
