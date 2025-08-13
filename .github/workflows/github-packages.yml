@@ -35,6 +35,4 @@ jobs:
                 "egor-progger:registry": "https://npm.pkg.github.com"
               }
             }
-          auth_token: ${GH_TOKEN}
-          org_name: egor-progger
       - run: npm publish
