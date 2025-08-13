@@ -2,9 +2,6 @@
 # For more information see: https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-to-github-packages
 
 name: Github Package
-permissions:
-  contents: read
-  packages: write
 
 on: workflow_dispatch
 
@@ -22,12 +19,16 @@ jobs:
   publish:
     environment: Github-packages
     needs: build
+    permissions:
+      packages: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: '20.18.1'
+          registry-url: https://npm.pkg.github.com/
       - run: npm ci
       - uses: jaywcjlove/github-action-package@main
         with:
@@ -38,11 +39,6 @@ jobs:
                 "registry": "https://npm.pkg.github.com"
               }
             }
-      - uses: v-venes/create-npmrc@v1.0.0
-        with:
-          org_name: egor-progger
-          auth_token: NODE_AUTH_TOKEN
-          always_auth: true
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
