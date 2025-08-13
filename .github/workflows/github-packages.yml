@@ -4,6 +4,7 @@
 name: Github Package
 permissions:
   contents: read
+  packages: write
 
 on: workflow_dispatch
 
