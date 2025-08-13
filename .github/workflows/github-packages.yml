@@ -27,16 +27,13 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - uses: jaywcjlove/github-action-package@main
-      - uses: ferluisxd/create-npmrc@3
         with:
           node-version: 20.18.1
           data: |
             {
-              "name": "@egor-progger/pointlinejs",
               "publishConfig": {
                 "egor-progger:registry": "https://npm.pkg.github.com"
-              },
-              "repository": "egor-progger:registry=https://npm.pkg.github.com"
+              }
             }
           auth_token: ${GH_TOKEN}
           org_name: egor-progger
