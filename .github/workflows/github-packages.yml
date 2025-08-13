@@ -4,6 +4,7 @@
 name: Github Package
 permissions:
   contents: read
+  packages: write
 
 on: workflow_dispatch
 
@@ -33,9 +34,9 @@ jobs:
             {
               "name": "@egor-progger/pointlinejs",
               "publishConfig": {
-                "registry": "https://npm.pkg.github.com"
+                "egor-progger:registry": "https://npm.pkg.github.com"
               },
-              "repository": "https://github.com/egor-progger/pointlinejs.git"
+              "repository": "egor-progger:registry=https://npm.pkg.github.com"
             }
           auth_token: ${GH_TOKEN}
           org_name: egor-progger
