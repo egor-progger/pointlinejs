@@ -30,15 +30,6 @@ jobs:
           node-version: '20.18.1'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@egor-progger'
-      - uses: jaywcjlove/github-action-package@main
-        with:
-          node-version: 20.18.1
-          data: |
-            {
-              "publishConfig": {
-                "registry": "https://npm.pkg.github.com/egor-progger"
-              }
-            }
       - run: npm ci
       - run: npm publish
         env:
