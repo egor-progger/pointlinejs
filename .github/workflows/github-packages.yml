@@ -38,11 +38,11 @@ jobs:
                 "registry": "https://npm.pkg.github.com"
               }
             }
-      uses: v-venes/create-npmrc@v1.0.0
-      with:
-        org_name: egor-progger
-        auth_token: NODE_AUTH_TOKEN
-        always_auth: true
+      - uses: v-venes/create-npmrc@v1.0.0
+        with:
+          org_name: egor-progger
+          auth_token: NODE_AUTH_TOKEN
+          always_auth: true
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
