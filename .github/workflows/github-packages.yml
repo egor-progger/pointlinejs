@@ -9,6 +9,8 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
     environment: Github-packages
     runs-on: ubuntu-latest
     steps:
