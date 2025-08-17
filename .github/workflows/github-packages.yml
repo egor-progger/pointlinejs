@@ -3,7 +3,9 @@
 
 name: Github Package
 
-on: workflow_dispatch
+on:
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -30,15 +32,6 @@ jobs:
           node-version: '20.18.1'
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
-      - uses: jaywcjlove/github-action-package@main
-        with:
-          data: |
-            {
-              "name": "@egor-progger/pointlinejs",
-              "publishConfig": {
-                "registry": "https://npm.pkg.github.com"
-              }
-            }
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
