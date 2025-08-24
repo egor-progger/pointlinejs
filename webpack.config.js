@@ -51,6 +51,10 @@ const entries = [
     name: 'examples/update-example/update-example',
     type: entryType.withTypescript,
   },
+  {
+    name: 'examples/remove-example/remove-example',
+    type: entryType.withTypescript,
+  },
   { name: 'documentation/documentation', type: entryType.withTypescript },
 ];
 /**
