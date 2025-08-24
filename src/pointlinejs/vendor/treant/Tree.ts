@@ -913,6 +913,25 @@ export class Tree {
   }
 
   /**
+        * @param {TreeNode} parentTreeNode
+        * @returns {Partial<NodeInterface>}
+        */
+  removeNode(selectedNode: TreeNode): Partial<NodeInterface> {
+    console.log('Tree');
+    console.log('removeNode');
+    let searchItem = this.searchNodeByIdInConfig(selectedNode.parent(), this.initJsonConfig.nodeStructure);
+    if (searchItem) {
+      for (const [childIndex, childItem] of searchItem.children.entries()) {
+        if (childItem.idInNodeDB === selectedNode.id) {
+          searchItem.children.splice(childIndex, 1);
+          break;
+        }
+      }
+    }
+    return searchItem;
+  }
+
+  /**
    * 
    * @param selectedNode 
    * @param nodeData 

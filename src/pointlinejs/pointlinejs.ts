@@ -131,7 +131,7 @@ export class PointlineJS {
    * @returns {Promise<Partial<NodeInterface>>}
    */
 
-  async addChildNode(selectedEl: HTMLElement, nodeStructure: Partial<NodeInterface>): Promise<Partial<NodeInterface>> {
+  async addChildToNode(selectedEl: HTMLElement, nodeStructure: Partial<NodeInterface>): Promise<Partial<NodeInterface>> {
     const tree = this.getTree();
     const nodeDb = tree.getNodeDb().db;
     for (var key in nodeDb) {
@@ -139,6 +139,21 @@ export class PointlineJS {
       if (nodeTree.text.name == selectedEl.textContent) {
         const selectedNodeTree = nodeTree;
         const addedNode = await tree.addChildToNode(selectedNodeTree, nodeStructure);
+        this.reload();
+        this.resetActions();
+        return addedNode;
+      }
+    }
+    return null;
+  }
+
+  async removeSelectedNode(selectedEl: HTMLElement): Promise<Partial<NodeInterface>> {
+    const tree = this.getTree();
+    const nodeDb = tree.getNodeDb().db;
+    for (var key in nodeDb) {
+      var nodeTree = nodeDb[key];
+      if (nodeTree.text.name == selectedEl.textContent) {
+        const addedNode = await tree.removeNode(nodeTree);
         this.reload();
         this.resetActions();
         return addedNode;

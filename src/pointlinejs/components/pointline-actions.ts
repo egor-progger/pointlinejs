@@ -45,6 +45,9 @@ const defaultButtons: ButtonItem[] = [
         'addChildNodeBtn', 'Add child node to selected', BUTTON_TYPE.ADD_CHILD_BUTTON
     ),
     new ButtonItem(
+        'removeSelectedNodeBtn', 'Remove selected node', BUTTON_TYPE.REMOVE_SELECTED_NODE_BUTTON
+    ),
+    new ButtonItem(
         'exportNodeStructureBtn', 'Export nodes to JSON', BUTTON_TYPE.EXPORT_TO_JSON_BUTTON
     )
 ];
@@ -87,6 +90,10 @@ export class PointlineActions {
                 dialogElements.push(this.createDivWithContentForModal(this.actionsDiv, modalId));
                 btn.addEventListener("click", () => this.showAddChildNodeModal(this.pointlineJS, this.selection?.selectedElement, modalId));
             }
+            if (btnData.type === BUTTON_TYPE.REMOVE_SELECTED_NODE_BUTTON) {
+                dialogElements.push(this.createDivWithContentForModal(this.actionsDiv, modalId));
+                btn.addEventListener("click", () => this.removeSelectedNode(this.pointlineJS, this.selection?.selectedElement, modalId));
+            }
             if (btnData.type === BUTTON_TYPE.EXPORT_TO_JSON_BUTTON) {
                 dialogElements.push(this.createDivWithContentForModal(this.actionsDiv, modalId));
                 btn.addEventListener("click", () => this.showExportJSONModal(this.pointlineJS, modalId));
@@ -102,6 +109,11 @@ export class PointlineActions {
                         btn.setAttribute('disabled', 'true');
                     }
                     break;
+                case BUTTON_TYPE.REMOVE_SELECTED_NODE_BUTTON:
+                    if (!this.selection?.hasSelectedElement) {
+                        btn.setAttribute('disabled', 'true');
+                    }
+                    break;
             }
             this.actionsDiv.append(btn);
         }
@@ -113,38 +125,41 @@ export class PointlineActions {
     }
 
     private clickFunc(nodeEl: EventTarget) {
+        console.log('clickFunc');
         this.selection.selectFunc(nodeEl);
-        if (typeof this.selection?.hasSelectedElement !== 'undefined') {
-            this.disableAddNodeButton();
-            this.disableAddParentNodeButton();
+        this.toggleAddNodeButton();
+        this.toggleAddParentNodeButton();
+        this.toggleRemoveNodeButton();
+    }
+
+    private toggleAddNodeButton() {
+        const addNodeButton = defaultButtons.find((item) => item.type === BUTTON_TYPE.ADD_CHILD_BUTTON);
+        const buttomElement = document.getElementById(addNodeButton.id);
+        if (buttomElement.getAttribute("disabled")) {
+            buttomElement.removeAttribute("disabled");
         } else {
-            this.enableAddNodeButton();
-            this.enableAddParentNodeButton();
+            buttomElement.setAttribute("disabled", "");
         }
     }
 
-    private enableAddNodeButton() {
-        const addNodeButton = defaultButtons.find((item) => item.type === BUTTON_TYPE.ADD_CHILD_BUTTON);
-        const buttomElement = document.getElementById(addNodeButton.id);
-        buttomElement.removeAttribute("disabled");
-    }
-
-    private disableAddNodeButton() {
-        const addNodeButton = defaultButtons.find((item) => item.type === BUTTON_TYPE.ADD_CHILD_BUTTON);
-        const buttomElement = document.getElementById(addNodeButton.id);
-        buttomElement.setAttribute("disabled", "");
-    }
-
-    private enableAddParentNodeButton() {
+    private toggleAddParentNodeButton() {
         const addNodeButton = defaultButtons.find((item) => item.type === BUTTON_TYPE.ADD_PARENT_BUTTON);
         const buttomElement = document.getElementById(addNodeButton.id);
-        buttomElement.removeAttribute("disabled");
+        if (buttomElement.getAttribute("disabled")) {
+            buttomElement.removeAttribute("disabled");
+        } else {
+            buttomElement.setAttribute("disabled", "");
+        }
     }
 
-    private disableAddParentNodeButton() {
-        const addNodeButton = defaultButtons.find((item) => item.type === BUTTON_TYPE.ADD_PARENT_BUTTON);
+    private toggleRemoveNodeButton() {
+        const addNodeButton = defaultButtons.find((item) => item.type === BUTTON_TYPE.REMOVE_SELECTED_NODE_BUTTON);
         const buttomElement = document.getElementById(addNodeButton.id);
-        buttomElement.setAttribute("disabled", "");
+        if (buttomElement.getAttribute("disabled")) {
+            buttomElement.removeAttribute("disabled");
+        } else {
+            buttomElement.setAttribute("disabled", "");
+        }
     }
 
     private createDivWithContentForModal(parentElement: HTMLElement, modalId: string) {
@@ -183,6 +198,21 @@ export class PointlineActions {
         dialog.listen('MDCDialog:closed', (event: MDCDialogCloseEvent) => {
             if (event.detail.action === 'accept') {
                 BUTTON_CALLBACK.ADD_CHILD_BUTTON(pointlineJS, selectedEl);
+            }
+        })
+    }
+
+    private removeSelectedNode(pointlineJS: PointlineJS, selectedEl: HTMLElement, modalId: string) {
+        const dialogElement = document.getElementById(modalId);
+        const dialogTitle = dialogElement.querySelector('#dialog-title');
+        dialogTitle.innerHTML = 'Remove selected node?';
+        const dialogContent = dialogElement.querySelector('#dialog-content');
+        dialogContent.innerHTML = '';
+        const dialog = new MDCDialog(document.querySelector(`#${modalId} .mdc-dialog`));
+        dialog.open();
+        dialog.listen('MDCDialog:closed', (event: MDCDialogCloseEvent) => {
+            if (event.detail.action === 'accept') {
+                BUTTON_CALLBACK.REMOVE_SELECTED_NODE_BUTTON(pointlineJS, selectedEl);
             }
         })
     }
