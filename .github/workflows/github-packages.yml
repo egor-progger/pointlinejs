@@ -3,7 +3,9 @@
 
 name: Github Package
 
-on: workflow_dispatch
+on:
+  release:
+    types: [created]
 
 jobs:
   build:
