@@ -24,6 +24,7 @@ import { Container, injectable } from 'inversify';
 import 'reflect-metadata';
 // import { UpdateNodeData } from './update/interfaces/update-node';
 import { Selection } from './selection/selection';
+import { CollapsableNode } from './components/nodes/collapsable-node';
 window.jQuery = window.$ = require('jquery');
 require('jquery.easing');
 
@@ -48,6 +49,7 @@ export class PointlineJS {
     container.bind(DI_LIST.nodeDB).to(NodeDB).inSingletonScope();
     container.bind(DI_LIST.nodeDBState).to(NodeDBState).inSingletonScope();
     container.bind(DI_LIST.jsonConfig).to(JSONconfig).inSingletonScope();
+    container.bind(DI_LIST.collapsableNode).to(CollapsableNode).inSingletonScope();
     container.bind(DI_LIST.treeNode).to(TreeNode);
     container.bind(DI_LIST.tree).to(Tree);
     container.bind(DI_LIST.treant).to(Treant);

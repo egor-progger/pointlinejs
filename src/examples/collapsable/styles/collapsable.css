@@ -85,14 +85,9 @@ body {
   height: 100%;
 }
 
-.Treant .collapse-switch {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
 .Treant .node.collapsed {
   background-color: #def82d;
 }
-.Treant .node.collapsed .collapse-switch {
+.Treant .node.collapsed .collapsable {
   background: none;
 }

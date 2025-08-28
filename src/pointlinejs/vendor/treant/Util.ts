@@ -114,6 +114,8 @@ export class UTIL {
 
     if ($) {
       var $element = $(selector, parentEl);
+      console.log('findEl');
+      console.log($element);
       return raw ? $element.get(0) : $element;
     } else {
       // todo: getElementsByName()
@@ -212,7 +214,6 @@ export class UTIL {
       $(element).toggleClass(cls, apply);
     } else {
       if (apply) {
-        //element.className += " "+cls;
         element.classList.add(cls);
       } else {
         element.classList.remove(cls);
