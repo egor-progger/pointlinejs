@@ -1,5 +1,6 @@
 export const DI_LIST = {
   treeNode: Symbol.for('TreeNode'),
+  collapsableNode: Symbol.for('CollapsableNode'),
   treeStore: Symbol.for('TreeStore'),
   treant: Symbol.for('Treant'),
   nodeDB: Symbol.for('NodeDB'),

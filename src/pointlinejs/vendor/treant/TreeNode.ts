@@ -21,6 +21,7 @@ import {
   RaphaelAttributesExtended,
 } from './Treant';
 import { RaphaelPath } from 'raphael';
+import { CollapsableNode } from '@pointlinejs/components/nodes/collapsable-node';
 
 export type RaphaelPathExtended = RaphaelPath<'SVG' | 'VML'> & {
   hidden?: boolean;
@@ -423,7 +424,6 @@ export class TreeNode {
       nodeSwitch as Element,
       'click',
       (e: Event): void | boolean => {
-        e.preventDefault();
         if (
           self
             .getTreeConfig()
@@ -474,7 +474,7 @@ export class TreeNode {
       oTree.inAnimation = true;
 
       this.collapsed = !this.collapsed; // toggle the collapse at each click
-      this.util.toggleClass(this.nodeDOM, 'collapsed', this.collapsed);
+      this.util.toggleClass(this.nodeDOM, CollapsableNode.collapsedClass, this.collapsed);
 
       oTree.positionTree();
 
@@ -761,7 +761,7 @@ export class TreeNode {
     var drawArea = tree.drawArea;
     /////////// CREATE NODE //////////////
     let node: HTMLAnchorElement | HTMLDivElement = document.createElement(
-      this.link.href ? 'a' : 'div'
+      this.link.href && !this.collapsable ? 'a' : 'div'
     );
 
     node.className = !this.pseudo ? this.CONFIG.nodeHTMLclass : 'pseudo';
@@ -769,11 +769,10 @@ export class TreeNode {
       node.className += ' ' + this.nodeHTMLclass;
     }
 
-    if (this.nodeHTMLid) {
-      node.id = this.nodeHTMLid
-        ? this.nodeHTMLid.toString()
-        : this.id.toString();
-    }
+    const id = this.nodeHTMLid
+      ? this.nodeHTMLid.toString()
+      : this.id.toString();
+    node.setAttribute('id', id);
 
     if (this.link.href && node instanceof HTMLAnchorElement) {
       node.href = this.link.href;
@@ -828,29 +827,21 @@ export class TreeNode {
     tree: Tree,
     nodeEl?: HTMLAnchorElement | HTMLDivElement
   ) {
+    const collapsableClassElement = CollapsableNode.collapsableClassElement;
+
     nodeEl = nodeEl || this.nodeDOM;
-
-    // safe guard and check to see if it has a collapse switch
-    var nodeSwitchEl = this.util.findEl('.collapse-switch', true, nodeEl) as
-      | HTMLAnchorElement
-      | HTMLDivElement;
-    if (!nodeSwitchEl) {
-      nodeSwitchEl = document.createElement('a');
-      nodeSwitchEl.className = 'collapse-switch';
-
-      nodeEl.appendChild(nodeSwitchEl);
-      this.addSwitchEvent(nodeSwitchEl);
-      if (this.collapsed) {
-        nodeEl.className += ' collapsed';
-      }
-
-      tree.CONFIG.callback.onCreateNodeCollapseSwitch.apply(tree, [
-        this,
-        nodeEl,
-        nodeSwitchEl,
-      ]);
+    if (nodeEl.className) {
+      nodeEl.className += ` ${collapsableClassElement}`;
+    } else {
+      nodeEl.className = ` ${collapsableClassElement}`;
     }
-    return nodeSwitchEl;
+    this.addSwitchEvent(nodeEl);
+
+    tree.CONFIG.callback.onCreateNodeCollapseSwitch.apply(tree, [
+      this,
+      nodeEl,
+    ]);
+    return nodeEl;
   }
 
   /**

@@ -2,7 +2,7 @@ import { PointlineJS } from '@pointlinejs/pointlinejs';
 import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/collapsable.css';
 
-const chart_config = {
+const chart_config: ChartConfigType = {
   chart: {
     container: '#collapsable-example',
 
@@ -22,6 +22,14 @@ const chart_config = {
     image: 'img/malory.png',
     children: [
       {
+        text: {
+          name: 'lana',
+          href: {
+            href: 'http://www.google.com',
+            target: '_blank',
+            val: 'lana'
+          },
+        },
         image: 'img/lana.png',
         collapsed: true,
         children: [
@@ -53,66 +61,6 @@ const chart_config = {
     ],
   },
 };
-
-/* Array approach
-    var config = {
-        container: "#collapsable-example",
-
-        animateOnInit: true,
-        
-        node: {
-            collapsable: true
-        },
-        animation: {
-            nodeAnimation: "easeOutBounce",
-            nodeSpeed: 700,
-            connectorsAnimation: "bounce",
-            connectorsSpeed: 700
-        }
-    },
-    malory = {
-        image: "img/malory.png"
-    },
-
-    lana = {
-        parent: malory,
-        image: "img/lana.png"
-    }
-
-    figgs = {
-        parent: lana,
-        image: "img/figgs.png"
-    }
-
-    sterling = {
-        parent: malory,
-        childrenDropLevel: 1,
-        image: "img/sterling.png"
-    },
-
-    woodhouse = {
-        parent: sterling,
-        image: "img/woodhouse.png"
-    },
-
-    pseudo = {
-        parent: malory,
-        pseudo: true
-    },
-
-    cheryl = {
-        parent: pseudo,
-        image: "img/cheryl.png"
-    },
-
-    pam = {
-        parent: pseudo,
-        image: "img/pam.png"
-    },
-
-    chart_config = [config, malory, lana, figgs, sterling, woodhouse, pseudo, pam, cheryl];
-
-*/
 
 const graphJS = new PointlineJS(chart_config as unknown as ChartConfigType);
 graphJS.draw();

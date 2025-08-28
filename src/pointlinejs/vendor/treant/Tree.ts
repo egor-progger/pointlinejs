@@ -96,7 +96,6 @@ export class Tree {
       onCreateNodeCollapseSwitch: function (
         treeNode: TreeNode,
         treeNodeDom: HTMLAnchorElement | HTMLDivElement,
-        switchDom: HTMLAnchorElement | HTMLDivElement
       ) { }, // this = Tree
       onAfterAddNode: function (
         newTreeNode: TreeNode,

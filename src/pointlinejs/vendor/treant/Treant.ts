@@ -43,8 +43,7 @@ export type CallbackFunction = {
   ) => void;
   onCreateNodeCollapseSwitch: (
     treeNode: TreeNode,
-    treeNodeDom: HTMLAnchorElement | HTMLDivElement,
-    switchDom: HTMLAnchorElement | HTMLDivElement
+    treeNodeDom: HTMLAnchorElement | HTMLDivElement
   ) => void;
   onAfterAddNode: (
     newTreeNode: TreeNode,
@@ -247,6 +246,7 @@ export type NodeText = {
   desc: string | Record<string, string>;
   contact: string | Record<string, string>;
   data: string;
+  href: string | Record<string, string>;
 };
 
 /**
