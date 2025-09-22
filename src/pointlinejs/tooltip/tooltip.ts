@@ -1,17 +1,3 @@
-// export class Tooltip {
-//     private tooltip: HTMLDivElement;
-
-//     constructor() { }
-//     showTooltip() {
-//         this.tooltip.style.display = 'block';
-//     }
-
-//     hideTooltip() {
-//         this.tooltip.style.display = '';
-//     }
-// }
-
-
 import { computePosition, offset, flip, shift, arrow, Placement, MiddlewareData } from '@floating-ui/dom';
 import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
