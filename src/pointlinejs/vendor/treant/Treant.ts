@@ -327,6 +327,7 @@ export interface NodeInterface {
   position: string;
   idInNodeDB: number;
   parent: Partial<NodeInterface>;
+  tooltip: string;
   clickEvent: () => void;
 }
 

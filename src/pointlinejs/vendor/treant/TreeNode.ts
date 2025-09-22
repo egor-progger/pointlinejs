@@ -22,10 +22,13 @@ import {
 } from './Treant';
 import { RaphaelPath } from 'raphael';
 import { CollapsableNode } from '@pointlinejs/components/nodes/collapsable-node';
+import { Tooltip } from '@pointlinejs/tooltip';
 
 export type RaphaelPathExtended = RaphaelPath<'SVG' | 'VML'> & {
   hidden?: boolean;
 };
+
+export type TreeNodeDom = HTMLAnchorElement | HTMLDivElement;
 
 @injectable()
 export class TreeNode {
@@ -43,6 +46,7 @@ export class TreeNode {
   private CONFIG = {
     nodeHTMLclass: 'node',
   };
+  private tooltip: Tooltip;
 
   id: number;
   text: Partial<NodeText>;
@@ -61,7 +65,7 @@ export class TreeNode {
   height: number;
   X: number;
   Y: number;
-  nodeDOM: HTMLAnchorElement | HTMLDivElement;
+  nodeDOM: TreeNodeDom;
   positioned: boolean;
   stackChildren: number[];
   style: CSSStyleDeclaration;
@@ -131,6 +135,10 @@ export class TreeNode {
       this.collapsed = nodeStructureValue.collapsed;
 
       this.text = nodeStructureValue.text;
+
+      if (nodeStructureValue.tooltip) {
+        this.tooltip = new Tooltip(nodeStructureValue.tooltip);
+      }
 
       // '.node' DIV
       this.nodeInnerHTML = nodeStructureValue.innerHTML;
@@ -533,7 +541,7 @@ export class TreeNode {
           oNewState,
           config.animation.nodeSpeed,
           config.animation.nodeAnimation,
-          function (this: HTMLAnchorElement | HTMLDivElement) {
+          function (this: TreeNodeDom) {
             this.style.visibility = 'hidden';
           }
         );
@@ -600,7 +608,7 @@ export class TreeNode {
         oNewState,
         config.animation.nodeSpeed,
         config.animation.nodeAnimation,
-        function (this: HTMLAnchorElement | HTMLDivElement) {
+        function (this: TreeNodeDom) {
           // $.animate applies "overflow:hidden" to the node, remove it to avoid visual problems
           this.style.overflow = '';
         }
@@ -659,7 +667,7 @@ export class TreeNode {
    *
    * @Returns the configured node
    */
-  private buildNodeFromText(node: HTMLAnchorElement | HTMLDivElement) {
+  private buildNodeFromText(node: TreeNodeDom) {
     // IMAGE
     if (this.image) {
       const image = document.createElement('img');
@@ -725,7 +733,7 @@ export class TreeNode {
    *
    * @Returns node the configured node
    */
-  private buildNodeFromHtml(node: HTMLAnchorElement | HTMLDivElement) {
+  private buildNodeFromHtml(node: TreeNodeDom) {
     // get some element by ID and clone its structure into a node
     if (this.nodeInnerHTML.charAt(0) === '#') {
       var elem = document.getElementById(this.nodeInnerHTML.substring(1));
@@ -760,7 +768,7 @@ export class TreeNode {
 
     var drawArea = tree.drawArea;
     /////////// CREATE NODE //////////////
-    let node: HTMLAnchorElement | HTMLDivElement = document.createElement(
+    let node: TreeNodeDom = document.createElement(
       this.link.href && !this.collapsable ? 'a' : 'div'
     );
 
@@ -805,6 +813,11 @@ export class TreeNode {
       }
     }
 
+    if (this.tooltip) {
+      node.appendChild(this.tooltip);
+    }
+    // add tooltip end
+
     this.addClickEventForNode(node);
     this.addMouseoverEventForNode(node);
     this.addMouseoutEventForNode(node);
@@ -815,17 +828,18 @@ export class TreeNode {
     drawArea.appendChild(node);
     this.width = node.offsetWidth;
     this.height = node.offsetHeight;
+
     this.nodeDOM = node;
     tree.imageLoader.processNode(this);
   }
 
   /**
    * @param {Tree} tree
-   * @param {HTMLAnchorElement | HTMLDivElement} nodeEl
+   * @param {TreeNodeDom} nodeEl
    */
   public createSwitchGeometry(
     tree: Tree,
-    nodeEl?: HTMLAnchorElement | HTMLDivElement
+    nodeEl?: TreeNodeDom
   ) {
     const collapsableClassElement = CollapsableNode.collapsableClassElement;
 
@@ -874,6 +888,9 @@ export class TreeNode {
         self
           .getTreeConfig()
           .callback.onMouseoverNode?.apply(self, [nodeElement, e]);
+        if (this.tooltip) {
+          this.tooltip.show(this.nodeDOM);
+        }
       }
     );
   }
@@ -892,6 +909,9 @@ export class TreeNode {
         self
           .getTreeConfig()
           .callback.onMouseoutNode?.apply(self, [nodeElement, e]);
+        if (this.tooltip) {
+          this.tooltip.hide();
+        }
       }
     );
   }
