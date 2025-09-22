@@ -13,4 +13,5 @@ export const DI_LIST = {
   selection: Symbol.for('selection'),
   pointlineActions: Symbol.for('pointlineActions'),
   pointlineJS: Symbol.for('pointlineJS'),
+  tooltip: Symbol.for('Tooltip'),
 };

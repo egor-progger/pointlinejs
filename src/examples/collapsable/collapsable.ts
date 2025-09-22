@@ -4,6 +4,7 @@ import './styles/collapsable.css';
 
 const chart_config: ChartConfigType = {
   chart: {
+    rootOrientation: 'WEST',
     container: '#collapsable-example',
 
     animateOnInit: true,
@@ -20,8 +21,10 @@ const chart_config: ChartConfigType = {
   },
   nodeStructure: {
     image: 'img/malory.png',
+    stackChildren: true,
     children: [
       {
+        stackChildren: true,
         text: {
           name: 'lana',
           href: {
@@ -41,6 +44,7 @@ const chart_config: ChartConfigType = {
       {
         image: 'img/sterling.png',
         childrenDropLevel: 1,
+        stackChildren: true,
         children: [
           {
             image: 'img/woodhouse.png',
