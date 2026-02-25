@@ -1,6 +1,6 @@
 {
   "name": "pointlinejs",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "description": "JavaScipt library for visualization of tree diagrams",
   "directories": {
     "example": "examples"
@@ -57,7 +57,7 @@
     "copy-webpack-plugin": "^13.0.1",
     "copyfiles": "^2.4.1",
     "css-loader": "^5.2.7",
-    "eslint": "^8.44.0",
+    "eslint": "^10.0.2",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eve-raphael": "^0.5.0",
