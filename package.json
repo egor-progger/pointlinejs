@@ -1,6 +1,6 @@
 {
   "name": "pointlinejs",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "JavaScipt library for visualization of tree diagrams",
   "directories": {
     "example": "examples"
@@ -46,6 +46,7 @@
     "url": "https://github.com/egor-progger/pointlinejs/issues"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.3",
     "@material/dialog": "^14.0.0",
     "@types/jquery": "^1.10.45",
     "@types/jqueryui": "^1.12.23",
@@ -82,7 +83,8 @@
     "tls": "^0.0.1",
     "ts-loader": "^8.4.0",
     "typedoc": "^0.24.8",
-    "typescript": "^5.0.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1",
     "url": "^0.11.0",
     "url-loader": "^4.1.1",
     "webpack": "^5.104.1",
