@@ -1,6 +1,6 @@
 {
   "name": "pointlinejs",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "JavaScipt library for visualization of tree diagrams",
   "directories": {
     "example": "examples"
@@ -46,12 +46,13 @@
     "url": "https://github.com/egor-progger/pointlinejs/issues"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.3",
     "@material/dialog": "^14.0.0",
     "@types/jquery": "^1.10.45",
     "@types/jqueryui": "^1.12.23",
     "@types/raphael": "^2.3.3",
-    "@typescript-eslint/eslint-plugin": "^5.60.1",
-    "@typescript-eslint/parser": "^5.60.1",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
     "brace-expansion": "^2.0.2",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^13.0.1",
@@ -62,6 +63,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eve-raphael": "^0.5.0",
     "file-loader": "^6.2.0",
+    "glob": "^13.0.6",
     "highlight.js": "^11.8.0",
     "html-webpack-injector": "^1.1.4",
     "html-webpack-plugin": "^5.6.6",
@@ -81,8 +83,9 @@
     "tailwindcss": "^3.3.2",
     "tls": "^0.0.1",
     "ts-loader": "^8.4.0",
-    "typedoc": "^0.24.8",
-    "typescript": "^5.0.4",
+    "typedoc": "^0.28.16",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1",
     "url": "^0.11.0",
     "url-loader": "^4.1.1",
     "webpack": "^5.104.1",
