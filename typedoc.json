@@ -1,6 +1,7 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": [
+    "./src/pointlinejs/configs/pointline-config.ts",
     "./src/pointlinejs/pointlinejs.ts",
     "./src/pointlinejs/vendor/treant/Treant.ts"
   ],
