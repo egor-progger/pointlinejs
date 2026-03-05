@@ -26,6 +26,8 @@ import 'reflect-metadata';
 import { Selection } from './selection/selection';
 import { CollapsableNode } from './components/nodes/collapsable-node';
 import { Tooltip } from './tooltip';
+import { PointlineZoom } from './components/pointline-zoom';
+import { defaultPointLineJSConfig, PointlineJSConfig } from './configs/pointline-config';
 window.jQuery = window.$ = require('jquery');
 require('jquery.easing');
 
@@ -38,10 +40,11 @@ export class PointlineJS {
    */
   private chartConfig: ChartConfigType;
   private tree: Tree;
-  private actionsId: string;
   private actions: PointlineActions;
+  private zoom: PointlineZoom;
+  private poinlineConfig: Partial<PointlineJSConfig>;
 
-  constructor(chartConfig: ChartConfigType, actionsId?: string) {
+  constructor(chartConfig: ChartConfigType, poinlineConfig: Partial<PointlineJSConfig> = defaultPointLineJSConfig) {
     const container = new Container();
     container.bind(DI_LIST.pointlineJS).to(PointlineJS).inSingletonScope();
     container.bind(DI_LIST.treeStore).to(TreeStore).inSingletonScope();
@@ -57,21 +60,26 @@ export class PointlineJS {
     container.bind(DI_LIST.treant).to(Treant);
     container.bind(DI_LIST.selection).to(Selection)
     container.bind(DI_LIST.pointlineActions).to(PointlineActions);
+    container.bind(DI_LIST.pointlineZoom).to(PointlineZoom);
     this.treant = container.get<Treant>(DI_LIST.treant);
     this.actions = container.get<PointlineActions>(DI_LIST.pointlineActions);
+    this.zoom = container.get<PointlineZoom>(DI_LIST.pointlineZoom);
     this.chartConfig = chartConfig;
-    this.actionsId = actionsId;
+    this.poinlineConfig = poinlineConfig;
   }
 
   async draw() {
     const tree = await this.treant.init(this.chartConfig);
     if (tree) {
       this.tree = tree;
-      if (this.actionsId) {
+      if (this.poinlineConfig.actionsId) {
         const treePositioned = await tree.treePositioned;
         if (treePositioned) {
-          this.actions.init(this.actionsId, this);
+          this.actions.init(this.poinlineConfig.actionsId, this);
         }
+      }
+      if (this.poinlineConfig.enablePanZoom) {
+        this.zoom.initZoom(this.tree.drawArea.id);
       }
     }
   }
@@ -94,7 +102,7 @@ export class PointlineJS {
   }
 
   resetActions() {
-    this.actions.init(this.actionsId, this);
+    this.actions.init(this.poinlineConfig.actionsId, this);
   }
 
   /**

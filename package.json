@@ -48,6 +48,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.3",
     "@material/dialog": "^14.0.0",
+    "@panzoom/panzoom": "^4.6.1",
     "@types/jquery": "^1.10.45",
     "@types/jqueryui": "^1.12.23",
     "@types/raphael": "^2.3.3",
