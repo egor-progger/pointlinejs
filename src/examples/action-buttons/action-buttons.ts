@@ -62,5 +62,5 @@ var chart_config = {
   }
 };
 
-const pointlinejs = new PointlineJS(chart_config as unknown as ChartConfigType, 'guiButtons');
+const pointlinejs = new PointlineJS(chart_config as unknown as ChartConfigType, { actionsId: 'guiButtons' });
 await pointlinejs.draw();
