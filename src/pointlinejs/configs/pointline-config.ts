@@ -1,3 +1,6 @@
+/**
+ * @description options for pointlinejs
+ */
 export type PointlineJSConfig = {
     /**
      * id html containter for draw action buttons
@@ -11,6 +14,9 @@ export type PointlineJSConfig = {
     enablePanZoom: boolean;
 }
 
+/**
+ * @description default parameters for pointlinejs
+ */
 export const defaultPointLineJSConfig: PointlineJSConfig = {
     actionsId: '',
     enablePanZoom: false
