@@ -14,5 +14,6 @@ export const DI_LIST = {
   pointlineActions: Symbol.for('pointlineActions'),
   pointlineJS: Symbol.for('pointlineJS'),
   tooltip: Symbol.for('Tooltip'),
-  pointlineZoom: Symbol.for('pointlineZoom')
+  pointlineZoom: Symbol.for('pointlineZoom'),
+  collapsableNodesStore: Symbol.for('CollapsableNodesStore'),
 };

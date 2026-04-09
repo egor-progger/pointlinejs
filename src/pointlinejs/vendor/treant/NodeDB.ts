@@ -4,6 +4,7 @@ import { UTIL } from './Util';
 import { DI_LIST } from '../../InjectableList';
 import { NodeInterface } from './Treant';
 import { Tree } from './Tree';
+import { CollapsableNodesStore } from '@pointlinejs/stores/collapsable-nodes/collaplable-nodes.store';
 
 @injectable()
 export class NodeDBState {
@@ -23,7 +24,10 @@ export class NodeDB {
   protected util: UTIL = new UTIL();
   public db: TreeNode[] = [];
 
-  constructor(@inject(DI_LIST.nodeDBState) public nodeDBState: NodeDBState) { }
+  constructor(
+    @inject(DI_LIST.nodeDBState) public nodeDBState: NodeDBState,
+    @inject(DI_LIST.collapsableNodesStore) private readonly collapsableNodesStore: CollapsableNodesStore
+  ) { }
 
   get size(): number {
     return this.db.length;
@@ -155,13 +159,16 @@ export class NodeDB {
     tree: Tree,
     stackParentId?: number | null
   ) {
-    const node = new TreeNode(tree).init(
+    const node = new TreeNode().init(
       nodeStructure,
       this.db.length,
       parentId,
       tree,
       stackParentId
     );
+    if (node.id && node.collapsable) {
+      this.collapsableNodesStore.addNode(node);
+    }
 
     this.db.push(node);
 

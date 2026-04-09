@@ -13,6 +13,10 @@ const entries = [
     type: entryType.withTypescript,
   },
   { name: 'examples/collapsable/collapsable', type: entryType.withTypescript },
+  {
+    name: 'examples/collapsable-from-code/collapsable-from-code',
+    type: entryType.withTypescript,
+  },
   { name: 'examples/comments/comments', type: entryType.withTypescript },
   { name: 'examples/connectors/connectors', type: entryType.withTypescript },
   {
@@ -168,6 +172,10 @@ module.exports = {
         {
           from: 'src/examples/collapsable/img',
           to: 'examples/collapsable/img',
+        },
+        {
+          from: 'src/examples/collapsable-from-code/img',
+          to: 'examples/collapsable-from-code/img',
         },
         {
           from: 'src/examples/comments/avatar.jpg',

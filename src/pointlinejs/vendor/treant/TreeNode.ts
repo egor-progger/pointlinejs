@@ -21,8 +21,8 @@ import {
   RaphaelAttributesExtended,
 } from './Treant';
 import { RaphaelPath } from 'raphael';
-import { CollapsableNode } from '@pointlinejs/components/nodes/collapsable-node';
 import { Tooltip } from '@pointlinejs/tooltip';
+import { CollapsableNodeCss } from '@pointlinejs/components/nodes/collapsable-node-css';
 
 export type RaphaelPathExtended = RaphaelPath<'SVG' | 'VML'> & {
   hidden?: boolean;
@@ -36,8 +36,6 @@ export class TreeNode {
   private parentId: number;
   private image: string;
   private link: NodeLink;
-  private collapsable: boolean;
-  private collapsed: boolean;
   private nodeInnerHTML: string;
   private nodeHTMLclass: string;
   private nodeHTMLid: number;
@@ -47,8 +45,11 @@ export class TreeNode {
     nodeHTMLclass: 'node',
   };
   private tooltip: Tooltip;
+  private tree: Tree;
 
   id: number;
+  collapsable: boolean;
+  collapsed: boolean;
   text: Partial<NodeText>;
   prelim: number;
   modifier: number;
@@ -72,7 +73,7 @@ export class TreeNode {
   treeId: number;
   meta: object;
 
-  constructor(private tree: Tree) { }
+  constructor() { }
 
   init(
     nodeStructure: Partial<NodeInterface> | 'pseudo',
@@ -81,6 +82,7 @@ export class TreeNode {
     tree: Tree,
     stackParentId: number | null
   ) {
+    this.tree = tree;
     return this.reset(nodeStructure, id, parentId, tree, stackParentId);
   }
 
@@ -482,7 +484,7 @@ export class TreeNode {
       oTree.inAnimation = true;
 
       this.collapsed = !this.collapsed; // toggle the collapse at each click
-      this.util.toggleClass(this.nodeDOM, CollapsableNode.collapsedClass, this.collapsed);
+      this.util.toggleClass(this.nodeDOM, CollapsableNodeCss.collapsedClass, this.collapsed);
 
       oTree.positionTree();
 
@@ -841,7 +843,7 @@ export class TreeNode {
     tree: Tree,
     nodeEl?: TreeNodeDom
   ) {
-    const collapsableClassElement = CollapsableNode.collapsableClassElement;
+    const collapsableClassElement = CollapsableNodeCss.collapsableClassElement;
 
     nodeEl = nodeEl || this.nodeDOM;
     if (nodeEl.className) {
