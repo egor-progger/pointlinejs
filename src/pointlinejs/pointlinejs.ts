@@ -28,6 +28,7 @@ import { CollapsableNode } from './components/nodes/collapsable-node';
 import { Tooltip } from './tooltip';
 import { PointlineZoom } from './components/pointline-zoom';
 import { defaultPointLineJSConfig, PointlineJSConfig } from './configs/pointline-config';
+import { CollapsableNodesStore } from './stores/collapsable-nodes/collaplable-nodes.store';
 window.jQuery = window.$ = require('jquery');
 require('jquery.easing');
 
@@ -43,6 +44,7 @@ export class PointlineJS {
   private actions: PointlineActions;
   private zoom: PointlineZoom;
   private poinlineConfig: Partial<PointlineJSConfig>;
+  private collapsableNodesStore: CollapsableNodesStore;
 
   constructor(chartConfig: ChartConfigType, poinlineConfig: Partial<PointlineJSConfig> = defaultPointLineJSConfig) {
     const container = new Container();
@@ -53,7 +55,8 @@ export class PointlineJS {
     container.bind(DI_LIST.nodeDB).to(NodeDB).inSingletonScope();
     container.bind(DI_LIST.nodeDBState).to(NodeDBState).inSingletonScope();
     container.bind(DI_LIST.jsonConfig).to(JSONconfig).inSingletonScope();
-    container.bind(DI_LIST.collapsableNode).to(CollapsableNode).inSingletonScope();
+    container.bind(DI_LIST.collapsableNode).to(CollapsableNode);
+    container.bind(DI_LIST.collapsableNodesStore).to(CollapsableNodesStore).inSingletonScope();
     container.bind(DI_LIST.tooltip).to(Tooltip).inSingletonScope();
     container.bind(DI_LIST.treeNode).to(TreeNode);
     container.bind(DI_LIST.tree).to(Tree);
@@ -66,6 +69,7 @@ export class PointlineJS {
     this.zoom = container.get<PointlineZoom>(DI_LIST.pointlineZoom);
     this.chartConfig = chartConfig;
     this.poinlineConfig = poinlineConfig;
+    this.collapsableNodesStore = container.get<CollapsableNodesStore>(DI_LIST.collapsableNodesStore);
   }
 
   async draw() {
@@ -206,5 +210,19 @@ export class PointlineJS {
     const chartConfig = this.treant.getJsonConfig();
     const container = document.querySelector(chartConfig.chart.container);
     container.scrollLeft = container.scrollWidth / 2 - container.clientWidth / 2;
+  }
+
+  collapseNodeById(id: number) {
+    const collapsableNode = this.collapsableNodesStore.findNodeById(id);
+    if (collapsableNode) {
+      collapsableNode.collapseNode();
+    }
+  }
+
+  expandNodeById(id: number) {
+    const collapsableNode = this.collapsableNodesStore.findNodeById(id);
+    if (collapsableNode) {
+      collapsableNode.expandNode();
+    }
   }
 }
