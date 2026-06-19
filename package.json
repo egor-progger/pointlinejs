@@ -25,8 +25,8 @@
     "documentation": "npm run dev && npm run doc"
   },
   "keywords": [
-    "pointlinejs",
     "treant",
+    "pointlinejs",
     "binary tree",
     "visualization",
     "data-visualization",
@@ -91,7 +91,7 @@
     "url-loader": "^4.1.1",
     "webpack": "^5.104.1",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.2.3",
+    "webpack-dev-server": "^5.2.5",
     "webpack-node-externals": "^3.0.0"
   },
   "main": "dist/lib/pointlinejs/PointlineJS.js",
@@ -99,6 +99,9 @@
   "types": "dist/lib/pointlinejs/PointlineJS.d.ts",
   "dependencies": {
     "@floating-ui/dom": "^1.7.4",
-    "lit": "^3.3.1"
+    "fast-uri": "^4.0.0",
+    "launch-editor": "^2.14.1",
+    "lit": "^3.3.1",
+    "ws": "^8.21.0"
   }
 }
