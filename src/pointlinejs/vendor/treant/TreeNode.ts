@@ -445,7 +445,7 @@ export class TreeNode {
           return false;
         }
 
-        self.toggleCollapse();
+        self.toggleCollapse(this.getTreeConfig().autoFocusForToggleCollapse);
 
         self
           .getTreeConfig()
@@ -455,21 +455,23 @@ export class TreeNode {
   }
 
   /**
+   * @param autoFocus @default false
    * @returns {TreeNode}
    */
-  collapse() {
+  collapse(autoFocus = false) {
     if (!this.collapsed) {
-      this.toggleCollapse();
+      this.toggleCollapse(autoFocus);
     }
     return this;
   }
 
   /**
+   * @param autoFocus @default false
    * @returns {TreeNode}
    */
-  expand() {
+  expand(autoFocus = false) {
     if (this.collapsed) {
-      this.toggleCollapse();
+      this.toggleCollapse(autoFocus);
     }
     return this;
   }
@@ -477,7 +479,7 @@ export class TreeNode {
   /**
    * @returns {TreeNode}
    */
-  toggleCollapse() {
+  toggleCollapse(autoFocus = false) {
     const oTree = this.getTree();
 
     if (!oTree.inAnimation) {
@@ -494,6 +496,9 @@ export class TreeNode {
         (oTree) => {
           // set the flag after the animation
           oTree.inAnimation = false;
+          if (autoFocus) {
+            this.nodeDOM.scrollIntoView();
+          }
           oTree.CONFIG.callback.onToggleCollapseFinished.apply(oTree, [
             self,
             self.collapsed,

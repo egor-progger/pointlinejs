@@ -18,6 +18,7 @@ const chart_config: ChartConfigType = {
       connectorsAnimation: 'bounce',
       connectorsSpeed: 700,
     },
+    autoFocusForToggleCollapse: true
   },
   nodeStructure: {
     image: 'img/malory.png',
@@ -38,6 +39,9 @@ const chart_config: ChartConfigType = {
         children: [
           {
             image: 'img/figgs.png',
+            children: [
+              { image: 'img/sterling.png', }
+            ]
           },
         ],
       },
@@ -48,6 +52,11 @@ const chart_config: ChartConfigType = {
         children: [
           {
             image: 'img/woodhouse.png',
+            children: [
+              {
+                image: 'img/woodhouse.png',
+              },
+            ]
           },
         ],
       },
@@ -56,6 +65,11 @@ const chart_config: ChartConfigType = {
         children: [
           {
             image: 'img/cheryl.png',
+            children: [
+              {
+                image: 'img/cheryl.png',
+              },
+            ]
           },
           {
             image: 'img/pam.png',
@@ -69,7 +83,7 @@ const chart_config: ChartConfigType = {
 const pointlineJS = new PointlineJS(chart_config as unknown as ChartConfigType);
 await pointlineJS.draw();
 setTimeout(() => {
-  pointlineJS.collapseNodeById(3);
+  pointlineJS.collapseNodeById(3, true);
 }
   , 2000);
 setTimeout(() => {

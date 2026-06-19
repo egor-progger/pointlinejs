@@ -215,7 +215,15 @@ export interface ChartInterface {
   node: Partial<NodeType>;
   animation: AnimationType;
   maxDepth: number;
+  /**
+   * id attribute for div where draw actions buttons
+   */
   actionsId: string;
+  /**
+   * autoFocusForToggleCollapse
+   * @default false
+   */
+  autoFocusForToggleCollapse: boolean
 }
 
 /**

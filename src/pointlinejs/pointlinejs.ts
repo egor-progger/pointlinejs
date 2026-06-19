@@ -212,17 +212,17 @@ export class PointlineJS {
     container.scrollLeft = container.scrollWidth / 2 - container.clientWidth / 2;
   }
 
-  collapseNodeById(id: number) {
+  collapseNodeById(id: number, autoFocus: boolean = false) {
     const collapsableNode = this.collapsableNodesStore.findNodeById(id);
     if (collapsableNode) {
-      collapsableNode.collapseNode();
+      collapsableNode.collapseNode(autoFocus);
     }
   }
 
-  expandNodeById(id: number) {
+  expandNodeById(id: number, autoFocus: boolean = false) {
     const collapsableNode = this.collapsableNodesStore.findNodeById(id);
     if (collapsableNode) {
-      collapsableNode.expandNode();
+      collapsableNode.expandNode(autoFocus);
     }
   }
 }

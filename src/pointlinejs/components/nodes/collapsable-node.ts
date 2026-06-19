@@ -26,11 +26,19 @@ export class CollapsableNode {
         return this.node.id;
     }
 
-    collapseNode() {
-        this.node.collapse();
+    /**
+     * 
+     * @param autoFocus
+     */
+    collapseNode(autoFocus = false) {
+        this.node.collapse(autoFocus);
     }
 
-    expandNode() {
-        this.node.expand();
+    /**
+     * 
+     * @param autoFocus 
+     */
+    expandNode(autoFocus = false) {
+        this.node.expand(autoFocus);
     }
 }

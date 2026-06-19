@@ -91,3 +91,8 @@ body {
 .Treant .node.collapsed .collapsable {
   background: none;
 }
+
+.container {
+  width: 400px;
+  overflow: auto;
+}
