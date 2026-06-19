@@ -11,6 +11,52 @@ It relies on Treant-JS, Raphael for handling SVG and animations, JQuery.
 [![Static Badge](https://img.shields.io/badge/Documentation-green)](https://egor-progger.github.io/pointlinejs/documentation/)
 [![Quick start example](https://img.shields.io/badge/Quick_start_example-blue)](https://github.com/egor-progger/pointlinejs-quick-start/)
 
+# Add to project
+
+1. Install PointlineJS:
+
+`npm i pointlinejs`
+
+2. Import PointlineJS:
+
+`import { PointlineJS } from "pointlinejs";`
+
+3. Create DOM-element in html where draw PointlineJS chart:
+
+`<div id="tree-simple" style="height: 600px; width: 900px;"></div>`
+
+4. Describe config chart in typescript file:
+
+```
+const simple_chart_config = {
+  chart: {
+    container: "#tree-simple",
+  },
+
+  nodeStructure: {
+    text: { name: "Parent node" },
+    children: [
+      {
+        text: { name: "First child" },
+      },
+      {
+        text: { name: "Second child" },
+      },
+    ],
+  },
+};
+```
+
+5. Draw chart:
+
+```
+const testTree = new PointlineJS(simple_chart_config);
+testTree.getTree();
+testTree.draw();
+```
+
+For run demo also see "Quick start" section.
+
 # Quick start
 
 1. clone repository with command:
