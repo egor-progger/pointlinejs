@@ -230,8 +230,9 @@ export class Tree {
       this.positionNodes();
 
       if (this.CONFIG.animateOnInit) {
+        const autoFocusForToggleCollapse = this.CONFIG.autoFocusForToggleCollapse;
         setTimeout(function () {
-          root.toggleCollapse();
+          root.toggleCollapse(autoFocusForToggleCollapse);
         }, this.CONFIG.animateOnInitDelay);
       }
 
