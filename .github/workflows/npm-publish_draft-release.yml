@@ -7,8 +7,9 @@ permissions:
   contents: read
 
 on:
-  release:
-    types: [prereleased]
+  push:
+    tags:
+      - **-rc
 
 jobs:
   publish:
