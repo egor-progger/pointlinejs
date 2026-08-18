@@ -6,8 +6,6 @@ updates:
       interval: 'daily'
     assignees:
       - 'egor-progger'
-    labels:
-      - 'dependencies'
     commit-message:
       # Prefix all commit messages with "npm: "
       prefix: 'npm'
@@ -23,8 +21,8 @@ updates:
     schedule:
       # Check for updates to GitHub Actions every week
       interval: 'weekly'
-    labels:
-      - 'dependencies'
+    assignees:
+      - 'egor-progger'
     commit-message:
       # Prefix all commit messages with "github-actions: "
       prefix: 'github-actions'
