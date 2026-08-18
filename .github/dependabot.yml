@@ -1,0 +1,28 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'daily'
+    assignees:
+      - 'egor-progger'
+    labels:
+      - 'dependencies'
+    commit-message:
+      # Prefix all commit messages with "npm: "
+      prefix: 'npm'
+    groups:
+      support-dependencies:
+        # Define patterns to include dependencies in the group (based on
+        # dependency name)
+        applies-to: security-updates # Applies the group rule to security updates
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      # Check for updates to GitHub Actions every week
+      interval: 'weekly'
+    labels:
+      - 'dependencies'
+    commit-message:
+      # Prefix all commit messages with "github-actions: "
+      prefix: 'github-actions'
