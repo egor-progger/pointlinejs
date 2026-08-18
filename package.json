@@ -81,7 +81,7 @@
     "sass": "^1.80.7",
     "sass-loader": "^13.3.2",
     "tls": "^0.0.1",
-    "ts-loader": "^8.4.0",
+    "ts-loader": "^9.6.2",
     "typedoc": "^0.28.20",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1",
