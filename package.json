@@ -46,7 +46,7 @@
     "url": "https://github.com/egor-progger/pointlinejs/issues"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.3",
+    "@eslint/js": "^10.0.1",
     "@material/dialog": "^14.0.0",
     "@panzoom/panzoom": "^4.6.1",
     "@types/jquery": "^1.10.45",
