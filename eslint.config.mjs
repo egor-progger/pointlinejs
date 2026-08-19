@@ -30,11 +30,11 @@ export default defineConfig([
   },
   {
     files: ["*.ts"],
-    extends: fixupConfigRules(compatWithRecommended.extends(
+    extends: fixupConfigRules(compatWithRecommended.extends([
       js.configs.recommended,
       "plugin:@typescript-eslint/eslint-recommended",
       "plugin:@typescript-eslint/recommended"
-    )),
+    ])),
     languageOptions: {
       parserOptions: {
         project: ["tsconfig.json"],
