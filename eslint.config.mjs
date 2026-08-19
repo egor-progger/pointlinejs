@@ -8,7 +8,6 @@ import Import from "eslint-plugin-import";
 import Jsdoc from "eslint-plugin-jsdoc";
 import { defineConfig, globalIgnores } from "@eslint/config-helpers";
 import { FlatCompat } from "@eslint/eslintrc";
-import js from '@eslint/js';
 import { fixupPluginRules, fixupConfigRules } from "@eslint/compat";
 
 const __filename = fileURLToPath(import.meta.url);
