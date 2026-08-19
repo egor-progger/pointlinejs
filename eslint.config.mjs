@@ -1,6 +1,4 @@
 import js from '@eslint/js';
-import path from "path";
-import { fileURLToPath } from "url";
 import tseslint from 'typescript-eslint';
 import Prettier from "eslint-plugin-prettier";
 import SimpleImportSort from "eslint-plugin-simple-import-sort";
