@@ -62,6 +62,7 @@
     "eslint": "^10.8.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
     "eve-raphael": "^0.5.0",
     "file-loader": "^6.2.0",
     "highlight.js": "^11.8.0",
