@@ -10,13 +10,13 @@ updates:
       # Prefix all commit messages with "npm: "
       prefix: 'npm'
     allow:
-      - dependency-type: "production"
+      - dependency-type: 'production'
         update-types:
-          - "version-update:semver-patch"
-      - dependency-type: "development"
+          - 'version-update:semver-patch'
+      - dependency-type: 'development'
         update-types:
-          - "version-update:semver-minor"
-          - "version-update:semver-patch
+          - 'version-update:semver-minor'
+          - 'version-update:semver-patch'
     groups:
       support-dependencies:
         # Define patterns to include dependencies in the group (based on
