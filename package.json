@@ -98,6 +98,7 @@
   "module": "dist/es/pointlinejs/PointlineJS.js",
   "types": "dist/lib/pointlinejs/PointlineJS.d.ts",
   "dependencies": {
+    "@eslint/compat": "^1.4.1",
     "@floating-ui/dom": "^1.7.4",
     "eslint-plugin-jsdoc": "^61.7.1",
     "launch-editor": "^2.14.1",
