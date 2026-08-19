@@ -99,8 +99,10 @@
   "types": "dist/lib/pointlinejs/PointlineJS.d.ts",
   "dependencies": {
     "@floating-ui/dom": "^1.7.4",
+    "eslint-plugin-jsdoc": "^61.7.1",
     "launch-editor": "^2.14.1",
     "lit": "^3.3.1",
+    "save-dev": "^0.0.1-security",
     "ws": "^8.21.0"
   }
 }
