@@ -1,7 +1,7 @@
 import js from '@eslint/js';
 import path from "path";
 import { fileURLToPath } from "url";
-import TypescriptEslint from "@typescript-eslint/eslint-plugin";
+import tseslint from 'typescript-eslint';
 import Prettier from "eslint-plugin-prettier";
 import SimpleImportSort from "eslint-plugin-simple-import-sort";
 import Import from "eslint-plugin-import";
@@ -19,9 +19,10 @@ const __dirname = path.dirname(__filename);
   });
 export default defineConfig([
   globalIgnores(["/node_modules","/dist","pointlinejs*.tgz","documentation/api"]),
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     plugins: {
-      "@typescript-eslint": fixupPluginRules(TypescriptEslint),
       prettier: fixupPluginRules(Prettier),
       "simple-import-sort": fixupPluginRules(SimpleImportSort),
       import: fixupPluginRules(Import),
@@ -30,11 +31,6 @@ export default defineConfig([
   },
   {
     files: ["*.ts"],
-    extends: fixupConfigRules(compatWithRecommended.extends(
-      js.configs.recommended,
-      "plugin:@typescript-eslint/eslint-recommended",
-      "plugin:@typescript-eslint/recommended"
-    )),
     languageOptions: {
       parserOptions: {
         project: ["tsconfig.json"],
