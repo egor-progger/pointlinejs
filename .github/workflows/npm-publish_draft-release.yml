@@ -9,7 +9,7 @@ permissions:
 on:
   push:
     tags:
-      - '**-rc'
+      - '**-rc*'
 
 jobs:
   publish:
