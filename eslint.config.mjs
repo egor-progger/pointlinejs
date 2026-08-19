@@ -7,11 +7,7 @@ import SimpleImportSort from "eslint-plugin-simple-import-sort";
 import Import from "eslint-plugin-import";
 import Jsdoc from "eslint-plugin-jsdoc";
 import { defineConfig, globalIgnores } from "@eslint/config-helpers";
-import { FlatCompat } from "@eslint/eslintrc";
 import { fixupPluginRules } from "@eslint/compat";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export default defineConfig([
   globalIgnores(["/node_modules","/dist","pointlinejs*.tgz","documentation/api"]),
