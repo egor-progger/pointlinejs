@@ -8,6 +8,7 @@ import Import from "eslint-plugin-import";
 import Jsdoc from "eslint-plugin-jsdoc";
 import { defineConfig, globalIgnores } from "@eslint/config-helpers";
 import { FlatCompat } from "@eslint/eslintrc";
+import js from '@eslint/js';
 import { fixupPluginRules, fixupConfigRules } from "@eslint/compat";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -30,11 +31,11 @@ export default defineConfig([
   },
   {
     files: ["*.ts"],
-    extends: fixupConfigRules(compatWithRecommended.extends([
+    extends: fixupConfigRules(compatWithRecommended.extends(
       js.configs.recommended,
       "plugin:@typescript-eslint/eslint-recommended",
       "plugin:@typescript-eslint/recommended"
-    ])),
+    )),
     languageOptions: {
       parserOptions: {
         project: ["tsconfig.json"],
