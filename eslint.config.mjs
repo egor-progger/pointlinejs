@@ -8,15 +8,11 @@ import Import from "eslint-plugin-import";
 import Jsdoc from "eslint-plugin-jsdoc";
 import { defineConfig, globalIgnores } from "@eslint/config-helpers";
 import { FlatCompat } from "@eslint/eslintrc";
-import { fixupPluginRules, fixupConfigRules } from "@eslint/compat";
+import { fixupPluginRules } from "@eslint/compat";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-  const compatWithRecommended = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-  });
 export default defineConfig([
   globalIgnores(["/node_modules","/dist","pointlinejs*.tgz","documentation/api"]),
   js.configs.recommended,
