@@ -12,7 +12,7 @@ export class CollapsableNode {
     }
 
     get cssClass() {
-        let cssClass: string[] = [];
+        const cssClass: string[] = [];
         if (this.node.collapsable) {
             cssClass.push(this.collapsableClassElement);
         }
