@@ -291,7 +291,7 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   rightSibling() {
-    var rightNeighbor = this.rightNeighbor();
+    const rightNeighbor = this.rightNeighbor();
 
     if (rightNeighbor && rightNeighbor.parentId === this.parentId) {
       return rightNeighbor;
@@ -303,7 +303,7 @@ export class TreeNode {
    * @returns {number}
    */
   childrenCenter() {
-    var first = this.firstChild(),
+    const first = this.firstChild(),
       last = this.lastChild();
     return first.prelim + (last.prelim - first.prelim + last.size()) / 2;
   }
@@ -313,7 +313,7 @@ export class TreeNode {
    * @returns {*}
    */
   collapsedParent(): TreeNode | boolean {
-    var parent = this.parent();
+    const parent = this.parent();
     if (!parent) {
       return false;
     }
@@ -337,8 +337,8 @@ export class TreeNode {
       return null;
     }
 
-    for (var i = 0, n = this.childrenCount(); i < n; i++) {
-      var leftmostDescendant = this.childAt(i).leftMost(level + 1, depth);
+    for (let i = 0, n = this.childrenCount(); i < n; i++) {
+      const leftmostDescendant = this.childAt(i).leftMost(level + 1, depth);
       if (leftmostDescendant) {
         return leftmostDescendant;
       }
@@ -390,7 +390,7 @@ export class TreeNode {
    */
   private pathStringThrough() {
     // get the geometry of a path going through the node
-    var startPoint = this.connectorPoint(true),
+    const startPoint = this.connectorPoint(true),
       endPoint = this.connectorPoint(false);
 
     return [
@@ -406,7 +406,7 @@ export class TreeNode {
    */
   drawLineThroughMe(hidePoint?: Coordinate): void {
     // hidepoint se proslijedjuje ako je node sakriven zbog collapsed
-    var pathString = hidePoint
+    const pathString = hidePoint
       ? this.getTree().getPointPathString(hidePoint)
       : this.pathStringThrough();
 
@@ -490,7 +490,7 @@ export class TreeNode {
 
       oTree.positionTree();
 
-      var self = this;
+      const self = this;
 
       setTimeout(
         (oTree) => {
@@ -515,12 +515,12 @@ export class TreeNode {
   }
 
   hide(collapse_to_point?: Coordinate) {
-    var bCurrentState = this.hidden;
+    const bCurrentState = this.hidden;
     this.hidden = true;
 
     this.nodeDOM.style.overflow = 'hidden';
 
-    var tree = this.getTree(),
+    const tree = this.getTree(),
       config = this.getTreeConfig(),
       oNewState: JQueryCssProperties = {
         opacity: '0',
@@ -565,7 +565,7 @@ export class TreeNode {
 
     // animate the line through node if the line exists
     if (this.lineThroughMe) {
-      var new_path = tree.getPointPathString(collapse_to_point);
+      const new_path = tree.getPointPathString(collapse_to_point);
       if (bCurrentState) {
         // update without animations
         this.lineThroughMe.attr({ path: new_path });
@@ -585,8 +585,8 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   hideConnector() {
-    var oTree = this.getTree();
-    var oPath = oTree.connectionStore[this.id];
+    const oTree = this.getTree();
+    const oPath = oTree.connectionStore[this.id];
     if (oPath) {
       oPath.animate(
         { opacity: 0 },
@@ -602,7 +602,7 @@ export class TreeNode {
 
     this.nodeDOM.style.visibility = 'visible';
 
-    var oNewState = {
+    const oNewState = {
       left: this.X,
       top: this.Y,
       opacity: 1,
@@ -641,8 +641,8 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   showConnector() {
-    var oTree = this.getTree();
-    var oPath = oTree.connectionStore[this.id];
+    const oTree = this.getTree();
+    const oPath = oTree.connectionStore[this.id];
     if (oPath) {
       oPath.animate(
         { opacity: 1 },
@@ -684,7 +684,7 @@ export class TreeNode {
 
     // TEXT
     if (this.text) {
-      for (var key in this.text) {
+      for (const key in this.text) {
         const keyTyped = key as keyof typeof this.text;
         // adding DATA Attributes to the node
         if (key.startsWith('data-')) {
@@ -703,7 +703,7 @@ export class TreeNode {
             textValue = this.text[keyTyped] as string;
           }
 
-          var textElement = document.createElement(
+          const textElement = document.createElement(
             href ? 'a' : 'p'
           ) as HTMLAnchorElement;
 
@@ -743,7 +743,7 @@ export class TreeNode {
   private buildNodeFromHtml(node: TreeNodeDom) {
     // get some element by ID and clone its structure into a node
     if (this.nodeInnerHTML.charAt(0) === '#') {
-      var elem = document.getElementById(this.nodeInnerHTML.substring(1));
+      const elem = document.getElementById(this.nodeInnerHTML.substring(1));
       if (elem) {
         if (node instanceof HTMLAnchorElement) {
           node = elem.cloneNode(true) as HTMLAnchorElement;
@@ -773,7 +773,7 @@ export class TreeNode {
       return;
     }
 
-    var drawArea = tree.drawArea;
+    const drawArea = tree.drawArea;
     /////////// CREATE NODE //////////////
     let node: TreeNodeDom = document.createElement(
       this.link.href && !this.collapsable ? 'a' : 'div'

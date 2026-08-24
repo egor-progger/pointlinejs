@@ -19,7 +19,7 @@ export class TreeStore {
    * @returns {Tree}
    */
   createTree(jsonConfig: ChartStructure) {
-    var nNewTreeId = this.store.length;
+    const nNewTreeId = this.store.length;
     this.store.push(this.tree.init(jsonConfig, nNewTreeId));
     return this.get(nNewTreeId);
   }
@@ -37,20 +37,20 @@ export class TreeStore {
    * @returns {TreeStore}
    */
   destroy(treeId: number) {
-    var tree = this.get(treeId);
+    const tree = this.get(treeId);
     if (tree) {
       tree._R.remove();
-      var draw_area = tree.drawArea;
+      const draw_area = tree.drawArea;
 
       while (draw_area.firstChild) {
         draw_area.removeChild(draw_area.firstChild);
       }
 
-      var classes = draw_area.className.split(' '),
+      const classes = draw_area.className.split(' '),
         classes_to_stay = [];
 
-      for (var i = 0; i < classes.length; i++) {
-        var cls = classes[i];
+      for (let i = 0; i < classes.length; i++) {
+        const cls = classes[i];
         if (cls !== 'Treant' && cls !== 'Treant-loaded') {
           classes_to_stay.push(cls);
         }

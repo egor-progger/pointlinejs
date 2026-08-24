@@ -2,7 +2,7 @@ import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import { PointlineJS } from '@pointlinejs/pointlinejs';
 import './styles/example8.css';
 
-var config = {
+const config = {
   container: '#OrganiseChart8',
   levelSeparation: 70,
   siblingSeparation: 60,

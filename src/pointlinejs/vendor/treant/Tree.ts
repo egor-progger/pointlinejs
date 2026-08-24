@@ -217,7 +217,7 @@ export class Tree {
    * @returns {Tree}
    */
   positionTree(callback?: (tree: Tree) => void) {
-    var self = this;
+    const self = this;
 
     if (this.imageLoader.isNotLoading() === true) {
       const root = this.root();
@@ -269,7 +269,7 @@ export class Tree {
     node = this.setNeighbors(node, level);
     this.calcLevelDim(node, level);
 
-    var leftSibling = node.leftSibling();
+    const leftSibling = node.leftSibling();
 
     if (node.childrenCount() === 0 || level === this.CONFIG.maxDepth) {
       // set preliminary x-coordinate
@@ -283,11 +283,11 @@ export class Tree {
       }
     } else {
       //node is not a leaf,  firstWalk for each child
-      for (var i = 0, n = node.childrenCount(); i < n; i++) {
+      for (let i = 0, n = node.childrenCount(); i < n; i++) {
         this.firstWalk(node.childAt(i), level + 1);
       }
 
-      var midPoint = node.childrenCenter() - node.size() / 2;
+      const midPoint = node.childrenCenter() - node.size() / 2;
 
       if (leftSibling) {
         node.prelim =
@@ -324,7 +324,7 @@ export class Tree {
    */
   apportion(node: TreeNode, level: number) {
     let firstChild: TreeNode | null = node.firstChild();
-    var firstChildLeftNeighbor = firstChild.leftNeighbor(),
+    let firstChildLeftNeighbor = firstChild.leftNeighbor(),
       compareDepth = 1,
       depthToStop = this.CONFIG.maxDepth - level;
 
@@ -334,12 +334,12 @@ export class Tree {
       compareDepth <= depthToStop
     ) {
       // calculate the position of the firstChild, according to the position of firstChildLeftNeighbor
-      var modifierSumRight = 0,
+      let modifierSumRight = 0,
         modifierSumLeft = 0,
         leftAncestor = firstChildLeftNeighbor,
         rightAncestor = firstChild;
 
-      for (var i = 0; i < compareDepth; i++) {
+      for (let i = 0; i < compareDepth; i++) {
         leftAncestor = leftAncestor.parent();
         rightAncestor = rightAncestor.parent();
         modifierSumLeft += leftAncestor.modifier;
@@ -354,7 +354,7 @@ export class Tree {
       // find the gap between two trees and apply it to subTrees
       // and matching smaller gaps to smaller subtrees
 
-      var totalGap =
+      let totalGap =
         firstChildLeftNeighbor.prelim +
         modifierSumLeft +
         firstChildLeftNeighbor.size() +
@@ -362,7 +362,7 @@ export class Tree {
         (firstChild.prelim + modifierSumRight);
 
       if (totalGap > 0) {
-        var subtreeAux = node,
+        let subtreeAux = node,
           numSubtrees = 0;
 
         // count all the subtrees in the LeftSibling
@@ -372,7 +372,7 @@ export class Tree {
         }
 
         if (subtreeAux) {
-          var subtreeMoveAux = node,
+          let subtreeMoveAux = node,
             singleGap = totalGap / numSubtrees;
 
           while (subtreeMoveAux.id !== leftAncestor.id) {
@@ -411,7 +411,7 @@ export class Tree {
       return;
     }
 
-    var xTmp = node.prelim + X,
+    let xTmp = node.prelim + X,
       yTmp = Y,
       align = this.CONFIG.nodeAlign,
       orient = this.CONFIG.rootOrientation,
@@ -451,7 +451,7 @@ export class Tree {
     }
 
     if (orient === 'WEST' || orient === 'EAST') {
-      var swapTmp = node.X;
+      const swapTmp = node.X;
       node.X = node.Y;
       node.Y = swapTmp;
     }
@@ -487,7 +487,7 @@ export class Tree {
    * @returns {Tree}
    */
   positionNodes() {
-    var self = this,
+    const self = this,
       treeSize = {
         x: self.nodeDB.getMinMaxCoord('X', null, null),
         y: self.nodeDB.getMinMaxCoord('Y', null, null),
@@ -501,7 +501,7 @@ export class Tree {
 
     this.handleOverflow(treeWidth, treeHeight);
 
-    var containerCenter = {
+    let containerCenter = {
       x: self.drawArea.clientWidth / 2,
       y: self.drawArea.clientHeight / 2,
     },
@@ -545,7 +545,7 @@ export class Tree {
           ? deltaY
           : this.CONFIG.padding);
 
-      var collapsedParent = node.collapsedParent() as TreeNode,
+      let collapsedParent = node.collapsedParent() as TreeNode,
         hidePoint: Coordinate = null;
 
       if (collapsedParent) {
@@ -588,7 +588,7 @@ export class Tree {
    * @returns {Tree}
    */
   handleOverflow(treeWidth: number, treeHeight: number) {
-    var viewWidth =
+    const viewWidth =
       treeWidth < this.drawArea.clientWidth
         ? this.drawArea.clientWidth
         : treeWidth + this.CONFIG.padding * 2,
@@ -617,7 +617,7 @@ export class Tree {
     }
     // Fancy scrollbar relies heavily on jQuery, so guarding with if ( $ )
     else if (this.CONFIG.scrollbar === 'fancy') {
-      var jq_drawArea: JQuery = $(this.drawArea);
+      const jq_drawArea: JQuery = $(this.drawArea);
       if (jq_drawArea.hasClass('ps-container')) {
         // znaci da je 'fancy' vec inicijaliziran, treba updateat
         jq_drawArea.find('.Treant').css({
@@ -629,7 +629,7 @@ export class Tree {
         );
         perfectScrollbar.update();
       } else {
-        var mainContainer = jq_drawArea.wrapInner('<div class="Treant"/>'),
+        const mainContainer = jq_drawArea.wrapInner('<div class="Treant"/>'),
           child = mainContainer.find('.Treant');
 
         child.css({
@@ -652,7 +652,7 @@ export class Tree {
    * @returns {Tree}
    */
   setConnectionToParent(treeNode: TreeNode, hidePoint: Coordinate) {
-    var stacked = treeNode.stackParentId ? true : false,
+    let stacked = treeNode.stackParentId ? true : false,
       connLine: RaphaelPathExtended,
       parent = stacked
         ? this.nodeDB.get(treeNode.stackParentId)
@@ -752,7 +752,7 @@ export class Tree {
    * @returns {string}
    */
   getPathString(from_node: TreeNode, to_node: TreeNode, stacked: boolean) {
-    var startPoint = from_node.connectorPoint(true),
+    const startPoint = from_node.connectorPoint(true),
       endPoint = to_node.connectorPoint(false),
       orientation = this.CONFIG.rootOrientation,
       connType = from_node.connStyle.type,
@@ -772,7 +772,7 @@ export class Tree {
     }
 
     // sp, p1, pm, p2, ep == "x,y"
-    var sp = startPoint.x + ',' + startPoint.y,
+    let sp = startPoint.x + ',' + startPoint.y,
       p1 = P1.x + ',' + P1.y,
       p2 = P2.x + ',' + P2.y,
       ep = endPoint.x + ',' + endPoint.y,
@@ -791,7 +791,7 @@ export class Tree {
       if (connType === 'step' || connType === 'straight') {
         pathString = ['M', sp, 'L', stackPoint, 'L', ep];
       } else if (connType === 'curve' || connType === 'bCurve') {
-        var helpPoint, // used for nicer curve lines
+        let helpPoint, // used for nicer curve lines
           indent = from_node.connStyle.stackIndent;
 
         if (orientation === 'NORTH') {
@@ -896,7 +896,7 @@ export class Tree {
         * @returns {Partial<NodeInterface>}
         */
   addParentForNode(selectedNode: TreeNode, nodeDefinition: Partial<NodeInterface>): Partial<NodeInterface> {
-    let searchItem = this.searchNodeByIdInConfig(selectedNode.parent(), this.initJsonConfig.nodeStructure);
+    const searchItem = this.searchNodeByIdInConfig(selectedNode.parent(), this.initJsonConfig.nodeStructure);
     if (searchItem) {
       for (const [childIndex, childItem] of searchItem.children.entries()) {
         if (childItem.idInNodeDB === selectedNode.id) {
@@ -919,7 +919,7 @@ export class Tree {
   removeNode(selectedNode: TreeNode): Partial<NodeInterface> {
     console.log('Tree');
     console.log('removeNode');
-    let searchItem = this.searchNodeByIdInConfig(selectedNode.parent(), this.initJsonConfig.nodeStructure);
+    const searchItem = this.searchNodeByIdInConfig(selectedNode.parent(), this.initJsonConfig.nodeStructure);
     if (searchItem) {
       for (const [childIndex, childItem] of searchItem.children.entries()) {
         if (childItem.idInNodeDB === selectedNode.id) {
@@ -938,7 +938,7 @@ export class Tree {
    * @returns {Partial<NodeInterface>}
    */
   updateNode(selectedNode: TreeNode, nodeData: Partial<NodeText>): Partial<NodeInterface> {
-    let searchItem = this.searchNodeByIdInConfig(selectedNode, this.initJsonConfig.nodeStructure);
+    const searchItem = this.searchNodeByIdInConfig(selectedNode, this.initJsonConfig.nodeStructure);
     searchItem.text = nodeData;
     return searchItem;
   }

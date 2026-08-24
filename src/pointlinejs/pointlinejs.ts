@@ -128,8 +128,8 @@ export class PointlineJS {
   async addParentNode(selectedEl: HTMLElement, nodeStructure: Partial<NodeInterface>): Promise<Partial<NodeInterface>> {
     const tree = this.getTree();
     const nodeDb = tree.getNodeDb().db;
-    for (var key in nodeDb) {
-      var nodeTree = nodeDb[key];
+    for (const key in nodeDb) {
+      const nodeTree = nodeDb[key];
       if (nodeTree.text.name == selectedEl.textContent) {
         const addedNode = await tree.addParentForNode(nodeTree, nodeStructure);
         this.reload();
@@ -150,8 +150,8 @@ export class PointlineJS {
   async addChildToNode(selectedEl: HTMLElement, nodeStructure: Partial<NodeInterface>): Promise<Partial<NodeInterface>> {
     const tree = this.getTree();
     const nodeDb = tree.getNodeDb().db;
-    for (var key in nodeDb) {
-      var nodeTree = nodeDb[key];
+    for (const key in nodeDb) {
+      const nodeTree = nodeDb[key];
       if (nodeTree.text.name == selectedEl.textContent) {
         const selectedNodeTree = nodeTree;
         const addedNode = await tree.addChildToNode(selectedNodeTree, nodeStructure);
@@ -166,8 +166,8 @@ export class PointlineJS {
   async removeSelectedNode(selectedEl: HTMLElement): Promise<Partial<NodeInterface>> {
     const tree = this.getTree();
     const nodeDb = tree.getNodeDb().db;
-    for (var key in nodeDb) {
-      var nodeTree = nodeDb[key];
+    for (const key in nodeDb) {
+      const nodeTree = nodeDb[key];
       if (nodeTree.text.name == selectedEl.textContent) {
         const addedNode = await tree.removeNode(nodeTree);
         this.reload();
@@ -190,8 +190,8 @@ export class PointlineJS {
     const selectedEl = this.actions.selectedElement;
     const tree = this.getTree();
     const nodeDb = tree.getNodeDb().db;
-    for (var key in nodeDb) {
-      var nodeTree = nodeDb[key];
+    for (const key in nodeDb) {
+      const nodeTree = nodeDb[key];
       if (nodeTree.text.name == selectedEl.textContent) {
         const selectedNodeTree = nodeTree;
         const updatedNode = await tree.updateNode(selectedNodeTree, data);

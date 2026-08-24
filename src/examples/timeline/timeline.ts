@@ -2,7 +2,7 @@ import { PointlineJS } from '@pointlinejs/pointlinejs';
 import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/timeline.css';
 
-var simple_chart_config = {
+const simple_chart_config = {
   chart: {
     container: '#OrganiseChart-simple',
     hideRootNode: true,

@@ -107,7 +107,7 @@ export class NodeDB {
    * @returns {NodeDB}
    */
   private createGeometries(tree: Tree): NodeDB {
-    var i = this.db.length;
+    let i = this.db.length;
     this.nodeDBState.totalNodes = this.db.length;
     const logTimeout = (nodeDb: TreeNode, nodeDBState: NodeDBState) => {
       nodeDBState.nodesWithHeightAndWidth.add(nodeDb.id);
@@ -137,7 +137,7 @@ export class NodeDB {
    * @returns {NodeDB}
    */
   walk(callback: (node: TreeNode) => void) {
-    var i = this.db.length;
+    let i = this.db.length;
 
     while (i--) {
       callback.apply(this, [this.get(i)]);
@@ -174,7 +174,7 @@ export class NodeDB {
 
     // skip root node (0)
     if (parentId >= 0) {
-      var parent = this.get(parentId);
+      const parent = this.get(parentId);
 
       // todo: refactor into separate private method
       if (typeof node.pseudo !== 'undefined' && node.pseudo === false) {
@@ -236,10 +236,10 @@ export class NodeDB {
       max: parent[dim] + (dim === 'X' ? parent.width : parent.height),
     };
 
-    var i = parent.childrenCount();
+    let i = parent.childrenCount();
 
     while (i--) {
-      var node = parent.childAt(i),
+      const node = parent.childAt(i),
         maxTest = node[dim] + (dim === 'X' ? node.width : node.height),
         minTest = node[dim];
 
@@ -260,7 +260,7 @@ export class NodeDB {
    * @returns {boolean}
    */
   private hasGrandChildren(nodeStructure: Partial<NodeInterface>) {
-    var i = nodeStructure.children.length;
+    let i = nodeStructure.children.length;
     while (i--) {
       if (
         nodeStructure.children[i].children &&

@@ -14,7 +14,7 @@ export class UTIL {
     applyTo: Record<string, object>,
     applyFrom: Record<string, object>
   ) {
-    for (var attr in applyFrom) {
+    for (const attr in applyFrom) {
       if (applyFrom.hasOwnProperty(attr)) {
         if (
           typeof applyTo[attr] === 'object' &&
@@ -72,7 +72,7 @@ export class UTIL {
       return obj;
     }
     const res = new (obj as { constructor: new () => object }).constructor();
-    for (let key in obj) {
+    for (const key in obj) {
       if (typeof obj === 'object' && obj.hasOwnProperty(key)) {
         (res as Record<string, object>)[key] = this.cloneObj(
           (obj as Record<string, object>)[key] as Record<string, object>
@@ -113,7 +113,7 @@ export class UTIL {
     const element = parentEl || window.document;
 
     if ($) {
-      var $element = $(selector, parentEl);
+      const $element = $(selector, parentEl);
       console.log('findEl');
       console.log($element);
       return raw ? $element.get(0) : $element;
@@ -124,7 +124,7 @@ export class UTIL {
       if (selector.charAt(0) === '#') {
         return (element as Document).getElementById(selector.substring(1));
       } else if (selector.charAt(0) === '.') {
-        var oElements = element.getElementsByClassName(selector.substring(1));
+        const oElements = element.getElementsByClassName(selector.substring(1));
         return oElements.length ? oElements[0] : null;
       }
 
@@ -133,7 +133,7 @@ export class UTIL {
   }
 
   getOuterHeight(element: ElementWithSupportIE) {
-    var nRoundingCompensation = 1;
+    const nRoundingCompensation = 1;
     if (typeof element.getBoundingClientRect === 'function') {
       return element.getBoundingClientRect().height;
     } else if ($) {
@@ -151,7 +151,7 @@ export class UTIL {
   }
 
   getOuterWidth(element: ElementWithSupportIE) {
-    var nRoundingCompensation = 1;
+    const nRoundingCompensation = 1;
     if (typeof element.getBoundingClientRect === 'function') {
       return element.getBoundingClientRect().width;
     } else if ($) {
@@ -169,7 +169,7 @@ export class UTIL {
   }
 
   getStyle(element: ElementWithSupportIE, strCssRule: string, asInt: boolean) {
-    var strValue = '';
+    let strValue = '';
     if (document.defaultView && document.defaultView.getComputedStyle) {
       strValue = document.defaultView
         .getComputedStyle(element, '')
