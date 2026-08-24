@@ -20,9 +20,9 @@ export class DraggableNode {
     }
 
     private addDraggableCallback() {
-        this.node.nodeDOM.addEventListener('dragstart', (event: DragEvent) => {
+        this.node.nodeDOM.addEventListener('dragstart', (event: Event) => {
             console.log('this.node dragsrart', this.node);
-            event.dataTransfer.setData('text/plain', this.node.id.toString())
+            (event as DragEvent).dataTransfer.setData('text/plain', this.node.id.toString())
         })
     }
 
@@ -31,9 +31,9 @@ export class DraggableNode {
     }
 
     private addDropCallback() {
-        this.node.nodeDOM.addEventListener('drop', (event: DragEvent) => {
+        this.node.nodeDOM.addEventListener('drop', (event: Event) => {
             event.preventDefault();
-            const data = event.dataTransfer.getData("text");
+            const data = (event as DragEvent).dataTransfer.getData("text");
             console.log('drop data', data);
         });
     }

@@ -12,6 +12,11 @@ export type PointlineJSConfig = {
      * @default false
      */
     enablePanZoom: boolean;
+    /**
+     * enable draggable for node
+     * @default false
+     */
+    enableDraggable: boolean;
 }
 
 /**
@@ -19,5 +24,6 @@ export type PointlineJSConfig = {
  */
 export const defaultPointLineJSConfig: PointlineJSConfig = {
     actionsId: '',
-    enablePanZoom: false
+    enablePanZoom: false,
+    enableDraggable: false,
 }
