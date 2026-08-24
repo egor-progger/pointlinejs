@@ -88,50 +88,7 @@ export class Tree {
       connectorsAnimation: 'linear',
     },
 
-    callback: {
-      onCreateNode: function (
-        treeNode: TreeNode,
-        treeNodeDom: HTMLAnchorElement | HTMLDivElement
-      ) { }, // this = Tree
-      onCreateNodeCollapseSwitch: function (
-        treeNode: TreeNode,
-        treeNodeDom: HTMLAnchorElement | HTMLDivElement,
-      ) { }, // this = Tree
-      onAfterAddNode: function (
-        newTreeNode: TreeNode,
-        parentTreeNode: TreeNode,
-        nodeStructure: Partial<NodeInterface>
-      ) { }, // this = Tree
-      onBeforeAddNode: function (
-        parentTreeNode: TreeNode,
-        nodeStructure: Partial<NodeInterface>
-      ) { }, // this = Tree
-      onAfterPositionNode: function (
-        treeNode: TreeNode,
-        nodeDbIndex: number,
-        containerCenter: Coordinate,
-        treeCenter: Coordinate
-      ) { }, // this = Tree
-      onBeforePositionNode: function (
-        treeNode: TreeNode,
-        nodeDbIndex: number,
-        containerCenter: Coordinate,
-        treeCenter: Coordinate
-      ) { }, // this = Tree
-      onToggleCollapseFinished: function (
-        treeNode: TreeNode,
-        bIsCollapsed: boolean
-      ) { }, // this = Tree
-      onAfterClickCollapseSwitch: function (
-        nodeSwitch: Element | JQuery,
-        event: Event
-      ) { }, // this = TreeNode
-      onBeforeClickCollapseSwitch: function (
-        nodeSwitch: Element | JQuery,
-        event: Event
-      ) { }, // this = TreeNode
-      onTreeLoaded: function (rootTreeNode: TreeNode) { }, // this = Tree
-    },
+    callback: {},
   };
   nodeDB: NodeDB = {} as NodeDB;
 
@@ -217,8 +174,6 @@ export class Tree {
    * @returns {Tree}
    */
   positionTree(callback?: (tree: Tree) => void) {
-    const self = this;
-
     if (this.imageLoader.isNotLoading() === true) {
       const root = this.root();
 
@@ -239,16 +194,14 @@ export class Tree {
       if (!this.loaded) {
         this.util.addClass(this.drawArea, 'Treant-loaded'); // nodes are hidden until .loaded class is added
         if (Object.prototype.toString.call(callback) === '[object Function]') {
-          callback(self);
+          callback(this);
         }
-        self.CONFIG.callback.onTreeLoaded.apply(self, [root]);
+        this.CONFIG.callback.onTreeLoaded.apply(self, [root]);
         this.loaded = true;
         this.treeReady(true);
       }
     } else {
-      setTimeout(function () {
-        self.positionTree(callback);
-      }, 10);
+      setTimeout(() => this.positionTree(callback), 10);
     }
     return this;
   }
@@ -325,8 +278,8 @@ export class Tree {
   apportion(node: TreeNode, level: number) {
     let firstChild: TreeNode | null = node.firstChild();
     let firstChildLeftNeighbor = firstChild.leftNeighbor(),
-      compareDepth = 1,
-      depthToStop = this.CONFIG.maxDepth - level;
+      compareDepth = 1;
+    const depthToStop = this.CONFIG.maxDepth - level;
 
     while (
       firstChild &&
@@ -372,8 +325,8 @@ export class Tree {
         }
 
         if (subtreeAux) {
-          let subtreeMoveAux = node,
-            singleGap = totalGap / numSubtrees;
+          let subtreeMoveAux = node;
+          const singleGap = totalGap / numSubtrees;
 
           while (subtreeMoveAux.id !== leftAncestor.id) {
             subtreeMoveAux.prelim += totalGap;
@@ -411,11 +364,11 @@ export class Tree {
       return;
     }
 
-    let xTmp = node.prelim + X,
+    const xTmp = node.prelim + X,
       yTmp = Y,
       align = this.CONFIG.nodeAlign,
-      orient = this.CONFIG.rootOrientation,
-      levelHeight,
+      orient = this.CONFIG.rootOrientation;
+    let levelHeight,
       nodesizeTmp;
 
     if (orient === 'NORTH' || orient === 'SOUTH') {
@@ -487,10 +440,10 @@ export class Tree {
    * @returns {Tree}
    */
   positionNodes() {
-    const self = this,
+    const
       treeSize = {
-        x: self.nodeDB.getMinMaxCoord('X', null, null),
-        y: self.nodeDB.getMinMaxCoord('Y', null, null),
+        x: this.nodeDB.getMinMaxCoord('X', null, null),
+        y: this.nodeDB.getMinMaxCoord('Y', null, null),
       },
       treeWidth = treeSize.x.max - treeSize.x.min,
       treeHeight = treeSize.y.max - treeSize.y.min,
@@ -501,16 +454,16 @@ export class Tree {
 
     this.handleOverflow(treeWidth, treeHeight);
 
-    let containerCenter = {
-      x: self.drawArea.clientWidth / 2,
-      y: self.drawArea.clientHeight / 2,
+    const containerCenter = {
+      x: this.drawArea.clientWidth / 2,
+      y: this.drawArea.clientHeight / 2,
     },
       deltaX = containerCenter.x - treeCenter.x,
       deltaY = containerCenter.y - treeCenter.y,
       // all nodes must have positive X or Y coordinates, handle this with offsets
       negOffsetX = treeSize.x.min + deltaX <= 0 ? Math.abs(treeSize.x.min) : 0,
-      negOffsetY = treeSize.y.min + deltaY <= 0 ? Math.abs(treeSize.y.min) : 0,
-      i,
+      negOffsetY = treeSize.y.min + deltaY <= 0 ? Math.abs(treeSize.y.min) : 0;
+    let i,
       len,
       node: TreeNode;
 
@@ -518,7 +471,7 @@ export class Tree {
     for (i = 0, len = this.nodeDB.size; i < len; i++) {
       node = this.nodeDB.get(i);
 
-      self.CONFIG.callback.onBeforePositionNode.apply(self, [
+      this.CONFIG.callback.onBeforePositionNode.apply(this, [
         node,
         i,
         containerCenter,
@@ -526,7 +479,7 @@ export class Tree {
       ]);
 
       if (node.id === 0 && this.CONFIG.hideRootNode) {
-        self.CONFIG.callback.onAfterPositionNode.apply(self, [
+        this.CONFIG.callback.onAfterPositionNode.apply(this, [
           node,
           i,
           containerCenter,
@@ -545,8 +498,8 @@ export class Tree {
           ? deltaY
           : this.CONFIG.padding);
 
-      let collapsedParent = node.collapsedParent() as TreeNode,
-        hidePoint: Coordinate = null;
+      const collapsedParent = node.collapsedParent() as TreeNode;
+      let hidePoint: Coordinate = null;
 
       if (collapsedParent) {
         // position the node behind the connector point of the parent, so future animations can be visible
@@ -572,7 +525,7 @@ export class Tree {
         node.drawLineThroughMe();
       }
 
-      self.CONFIG.callback.onAfterPositionNode.apply(self, [
+      this.CONFIG.callback.onAfterPositionNode.apply(this, [
         node,
         i,
         containerCenter,
@@ -652,8 +605,8 @@ export class Tree {
    * @returns {Tree}
    */
   setConnectionToParent(treeNode: TreeNode, hidePoint: Coordinate) {
-    let stacked = treeNode.stackParentId ? true : false,
-      connLine: RaphaelPathExtended,
+    let connLine: RaphaelPathExtended;
+    const stacked = treeNode.stackParentId ? true : false,
       parent = stacked
         ? this.nodeDB.get(treeNode.stackParentId)
         : treeNode.parent(),
@@ -772,12 +725,12 @@ export class Tree {
     }
 
     // sp, p1, pm, p2, ep == "x,y"
-    let sp = startPoint.x + ',' + startPoint.y,
+    const sp = startPoint.x + ',' + startPoint.y,
       p1 = P1.x + ',' + P1.y,
       p2 = P2.x + ',' + P2.y,
       ep = endPoint.x + ',' + endPoint.y,
-      pm = (P1.x + P2.x) / 2 + ',' + (P1.y + P2.y) / 2,
-      pathString: string[],
+      pm = (P1.x + P2.x) / 2 + ',' + (P1.y + P2.y) / 2;
+    let pathString: string[],
       stackPoint;
 
     if (stacked) {
@@ -791,8 +744,8 @@ export class Tree {
       if (connType === 'step' || connType === 'straight') {
         pathString = ['M', sp, 'L', stackPoint, 'L', ep];
       } else if (connType === 'curve' || connType === 'bCurve') {
-        let helpPoint, // used for nicer curve lines
-          indent = from_node.connStyle.stackIndent;
+        let helpPoint; // used for nicer curve lines
+        const indent = from_node.connStyle.stackIndent;
 
         if (orientation === 'NORTH') {
           helpPoint = endPoint.x - indent + ',' + (endPoint.y - indent);

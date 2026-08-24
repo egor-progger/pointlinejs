@@ -58,11 +58,10 @@ export class ImageLoader {
    * @returns {*}
    */
   private create(node: TreeNode, image: HTMLImageElement) {
-    const self = this,
-      source = image.src;
+    const source = image.src;
 
-    function imgTrigger() {
-      self.removeAll(source);
+    const imgTrigger = () => {
+      this.removeAll(source);
       node.width = node.nodeDOM.offsetWidth;
       node.height = node.nodeDOM.offsetHeight;
     }

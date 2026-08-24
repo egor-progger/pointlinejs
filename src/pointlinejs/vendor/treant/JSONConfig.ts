@@ -10,6 +10,11 @@ export class JSONconfig {
   private json_id = 1;
   private jsonStructure: ChartStructure;
 
+  /**
+   * @deprecated
+   * @param configArray
+   * @returns 
+   */
   make(configArray: Array<Partial<ChartInterface> | Partial<NodeInterface>>) {
     let i = configArray.length,
       node;

@@ -429,13 +429,12 @@ export class TreeNode {
   }
 
   private addSwitchEvent(nodeSwitch: Element | JQuery) {
-    const self = this;
     this.util.addEvent(
       nodeSwitch as Element,
       'click',
       (e: Event): void | boolean => {
         if (
-          self
+          this
             .getTreeConfig()
             .callback.onBeforeClickCollapseSwitch.apply(self, [
               nodeSwitch,
@@ -445,9 +444,9 @@ export class TreeNode {
           return false;
         }
 
-        self.toggleCollapse(this.getTreeConfig().autoFocusForToggleCollapse);
+        this.toggleCollapse(this.getTreeConfig().autoFocusForToggleCollapse);
 
-        self
+        this
           .getTreeConfig()
           .callback.onAfterClickCollapseSwitch.apply(self, [nodeSwitch, e]);
       }
@@ -490,8 +489,6 @@ export class TreeNode {
 
       oTree.positionTree();
 
-      const self = this;
-
       setTimeout(
         (oTree) => {
           // set the flag after the animation
@@ -500,8 +497,8 @@ export class TreeNode {
             this.nodeDOM.scrollIntoView();
           }
           oTree.CONFIG.callback.onToggleCollapseFinished.apply(oTree, [
-            self,
-            self.collapsed,
+            this,
+            this.collapsed,
           ]);
         },
         oTree.CONFIG.animation.nodeSpeed >
@@ -869,12 +866,11 @@ export class TreeNode {
    * @param nodeElement 
    */
   private addClickEventForNode(nodeElement: Element | JQuery): void {
-    const self = this;
     this.util.addEvent(
       nodeElement as Element,
       'click',
       (e: Event): void | boolean => {
-        self
+        this
           .getTreeConfig()
           .callback.onClickNode?.apply(self, [nodeElement, e]);
       }
@@ -885,14 +881,13 @@ export class TreeNode {
    * @param nodeElement 
    */
   private addMouseoverEventForNode(nodeElement: Element | JQuery): void {
-    const self = this;
     this.util.addEvent(
       nodeElement as Element,
       'mouseover',
       (e: Event): void | boolean => {
         e.preventDefault();
 
-        self
+        this
           .getTreeConfig()
           .callback.onMouseoverNode?.apply(self, [nodeElement, e]);
         if (this.tooltip) {
@@ -906,14 +901,13 @@ export class TreeNode {
    * @param nodeElement 
    */
   private addMouseoutEventForNode(nodeElement: Element | JQuery): void {
-    const self = this;
     this.util.addEvent(
       nodeElement as Element,
       'mouseout',
       (e: Event): void | boolean => {
         e.preventDefault();
 
-        self
+        this
           .getTreeConfig()
           .callback.onMouseoutNode?.apply(self, [nodeElement, e]);
         if (this.tooltip) {

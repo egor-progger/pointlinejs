@@ -387,7 +387,7 @@ export class Treant {
     if (jQuery) {
       $ = jQuery;
     }
-    this.tree = new Promise((resolve, reject) =>
+    this.tree = new Promise((resolve) =>
       setTimeout(() => resolve(this.treeStore.createTree(this.jsonConfig)), 200)
     );
     return Promise.all([this.tree, this.nodeDB.nodeDBState.dbReady]).then(
