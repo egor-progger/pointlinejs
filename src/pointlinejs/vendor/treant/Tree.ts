@@ -196,7 +196,9 @@ export class Tree {
         if (Object.prototype.toString.call(callback) === '[object Function]') {
           callback(this);
         }
-        this.CONFIG.callback.onTreeLoaded.apply(self, [root]);
+        if (this.CONFIG.callback.onTreeLoaded) {
+          this.CONFIG.callback.onTreeLoaded.apply(this, [root]);
+        }
         this.loaded = true;
         this.treeReady(true);
       }
@@ -471,14 +473,16 @@ export class Tree {
     for (i = 0, len = this.nodeDB.size; i < len; i++) {
       node = this.nodeDB.get(i);
 
-      this.CONFIG.callback.onBeforePositionNode.apply(this, [
-        node,
-        i,
-        containerCenter,
-        treeCenter,
-      ]);
+      if (this.CONFIG.callback.onBeforePositionNode) {
+        this.CONFIG.callback.onBeforePositionNode.apply(this, [
+          node,
+          i,
+          containerCenter,
+          treeCenter,
+        ]);
+      }
 
-      if (node.id === 0 && this.CONFIG.hideRootNode) {
+      if (node.id === 0 && this.CONFIG.hideRootNode && this.CONFIG.callback.onAfterPositionNode) {
         this.CONFIG.callback.onAfterPositionNode.apply(this, [
           node,
           i,
@@ -525,12 +529,14 @@ export class Tree {
         node.drawLineThroughMe();
       }
 
-      this.CONFIG.callback.onAfterPositionNode.apply(this, [
-        node,
-        i,
-        containerCenter,
-        treeCenter,
-      ]);
+      if (this.CONFIG.callback.onAfterPositionNode) {
+        this.CONFIG.callback.onAfterPositionNode.apply(this, [
+          node,
+          i,
+          containerCenter,
+          treeCenter,
+        ]);
+      }
     }
     return this;
   }

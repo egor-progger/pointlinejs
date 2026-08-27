@@ -223,7 +223,11 @@ export interface ChartInterface {
    * autoFocusForToggleCollapse
    * @default false
    */
-  autoFocusForToggleCollapse: boolean
+  autoFocusForToggleCollapse: boolean,
+  /**
+   * @default true
+   */
+  enableDraggable: boolean
 }
 
 /**
@@ -337,6 +341,10 @@ export interface NodeInterface {
   parent: Partial<NodeInterface>;
   tooltip: string;
   clickEvent: () => void;
+  /**
+   * @default true
+   */
+  draggable: boolean
 }
 
 export type ChartStructure = {

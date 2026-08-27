@@ -187,7 +187,9 @@ const config: Partial<ChartInterface> = {
 //     }
 // };
 
-const pointlinejs = new PointlineJS(chart_config as unknown as ChartConfigType);
+const pointlinejs = new PointlineJS(chart_config as unknown as ChartConfigType, {
+  enableDraggable: true
+});
 await pointlinejs.draw();
 const tree = pointlinejs.getTree();
 console.log('tree');

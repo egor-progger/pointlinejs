@@ -436,7 +436,10 @@ export class TreeNode {
         if (
           this
             .getTreeConfig()
-            .callback.onBeforeClickCollapseSwitch.apply(self, [
+            .callback.onBeforeClickCollapseSwitch &&
+          this
+            .getTreeConfig()
+            .callback.onBeforeClickCollapseSwitch.apply(this, [
               nodeSwitch,
               e,
             ]) === false
@@ -446,9 +449,13 @@ export class TreeNode {
 
         this.toggleCollapse(this.getTreeConfig().autoFocusForToggleCollapse);
 
-        this
+        if (this
           .getTreeConfig()
-          .callback.onAfterClickCollapseSwitch.apply(self, [nodeSwitch, e]);
+          .callback.onAfterClickCollapseSwitch) {
+          this
+            .getTreeConfig()
+            .callback.onAfterClickCollapseSwitch.apply(this, [nodeSwitch, e]);
+        }
       }
     );
   }
@@ -496,10 +503,12 @@ export class TreeNode {
           if (autoFocus) {
             this.nodeDOM.scrollIntoView();
           }
-          oTree.CONFIG.callback.onToggleCollapseFinished.apply(oTree, [
-            this,
-            this.collapsed,
-          ]);
+          if (oTree.CONFIG.callback.onToggleCollapseFinished) {
+            oTree.CONFIG.callback.onToggleCollapseFinished.apply(oTree, [
+              this,
+              this.collapsed,
+            ]);
+          }
         },
         oTree.CONFIG.animation.nodeSpeed >
           oTree.CONFIG.animation.connectorsSpeed
@@ -826,7 +835,9 @@ export class TreeNode {
     this.addMouseoverEventForNode(node);
     this.addMouseoutEventForNode(node);
 
-    tree.CONFIG.callback.onCreateNode.apply(tree, [this, node]);
+    if (tree.CONFIG.callback.onCreateNode) {
+      tree.CONFIG.callback.onCreateNode.apply(tree, [this, node]);
+    }
 
     /////////// APPEND all //////////////
     drawArea.appendChild(node);
@@ -855,10 +866,12 @@ export class TreeNode {
     }
     this.addSwitchEvent(nodeEl);
 
-    tree.CONFIG.callback.onCreateNodeCollapseSwitch.apply(tree, [
-      this,
-      nodeEl,
-    ]);
+    if (tree.CONFIG.callback.onCreateNodeCollapseSwitch) {
+      tree.CONFIG.callback.onCreateNodeCollapseSwitch.apply(tree, [
+        this,
+        nodeEl,
+      ]);
+    }
     return nodeEl;
   }
 
@@ -872,7 +885,7 @@ export class TreeNode {
       (e: Event): void | boolean => {
         this
           .getTreeConfig()
-          .callback.onClickNode?.apply(self, [nodeElement, e]);
+          .callback.onClickNode?.apply(this, [nodeElement, e]);
       }
     );
   }
@@ -889,7 +902,7 @@ export class TreeNode {
 
         this
           .getTreeConfig()
-          .callback.onMouseoverNode?.apply(self, [nodeElement, e]);
+          .callback.onMouseoverNode?.apply(this, [nodeElement, e]);
         if (this.tooltip) {
           this.tooltip.show(this.nodeDOM);
         }

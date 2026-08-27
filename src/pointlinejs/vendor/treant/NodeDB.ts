@@ -5,6 +5,7 @@ import { DI_LIST } from '../../InjectableList';
 import { NodeInterface } from './Treant';
 import { Tree } from './Tree';
 import { CollapsableNodesStore } from '@pointlinejs/stores/collapsable-nodes/collaplable-nodes.store';
+import { DraggableNode } from '@pointlinejs/components/nodes/draggable-node';
 
 @injectable()
 export class NodeDBState {
@@ -166,8 +167,14 @@ export class NodeDB {
       tree,
       stackParentId
     );
-    if (node.id && node.collapsable) {
-      this.collapsableNodesStore.addNode(node);
+    if (node.id) {
+      if (node.collapsable) {
+        this.collapsableNodesStore.addNode(node);
+      }
+      if (nodeStructure !== 'pseudo' && nodeStructure.draggable) {
+        const draggableNode = new DraggableNode(node);
+        console.log('draggableNode', draggableNode);
+      }
     }
 
     this.db.push(node);

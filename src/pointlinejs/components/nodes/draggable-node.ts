@@ -38,9 +38,9 @@ export class DraggableNode {
         });
     }
 
-    private disableDraggable() {
-        this.node.nodeDOM.draggable = false;
-    }
+    // private disableDraggable() {
+    //     this.node.nodeDOM.draggable = false;
+    // }
     //     function addingDragAndDropSupport() {
     // 	var nodeDivs = document.getElementsByClassName("node");
     // 	var i;
