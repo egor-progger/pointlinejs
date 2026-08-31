@@ -146,6 +146,10 @@ export type NodeType = {
    * If you are planning of making a lot of \<a\> nodes then here is the possibility to assign target="_blank" to each of those nodes in one blow.
    */
   link: { target: '_self' };
+  /**
+   * draggable
+   */
+  draggable: boolean;
 };
 
 export type AnimationType = {
@@ -223,11 +227,7 @@ export interface ChartInterface {
    * autoFocusForToggleCollapse
    * @default false
    */
-  autoFocusForToggleCollapse: boolean,
-  /**
-   * @default true
-   */
-  enableDraggable: boolean
+  autoFocusForToggleCollapse: boolean
 }
 
 /**
@@ -361,11 +361,11 @@ export type ChartConfigType =
  */
 @injectable()
 export class Treant {
-  private jsonConfig: ChartStructure;
+  private chartStructure: ChartStructure;
   private tree: Promise<Tree> | null = null;
 
   constructor(
-    @inject(DI_LIST.jsonConfig) private jsonConfigService: JSONconfig,
+    @inject(DI_LIST.jsonConfig) private jsonConfig: JSONconfig,
     @inject(DI_LIST.treeStore) private treeStore: TreeStore,
     @inject(DI_LIST.nodeDB) private nodeDB: NodeDB
   ) { }
@@ -387,16 +387,16 @@ export class Treant {
     jQuery?: JQueryStatic
   ): Promise<Tree> {
     if (Array.isArray(jsonConfig)) {
-      this.jsonConfig = this.jsonConfigService.make(jsonConfig);
+      this.chartStructure = this.jsonConfig.make(jsonConfig);
     } else {
-      this.jsonConfig = jsonConfig;
+      this.chartStructure = jsonConfig;
     }
     // optional
     if (jQuery) {
       $ = jQuery;
     }
     this.tree = new Promise((resolve) =>
-      setTimeout(() => resolve(this.treeStore.createTree(this.jsonConfig)), 200)
+      setTimeout(() => resolve(this.treeStore.createTree(this.chartStructure)), 200)
     );
     return Promise.all([this.tree, this.nodeDB.nodeDBState.dbReady]).then(
       ([tree, dbReady]) => {
@@ -429,6 +429,6 @@ export class Treant {
    * @returns {ChartStructure}
    */
   getJsonConfig() {
-    return this.jsonConfig;
+    return this.chartStructure;
   }
 }
