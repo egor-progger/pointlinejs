@@ -23,6 +23,9 @@ import {
 import { RaphaelPath } from 'raphael';
 import { Tooltip } from '@pointlinejs/tooltip';
 import { CollapsableNodeCss } from '@pointlinejs/components/nodes/collapsable-node-css';
+// import { DraggableNodeFactory } from '@pointlinejs/components/nodes/draggable/draggable-node';
+// import { DraggableNode } from '@pointlinejs/components/nodes/draggable/draggable-node';
+// import { DI_LIST } from '@pointlinejs/InjectableList';
 
 export type RaphaelPathExtended = RaphaelPath<'SVG' | 'VML'> & {
   hidden?: boolean;
@@ -46,6 +49,7 @@ export class TreeNode {
   };
   private tooltip: Tooltip;
   private tree: Tree;
+  // private draggableNodeFactory: DraggableNodeFactory = new DraggableNodeFactory();
 
   id: number;
   collapsable: boolean;
@@ -101,6 +105,8 @@ export class TreeNode {
     tree: Tree,
     stackParentId: number | null
   ) {
+    console.log('reset');
+    console.log('tree.CONFIG.node.draggable', tree.CONFIG.node.draggable);
     this.id = id;
     this.parentId = parentId;
     this.treeId = tree.id;
@@ -845,6 +851,14 @@ export class TreeNode {
     this.height = node.offsetHeight;
 
     this.nodeDOM = node;
+
+    /** init draggable begin */
+    // if (tree.CONFIG.node.draggable) {
+    //   const draggableNode = this.draggableNodeFactory.create(this);
+    //   console.log('draggableNode', draggableNode);
+    // }
+    /** init draggable end */
+
     tree.imageLoader.processNode(this);
   }
 

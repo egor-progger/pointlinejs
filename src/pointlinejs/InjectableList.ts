@@ -1,6 +1,11 @@
 export const DI_LIST = {
-  treeNode: Symbol.for('TreeNode'),
+  // treeNode: Symbol.for('TreeNode'),
+  treeNodeConstructor: Symbol.for('TreeNodeConstructor'),
   collapsableNode: Symbol.for('CollapsableNode'),
+  // draggableNode: Symbol.for('DraggableNode'),
+  draggableNodeConstructor: Symbol.for('DraggableNodeConstructor'),
+  draggableNodeFactory: Symbol.for('DraggableNodeFactory'),
+  dragNodeAction: Symbol.for('DragNodeAction'),
   treeStore: Symbol.for('TreeStore'),
   treant: Symbol.for('Treant'),
   nodeDB: Symbol.for('NodeDB'),

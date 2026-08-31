@@ -5,7 +5,8 @@ import { DI_LIST } from '../../InjectableList';
 import { NodeInterface } from './Treant';
 import { Tree } from './Tree';
 import { CollapsableNodesStore } from '@pointlinejs/stores/collapsable-nodes/collaplable-nodes.store';
-import { DraggableNode } from '@pointlinejs/components/nodes/draggable-node';
+import { DraggableNode } from '@pointlinejs/components/nodes/draggable/draggable-node';
+// import { DraggableNode } from '@pointlinejs/components/nodes/draggable-node';
 
 @injectable()
 export class NodeDBState {
@@ -21,13 +22,15 @@ export class NodeDBState {
 
 @injectable()
 export class NodeDB {
+  @inject(DI_LIST.treeNodeConstructor) private treeNode: { new(): TreeNode };
+  @inject(DI_LIST.draggableNodeConstructor) private draggableNode: { new(): DraggableNode };
+  private readonly collapsableNodesStore: CollapsableNodesStore = new CollapsableNodesStore();
   protected readonly maxStackedChilren = 1;
   protected util: UTIL = new UTIL();
+  public nodeDBState = new NodeDBState();
   public db: TreeNode[] = [];
 
   constructor(
-    @inject(DI_LIST.nodeDBState) public nodeDBState: NodeDBState,
-    @inject(DI_LIST.collapsableNodesStore) private readonly collapsableNodesStore: CollapsableNodesStore
   ) { }
 
   get size(): number {
@@ -118,7 +121,14 @@ export class NodeDB {
     };
 
     while (i--) {
-      this.get(i).createGeometry(tree);
+      const node = this.get(i);
+      node.createGeometry(tree);
+      /** init draggable begin */
+      if (tree.CONFIG.node.draggable) {
+        const draggableNode = new this.draggableNode().init(node);
+        console.log('draggableNode', draggableNode);
+      }
+      /** init draggable end */
       setTimeout(logTimeout, 100, this.get(i), this.nodeDBState);
     }
     return this;
@@ -160,20 +170,22 @@ export class NodeDB {
     tree: Tree,
     stackParentId?: number | null
   ) {
-    const node = new TreeNode().init(
-      nodeStructure,
-      this.db.length,
-      parentId,
-      tree,
-      stackParentId
-    );
+    let node: TreeNode;
+    try {
+      node = new this.treeNode().init(
+        nodeStructure,
+        this.db.length,
+        parentId,
+        tree,
+        stackParentId
+      );
+    }
+    catch (error) {
+      console.error(error);
+    }
     if (node.id) {
       if (node.collapsable) {
         this.collapsableNodesStore.addNode(node);
-      }
-      if (nodeStructure !== 'pseudo' && nodeStructure.draggable) {
-        const draggableNode = new DraggableNode(node);
-        console.log('draggableNode', draggableNode);
       }
     }
 
