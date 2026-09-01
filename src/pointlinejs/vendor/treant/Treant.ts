@@ -85,6 +85,8 @@ export type CallbackFunction = {
   onMouseoverNode: (node: Element | JQuery, event: Event) => void,
   onMouseoutNode: (node: Element | JQuery, event: Event) => void,
   onTreeLoaded: (rootTreeNode: TreeNode) => void;
+  onDropNode: () => void;
+  // onDropNode: (callback: () => void) => Promise<boolean>
 };
 
 /**
@@ -395,6 +397,11 @@ export class Treant {
     if (jQuery) {
       $ = jQuery;
     }
+    if (this.chartStructure.chart.node.draggable) {
+      this.chartStructure.chart.callback = {
+        onDropNode: this.callbackDropNode(this.tree)
+      }
+    }
     this.tree = new Promise((resolve) =>
       setTimeout(() => resolve(this.treeStore.createTree(this.chartStructure)), 200)
     );
@@ -430,5 +437,30 @@ export class Treant {
    */
   getJsonConfig() {
     return this.chartStructure;
+  }
+
+  private callbackDropNode(tree: Promise<Tree> | null): () => void {
+    if (tree) {
+      return () => tree.then((tree) => {
+        console.log('treant callbackDropNode', tree);
+      });
+    }
+    return () => {
+      console.log('treant callbackDropNode', tree);
+    };
+    // Promise.all([this.tree, this.nodeDB.nodeDBState.dbReady]).then(
+    //   ([tree, dbReady]) => {
+    //     if (dbReady) {
+    //       console.log('treant callbackDropNode', tree);
+    //       return tree;
+    //     }
+    //     return null;
+    //   }
+    // );
+    // console.log('treant callbackDropNode', await this.tree);
+    // this.tree.then((tree) => {
+    //   console.log('callbackDropNode', tree);
+    //   // tree.positionTree();
+    // });
   }
 }

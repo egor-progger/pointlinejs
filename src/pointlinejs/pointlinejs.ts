@@ -30,7 +30,7 @@ import { PointlineZoom } from './components/pointline-zoom';
 import { defaultPointLineJSConfig, PointlineJSConfig } from './configs/pointline-config';
 import { CollapsableNodesStore } from './stores/collapsable-nodes/collaplable-nodes.store';
 import { DragNodeAction } from './components/nodes/draggable/drag-node-action';
-import { DraggableNode, DraggableNodeFactory } from './components/nodes/draggable/draggable-node';
+import { DraggableNode } from './components/nodes/draggable/draggable-node';
 window.jQuery = window.$ = require('jquery');
 require('jquery.easing');
 
@@ -60,7 +60,7 @@ export class PointlineJS {
     container.bind(DI_LIST.collapsableNode).to(CollapsableNode);
     // container.bind(DI_LIST.draggableNode).to(DraggableNode);
     container.bind<{ new(): DraggableNode }>(DI_LIST.draggableNodeConstructor).toConstructor(DraggableNode);
-    container.bind<DraggableNodeFactory>(DI_LIST.draggableNodeFactory).toService(DraggableNodeFactory);
+    // container.bind<DraggableNodeFactory>(DI_LIST.draggableNodeFactory).toService(DraggableNodeFactory);
     container.bind(DI_LIST.dragNodeAction).to(DragNodeAction).inSingletonScope();
     container.bind(DI_LIST.collapsableNodesStore).to(CollapsableNodesStore).inSingletonScope();
     container.bind(DI_LIST.tooltip).to(Tooltip).inSingletonScope();

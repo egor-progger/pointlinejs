@@ -1,29 +1,31 @@
 import { TreeNode } from "@pointlinejs/vendor/treant/TreeNode";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
 import { DragNodeAction } from "./drag-node-action";
-import { DI_LIST } from "@pointlinejs/InjectableList";
+// import { DI_LIST } from "@pointlinejs/InjectableList";
+import { IDragNodeData } from "./drag-node-data";
 
 
-@injectable()
-export class DraggableNodeFactory {
-    @inject(DI_LIST.draggableNodeConstructor) private draggableNode: { new(): DraggableNode };
+// @injectable()
+// export class DraggableNodeFactory {
+//     @inject(DI_LIST.draggableNodeConstructor) private draggableNode: { new(): DraggableNode };
 
-    public create(node: TreeNode): DraggableNode {
-        const draggableNode = new this.draggableNode();
-        draggableNode.init(node);
-        return draggableNode;
-    }
-}
+//     public create(node: TreeNode): DraggableNode {
+//         const draggableNode = new this.draggableNode();
+//         draggableNode.init(node);
+//         return draggableNode;
+//     }
+// }
 
 @injectable()
 export class DraggableNode {
     private draggable = true;
     private node: TreeNode;
     private readonly dragNodeAction: DragNodeAction = new DragNodeAction();
+    private dropNodeEvent: () => void;
 
     // constructor(@inject(DI_LIST.dragNodeAction) private readonly dragNodeAction: DragNodeAction) { }
 
-    init(node: TreeNode) {
+    init(node: TreeNode, dropNodeEvent: () => void) {
         console.log('DraggableNode init', node);
         console.log('dragNodeAction', this.dragNodeAction);
         this.node = node;
@@ -32,6 +34,7 @@ export class DraggableNode {
             this.addDraggableCallback();
             this.allowDragOver();
             this.addDropCallback();
+            this.dropNodeEvent = dropNodeEvent;
         }
     }
 
@@ -42,7 +45,24 @@ export class DraggableNode {
     private addDraggableCallback() {
         this.node.nodeDOM.addEventListener('dragstart', (event: Event) => {
             console.log('this.node dragsrart', this.node);
-            (event as DragEvent).dataTransfer.setData('text/plain', this.node.nodeDOM.innerHTML)
+            const nodeData: IDragNodeData = {
+                id: this.node.id,
+                image: this.node.image,
+                link: this.node.link,
+                meta: this.node.meta,
+                text: this.node.text,
+                parentId: this.node.parentId,
+                children: this.node.children,
+                connStyle: this.node.connStyle,
+                stackChildren: this.node.stackChildren,
+                stackParentId: this.node.stackParentId,
+                stackParent: this.node.stackParent,
+                leftNeighborId: this.node.leftNeighborId,
+                rightNeighborId: this.node.rightNeighborId,
+                collapsable: this.node.collapsable,
+                collapsed: this.node.collapsed
+            };
+            (event as DragEvent).dataTransfer.setData('application/json', JSON.stringify(nodeData))
         })
     }
 
@@ -53,13 +73,14 @@ export class DraggableNode {
     private addDropCallback() {
         this.node.nodeDOM.addEventListener('drop', (event: Event) => {
             event.preventDefault();
-            const sourceNode = (event as DragEvent).dataTransfer.getData("text");
+            const sourceNode = JSON.parse((event as DragEvent).dataTransfer.getData("application/json"));
             console.log('addDropCallback', sourceNode);
             if (sourceNode) {
                 console.log('source node id', sourceNode);
                 console.log('destination node', this.node.nodeDOM.innerHTML);
                 this.dragNodeAction.handleDrodNode(sourceNode, this.node);
                 console.log('destination node', this.node.nodeDOM.innerHTML);
+                this.dropNodeEvent();
             }
         });
     }
