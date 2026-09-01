@@ -124,8 +124,8 @@ export class NodeDB {
       const node = this.get(i);
       node.createGeometry(tree);
       /** init draggable begin */
-      if (tree.CONFIG.node.draggable) {
-        const draggableNode = new this.draggableNode().init(node);
+      if (tree.CONFIG.node.draggable && tree.CONFIG.callback.onDropNode) {
+        const draggableNode = new this.draggableNode().init(node, tree.CONFIG.callback.onDropNode);
         console.log('draggableNode', draggableNode);
       }
       /** init draggable end */

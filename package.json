@@ -1,6 +1,7 @@
 {
   "name": "pointlinejs",
   "version": "1.0.40",
+  "homepage": "https://egor-progger.github.io/pointlinejs/documentation",
   "description": "JavaScipt library for visualization of tree diagrams",
   "directories": {
     "example": "examples"

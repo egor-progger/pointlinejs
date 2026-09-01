@@ -36,12 +36,8 @@ export type TreeNodeDom = HTMLAnchorElement | HTMLDivElement;
 @injectable()
 export class TreeNode {
   private util: UTIL = new UTIL();
-  private parentId: number;
-  private image: string;
-  private link: NodeLink;
   private nodeInnerHTML: string;
   private nodeHTMLclass: string;
-  private nodeHTMLid: number;
   private lineThroughMe: RaphaelPathExtended;
   private hidden: boolean;
   private CONFIG = {
@@ -52,6 +48,10 @@ export class TreeNode {
   // private draggableNodeFactory: DraggableNodeFactory = new DraggableNodeFactory();
 
   id: number;
+  parentId: number;
+  nodeHTMLid: number;
+  image: string;
+  link: NodeLink;
   collapsable: boolean;
   collapsed: boolean;
   text: Partial<NodeText>;
@@ -686,7 +686,7 @@ export class TreeNode {
    *
    * @Returns the configured node
    */
-  private buildNodeFromText(node: TreeNodeDom) {
+  private buildNodeFromText(node: TreeNodeDom): TreeNodeDom {
     // IMAGE
     if (this.image) {
       const image = document.createElement('img');
