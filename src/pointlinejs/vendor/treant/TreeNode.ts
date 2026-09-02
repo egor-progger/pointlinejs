@@ -76,6 +76,7 @@ export class TreeNode {
   style: CSSStyleDeclaration;
   treeId: number;
   meta: object;
+  dragInProgress: boolean = false;
 
   constructor() { }
 
@@ -140,7 +141,10 @@ export class TreeNode {
         nodeStructureValue.collapsable === false
           ? false
           : nodeStructureValue.collapsable || tree.CONFIG.node.collapsable;
-      this.collapsed = nodeStructureValue.collapsed;
+      if (this.collapsable) {
+        console.log('this.collapsed = nodeStructureValue.collapsed');
+        this.collapsed = nodeStructureValue.collapsed;
+      }
 
       this.text = nodeStructureValue.text;
 
@@ -435,35 +439,40 @@ export class TreeNode {
   }
 
   private addSwitchEvent(nodeSwitch: Element | JQuery) {
-    this.util.addEvent(
-      nodeSwitch as Element,
-      'click',
-      (e: Event): void | boolean => {
-        if (
-          this
-            .getTreeConfig()
-            .callback.onBeforeClickCollapseSwitch &&
-          this
-            .getTreeConfig()
-            .callback.onBeforeClickCollapseSwitch.apply(this, [
-              nodeSwitch,
-              e,
-            ]) === false
-        ) {
-          return false;
-        }
+    this.util.addEvent.bind(
+      this)(
+        nodeSwitch as Element,
+        'click',
+        (e: Event): void | boolean => {
+          console.log('addSwitchEvent');
+          console.log('this.dragInProgress', this.dragInProgress);
+          // if (!this.dragInProgress) {
+          if (
+            this
+              .getTreeConfig()
+              .callback.onBeforeClickCollapseSwitch &&
+            this
+              .getTreeConfig()
+              .callback.onBeforeClickCollapseSwitch.apply(this, [
+                nodeSwitch,
+                e,
+              ]) === false
+          ) {
+            return false;
+          }
 
-        this.toggleCollapse(this.getTreeConfig().autoFocusForToggleCollapse);
+          this.toggleCollapse(this.getTreeConfig().autoFocusForToggleCollapse);
 
-        if (this
-          .getTreeConfig()
-          .callback.onAfterClickCollapseSwitch) {
-          this
+          if (this
             .getTreeConfig()
-            .callback.onAfterClickCollapseSwitch.apply(this, [nodeSwitch, e]);
+            .callback.onAfterClickCollapseSwitch) {
+            this
+              .getTreeConfig()
+              .callback.onAfterClickCollapseSwitch.apply(this, [nodeSwitch, e]);
+          }
         }
-      }
-    );
+        // }
+      );
   }
 
   /**
@@ -471,6 +480,7 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   collapse(autoFocus = false) {
+    console.log('collapse');
     if (!this.collapsed) {
       this.toggleCollapse(autoFocus);
     }
@@ -492,6 +502,7 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   toggleCollapse(autoFocus = false) {
+    console.log('toggleCollapse');
     const oTree = this.getTree();
 
     if (!oTree.inAnimation) {
