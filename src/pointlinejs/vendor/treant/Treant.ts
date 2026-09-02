@@ -85,8 +85,7 @@ export type CallbackFunction = {
   onMouseoverNode: (node: Element | JQuery, event: Event) => void,
   onMouseoutNode: (node: Element | JQuery, event: Event) => void,
   onTreeLoaded: (rootTreeNode: TreeNode) => void;
-  onDropNode: () => void;
-  // onDropNode: (callback: () => void) => Promise<boolean>
+  onDropNode: (sourceNodeId: number, destinationNodeId: number) => void;
 };
 
 /**
@@ -365,6 +364,8 @@ export type ChartConfigType =
 export class Treant {
   private chartStructure: ChartStructure;
   private tree: Promise<Tree> | null = null;
+  private positionedTree: Tree | null = null;
+  // private dropNodeHandler: (node: TreeNode) => void | null = null;
 
   constructor(
     @inject(DI_LIST.jsonConfig) private jsonConfig: JSONconfig,
@@ -399,7 +400,7 @@ export class Treant {
     }
     if (this.chartStructure.chart.node.draggable) {
       this.chartStructure.chart.callback = {
-        onDropNode: this.callbackDropNode(this.tree)
+        onDropNode: this.dropNodeHandler.bind(this)
       }
     }
     this.tree = new Promise((resolve) =>
@@ -407,7 +408,9 @@ export class Treant {
     );
     return Promise.all([this.tree, this.nodeDB.nodeDBState.dbReady]).then(
       ([tree, dbReady]) => {
-        if (dbReady) {
+        if (tree && dbReady) {
+          this.positionedTree = tree;
+          console.log('this.positionedTree', this.positionedTree);
           return tree.positionTree(callback);
         }
         return null;
@@ -439,28 +442,49 @@ export class Treant {
     return this.chartStructure;
   }
 
-  private callbackDropNode(tree: Promise<Tree> | null): () => void {
-    if (tree) {
-      return () => tree.then((tree) => {
-        console.log('treant callbackDropNode', tree);
-      });
-    }
-    return () => {
-      console.log('treant callbackDropNode', tree);
-    };
-    // Promise.all([this.tree, this.nodeDB.nodeDBState.dbReady]).then(
-    //   ([tree, dbReady]) => {
-    //     if (dbReady) {
-    //       console.log('treant callbackDropNode', tree);
-    //       return tree;
-    //     }
-    //     return null;
-    //   }
-    // );
-    // console.log('treant callbackDropNode', await this.tree);
-    // this.tree.then((tree) => {
-    //   console.log('callbackDropNode', tree);
-    //   // tree.positionTree();
-    // });
+  private dropNodeHandler(sourceNodeId: number, destinationNodeId: number): void {
+    console.log('treant dropNodeHandler', this.positionedTree);
+    console.log('sourceNodeId', this.nodeDB.db[sourceNodeId]);
+    console.log('destinationNodeId', this.nodeDB.db[destinationNodeId]);
+    const temp = this.nodeDB.db[sourceNodeId];
+    const dragClone = { ...temp };
+    const dropClone = { ...this.nodeDB.db[destinationNodeId] };
+
+
+    this.nodeDB.db[sourceNodeId] = this.nodeDB.db[destinationNodeId];
+    this.nodeDB.db[destinationNodeId] = temp;
+
+    // set dragged node props
+    this.nodeDB.db[sourceNodeId].id = dragClone.id;
+    this.nodeDB.db[sourceNodeId].nodeDOM.id = dragClone.id.toString();
+    this.nodeDB.db[sourceNodeId].parentId = dragClone.parentId;
+    this.nodeDB.db[sourceNodeId].children = dragClone.children;
+    this.nodeDB.db[sourceNodeId].connStyle = dragClone.connStyle;
+    this.nodeDB.db[sourceNodeId].stackChildren = dragClone.stackChildren;
+    this.nodeDB.db[sourceNodeId].stackParentId = dragClone.stackParentId;
+    this.nodeDB.db[sourceNodeId].stackParent = dragClone.stackParent;
+    this.nodeDB.db[sourceNodeId].leftNeighborId = dragClone.leftNeighborId;
+    this.nodeDB.db[sourceNodeId].rightNeighborId = dragClone.rightNeighborId;
+    this.nodeDB.db[sourceNodeId].collapsed = dragClone.collapsed;
+    this.nodeDB.db[sourceNodeId].collapsable = dragClone.collapsable;
+
+    // set dropped node props
+    this.nodeDB.db[destinationNodeId].id = dropClone.id;
+    this.nodeDB.db[destinationNodeId].nodeDOM.id = dropClone.id.toString();
+    this.nodeDB.db[destinationNodeId].parentId = dropClone.parentId;
+    this.nodeDB.db[destinationNodeId].children = dropClone.children;
+    this.nodeDB.db[destinationNodeId].connStyle = dropClone.connStyle;
+    this.nodeDB.db[destinationNodeId].stackChildren = dropClone.stackChildren;
+    this.nodeDB.db[destinationNodeId].stackParent = dropClone.stackParent;
+    this.nodeDB.db[destinationNodeId].stackParentId = dropClone.stackParentId;
+    this.nodeDB.db[destinationNodeId].leftNeighborId = dropClone.leftNeighborId;
+    this.nodeDB.db[destinationNodeId].rightNeighborId = dropClone.rightNeighborId;
+    this.nodeDB.db[destinationNodeId].collapsed = dropClone.collapsed;
+    this.nodeDB.db[destinationNodeId].collapsable = dropClone.collapsable;
+
+    console.log('sourceNodeId', this.nodeDB.db[sourceNodeId]);
+    console.log('destinationNodeId', this.nodeDB.db[destinationNodeId]);
+
+    this.positionedTree.positionTree();
   }
 }

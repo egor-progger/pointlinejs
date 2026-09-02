@@ -12,8 +12,8 @@ import { DraggableNode } from '@pointlinejs/components/nodes/draggable/draggable
 export class NodeDBState {
   totalNodes: number;
   nodesWithHeightAndWidth: Set<number> = new Set();
-  dbReadyResolve: (value: boolean | PromiseLike<boolean>) => void;
-  dbReadyReject: (value: boolean | PromiseLike<boolean>) => void;
+  dbReadyResolve: (value: boolean) => void;
+  dbReadyReject: (value: boolean) => void;
   dbReady: Promise<boolean> | null = new Promise((resolve, reject) => {
     this.dbReadyResolve = resolve;
     this.dbReadyReject = reject;
@@ -97,7 +97,9 @@ export class NodeDB {
   private reset(nodeStructure: Partial<NodeInterface>, tree: Tree) {
     this.db = [];
 
-    if (tree.CONFIG.animateOnInit) {
+    console.log('tree.CONFIG.node.collapsable', tree.CONFIG.node.collapsable);
+    if (tree.CONFIG.animateOnInit && tree.CONFIG.node.collapsable) {
+      console.log('nodeStructure.collapsed = true');
       nodeStructure.collapsed = true;
     }
 
