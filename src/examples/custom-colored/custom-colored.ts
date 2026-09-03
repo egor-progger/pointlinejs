@@ -2,7 +2,7 @@ import { PointlineJS } from '@pointlinejs/pointlinejs';
 import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/custom-colored.css';
 
-var config = {
+const config = {
   container: '#custom-colored',
 
   nodeAlign: 'BOTTOM',

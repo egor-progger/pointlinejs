@@ -4,7 +4,7 @@ import './styles/test-ground.css';
 import { UTIL } from '@pointlinejs/vendor/treant/Util';
 
 // img_examples/example4
-var example1 = {
+const example1 = {
   chart: {
     container: '#OrganiseChart1',
     levelSeparation: 25,
@@ -286,7 +286,7 @@ var example1 = {
 // ########### ALTERNATIVE CONFIG ######
 // #####################################
 
-var config = {
+const config = {
   container: '#OrganiseChart5',
   //rootOrientation:	'NORTH', // NORTH || EAST || WEST || SOUTH
   // levelSeparation:	30,
@@ -415,9 +415,9 @@ var config = {
 
 const util = new UTIL();
 
-var T1 = new PointlineJS(example1 as unknown as ChartConfigType);
+const T1 = new PointlineJS(example1 as unknown as ChartConfigType);
 
-var example2 = util.createMerge(example1, {
+const example2 = util.createMerge(example1, {
   chart: {
     container: '#OrganiseChart2',
     rootOrientation: 'EAST',
@@ -432,9 +432,9 @@ var example2 = util.createMerge(example1, {
     },
   },
 });
-var T2 = new PointlineJS(example2 as unknown as ChartConfigType);
+const T2 = new PointlineJS(example2 as unknown as ChartConfigType);
 
-var example3 = util.createMerge(example1, {
+const example3 = util.createMerge(example1, {
   chart: {
     container: '#OrganiseChart3',
     rootOrientation: 'SOUTH',
@@ -449,9 +449,9 @@ var example3 = util.createMerge(example1, {
     },
   },
 });
-var T3 = new PointlineJS(example3 as unknown as ChartConfigType);
+const T3 = new PointlineJS(example3 as unknown as ChartConfigType);
 
-var example4 = util.createMerge(example1, {
+const example4 = util.createMerge(example1, {
   chart: {
     container: '#OrganiseChart4',
     rootOrientation: 'WEST',
@@ -466,9 +466,9 @@ var example4 = util.createMerge(example1, {
     },
   },
 });
-var T4 = new PointlineJS(example4 as unknown as ChartConfigType);
+const T4 = new PointlineJS(example4 as unknown as ChartConfigType);
 
-var T5 = new PointlineJS(ALTERNATIVE as unknown as ChartConfigType);
+const T5 = new PointlineJS(ALTERNATIVE as unknown as ChartConfigType);
 
 T1.draw();
 T2.draw();

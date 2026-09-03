@@ -2,7 +2,7 @@ import { PointlineJS } from '@pointlinejs/pointlinejs';
 import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/evolution-tree.css';
 
-var tree_structure = {
+const tree_structure = {
   chart: {
     container: '#OrganiseChart6',
     levelSeparation: 25,

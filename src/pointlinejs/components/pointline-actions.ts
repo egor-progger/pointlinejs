@@ -76,10 +76,10 @@ export class PointlineActions {
                 () => this.clickFunc(element)
             );
         });
-        for (var key in defaultButtons) {
-            var btnData = defaultButtons[key];
+        for (const key in defaultButtons) {
+            const btnData = defaultButtons[key];
             const modalId = `${btnData.id}-dialog`;
-            var btn = document.createElement('button');
+            const btn = document.createElement('button');
             btn.setAttribute("id", btnData.id);
             btn.innerHTML = btnData.text;
             if (btnData.type === BUTTON_TYPE.ADD_PARENT_BUTTON) {

@@ -85,6 +85,7 @@ export type CallbackFunction = {
   onMouseoverNode: (node: Element | JQuery, event: Event) => void,
   onMouseoutNode: (node: Element | JQuery, event: Event) => void,
   onTreeLoaded: (rootTreeNode: TreeNode) => void;
+  onDropNode: (sourceNodeId: number, destinationNodeId: number) => void;
 };
 
 /**
@@ -146,6 +147,10 @@ export type NodeType = {
    * If you are planning of making a lot of \<a\> nodes then here is the possibility to assign target="_blank" to each of those nodes in one blow.
    */
   link: { target: '_self' };
+  /**
+   * draggable
+   */
+  draggable: boolean;
 };
 
 export type AnimationType = {
@@ -337,6 +342,10 @@ export interface NodeInterface {
   parent: Partial<NodeInterface>;
   tooltip: string;
   clickEvent: () => void;
+  /**
+   * @default true
+   */
+  draggable: boolean
 }
 
 export type ChartStructure = {
@@ -353,11 +362,13 @@ export type ChartConfigType =
  */
 @injectable()
 export class Treant {
-  private jsonConfig: ChartStructure;
+  private chartStructure: ChartStructure;
   private tree: Promise<Tree> | null = null;
+  private positionedTree: Tree | null = null;
+  // private dropNodeHandler: (node: TreeNode) => void | null = null;
 
   constructor(
-    @inject(DI_LIST.jsonConfig) private jsonConfigService: JSONconfig,
+    @inject(DI_LIST.jsonConfig) private jsonConfig: JSONconfig,
     @inject(DI_LIST.treeStore) private treeStore: TreeStore,
     @inject(DI_LIST.nodeDB) private nodeDB: NodeDB
   ) { }
@@ -379,20 +390,27 @@ export class Treant {
     jQuery?: JQueryStatic
   ): Promise<Tree> {
     if (Array.isArray(jsonConfig)) {
-      this.jsonConfig = this.jsonConfigService.make(jsonConfig);
+      this.chartStructure = this.jsonConfig.make(jsonConfig);
     } else {
-      this.jsonConfig = jsonConfig;
+      this.chartStructure = jsonConfig;
     }
     // optional
     if (jQuery) {
       $ = jQuery;
     }
-    this.tree = new Promise((resolve, reject) =>
-      setTimeout(() => resolve(this.treeStore.createTree(this.jsonConfig)), 200)
+    if (this.chartStructure.chart.node.draggable) {
+      this.chartStructure.chart.callback = {
+        onDropNode: this.dropNodeHandler.bind(this)
+      }
+    }
+    this.tree = new Promise((resolve) =>
+      setTimeout(() => resolve(this.treeStore.createTree(this.chartStructure)), 200)
     );
     return Promise.all([this.tree, this.nodeDB.nodeDBState.dbReady]).then(
       ([tree, dbReady]) => {
-        if (dbReady) {
+        if (tree && dbReady) {
+          this.positionedTree = tree;
+          console.log('this.positionedTree', this.positionedTree);
           return tree.positionTree(callback);
         }
         return null;
@@ -421,6 +439,52 @@ export class Treant {
    * @returns {ChartStructure}
    */
   getJsonConfig() {
-    return this.jsonConfig;
+    return this.chartStructure;
+  }
+
+  private dropNodeHandler(sourceNodeId: number, destinationNodeId: number): void {
+    console.log('treant dropNodeHandler', this.positionedTree);
+    console.log('sourceNodeId', this.nodeDB.db[sourceNodeId]);
+    console.log('destinationNodeId', this.nodeDB.db[destinationNodeId]);
+    const temp = this.nodeDB.db[sourceNodeId];
+    const dragClone = { ...temp };
+    const dropClone = { ...this.nodeDB.db[destinationNodeId] };
+
+
+    this.nodeDB.db[sourceNodeId] = this.nodeDB.db[destinationNodeId];
+    this.nodeDB.db[destinationNodeId] = temp;
+
+    // set dragged node props
+    this.nodeDB.db[sourceNodeId].id = dragClone.id;
+    this.nodeDB.db[sourceNodeId].nodeDOM.id = dragClone.id.toString();
+    this.nodeDB.db[sourceNodeId].parentId = dragClone.parentId;
+    this.nodeDB.db[sourceNodeId].children = dragClone.children;
+    this.nodeDB.db[sourceNodeId].connStyle = dragClone.connStyle;
+    this.nodeDB.db[sourceNodeId].stackChildren = dragClone.stackChildren;
+    this.nodeDB.db[sourceNodeId].stackParentId = dragClone.stackParentId;
+    this.nodeDB.db[sourceNodeId].stackParent = dragClone.stackParent;
+    this.nodeDB.db[sourceNodeId].leftNeighborId = dragClone.leftNeighborId;
+    this.nodeDB.db[sourceNodeId].rightNeighborId = dragClone.rightNeighborId;
+    this.nodeDB.db[sourceNodeId].collapsed = dragClone.collapsed;
+    this.nodeDB.db[sourceNodeId].collapsable = dragClone.collapsable;
+
+    // set dropped node props
+    this.nodeDB.db[destinationNodeId].id = dropClone.id;
+    this.nodeDB.db[destinationNodeId].nodeDOM.id = dropClone.id.toString();
+    this.nodeDB.db[destinationNodeId].parentId = dropClone.parentId;
+    this.nodeDB.db[destinationNodeId].children = dropClone.children;
+    this.nodeDB.db[destinationNodeId].connStyle = dropClone.connStyle;
+    this.nodeDB.db[destinationNodeId].stackChildren = dropClone.stackChildren;
+    this.nodeDB.db[destinationNodeId].stackParent = dropClone.stackParent;
+    this.nodeDB.db[destinationNodeId].stackParentId = dropClone.stackParentId;
+    this.nodeDB.db[destinationNodeId].leftNeighborId = dropClone.leftNeighborId;
+    this.nodeDB.db[destinationNodeId].rightNeighborId = dropClone.rightNeighborId;
+    this.nodeDB.db[destinationNodeId].collapsed = dropClone.collapsed;
+    this.nodeDB.db[destinationNodeId].collapsable = dropClone.collapsable;
+
+    console.log('sourceNodeId', this.nodeDB.db[sourceNodeId]);
+    console.log('destinationNodeId', this.nodeDB.db[destinationNodeId]);
+
+    this.positionedTree.positionTree();
   }
 }

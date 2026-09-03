@@ -5,13 +5,15 @@ import { DI_LIST } from '../../InjectableList';
 import { NodeInterface } from './Treant';
 import { Tree } from './Tree';
 import { CollapsableNodesStore } from '@pointlinejs/stores/collapsable-nodes/collaplable-nodes.store';
+import { DraggableNode } from '@pointlinejs/components/nodes/draggable/draggable-node';
+// import { DraggableNode } from '@pointlinejs/components/nodes/draggable-node';
 
 @injectable()
 export class NodeDBState {
   totalNodes: number;
   nodesWithHeightAndWidth: Set<number> = new Set();
-  dbReadyResolve: (value: boolean | PromiseLike<boolean>) => void;
-  dbReadyReject: (value: boolean | PromiseLike<boolean>) => void;
+  dbReadyResolve: (value: boolean) => void;
+  dbReadyReject: (value: boolean) => void;
   dbReady: Promise<boolean> | null = new Promise((resolve, reject) => {
     this.dbReadyResolve = resolve;
     this.dbReadyReject = reject;
@@ -20,13 +22,15 @@ export class NodeDBState {
 
 @injectable()
 export class NodeDB {
+  @inject(DI_LIST.treeNodeConstructor) private treeNode: { new(): TreeNode };
+  @inject(DI_LIST.draggableNodeConstructor) private draggableNode: { new(): DraggableNode };
+  private readonly collapsableNodesStore: CollapsableNodesStore = new CollapsableNodesStore();
   protected readonly maxStackedChilren = 1;
   protected util: UTIL = new UTIL();
+  public nodeDBState = new NodeDBState();
   public db: TreeNode[] = [];
 
   constructor(
-    @inject(DI_LIST.nodeDBState) public nodeDBState: NodeDBState,
-    @inject(DI_LIST.collapsableNodesStore) private readonly collapsableNodesStore: CollapsableNodesStore
   ) { }
 
   get size(): number {
@@ -93,7 +97,9 @@ export class NodeDB {
   private reset(nodeStructure: Partial<NodeInterface>, tree: Tree) {
     this.db = [];
 
-    if (tree.CONFIG.animateOnInit) {
+    console.log('tree.CONFIG.node.collapsable', tree.CONFIG.node.collapsable);
+    if (tree.CONFIG.animateOnInit && tree.CONFIG.node.collapsable) {
+      console.log('nodeStructure.collapsed = true');
       nodeStructure.collapsed = true;
     }
 
@@ -107,7 +113,7 @@ export class NodeDB {
    * @returns {NodeDB}
    */
   private createGeometries(tree: Tree): NodeDB {
-    var i = this.db.length;
+    let i = this.db.length;
     this.nodeDBState.totalNodes = this.db.length;
     const logTimeout = (nodeDb: TreeNode, nodeDBState: NodeDBState) => {
       nodeDBState.nodesWithHeightAndWidth.add(nodeDb.id);
@@ -117,7 +123,14 @@ export class NodeDB {
     };
 
     while (i--) {
-      this.get(i).createGeometry(tree);
+      const node = this.get(i);
+      node.createGeometry(tree);
+      /** init draggable begin */
+      if (tree.CONFIG.node.draggable && tree.CONFIG.callback.onDropNode) {
+        const draggableNode = new this.draggableNode().init(node, tree.CONFIG.callback.onDropNode);
+        console.log('draggableNode', draggableNode);
+      }
+      /** init draggable end */
       setTimeout(logTimeout, 100, this.get(i), this.nodeDBState);
     }
     return this;
@@ -137,7 +150,7 @@ export class NodeDB {
    * @returns {NodeDB}
    */
   walk(callback: (node: TreeNode) => void) {
-    var i = this.db.length;
+    let i = this.db.length;
 
     while (i--) {
       callback.apply(this, [this.get(i)]);
@@ -159,22 +172,30 @@ export class NodeDB {
     tree: Tree,
     stackParentId?: number | null
   ) {
-    const node = new TreeNode().init(
-      nodeStructure,
-      this.db.length,
-      parentId,
-      tree,
-      stackParentId
-    );
-    if (node.id && node.collapsable) {
-      this.collapsableNodesStore.addNode(node);
+    let node: TreeNode;
+    try {
+      node = new this.treeNode().init(
+        nodeStructure,
+        this.db.length,
+        parentId,
+        tree,
+        stackParentId
+      );
+    }
+    catch (error) {
+      console.error(error);
+    }
+    if (node.id) {
+      if (node.collapsable) {
+        this.collapsableNodesStore.addNode(node);
+      }
     }
 
     this.db.push(node);
 
     // skip root node (0)
     if (parentId >= 0) {
-      var parent = this.get(parentId);
+      const parent = this.get(parentId);
 
       // todo: refactor into separate private method
       if (typeof node.pseudo !== 'undefined' && node.pseudo === false) {
@@ -236,10 +257,10 @@ export class NodeDB {
       max: parent[dim] + (dim === 'X' ? parent.width : parent.height),
     };
 
-    var i = parent.childrenCount();
+    let i = parent.childrenCount();
 
     while (i--) {
-      var node = parent.childAt(i),
+      const node = parent.childAt(i),
         maxTest = node[dim] + (dim === 'X' ? node.width : node.height),
         minTest = node[dim];
 
@@ -260,7 +281,7 @@ export class NodeDB {
    * @returns {boolean}
    */
   private hasGrandChildren(nodeStructure: Partial<NodeInterface>) {
-    var i = nodeStructure.children.length;
+    let i = nodeStructure.children.length;
     while (i--) {
       if (
         nodeStructure.children[i].children &&

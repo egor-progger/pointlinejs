@@ -29,6 +29,8 @@ import { Tooltip } from './tooltip';
 import { PointlineZoom } from './components/pointline-zoom';
 import { defaultPointLineJSConfig, PointlineJSConfig } from './configs/pointline-config';
 import { CollapsableNodesStore } from './stores/collapsable-nodes/collaplable-nodes.store';
+import { DragNodeAction } from './components/nodes/draggable/drag-node-action';
+import { DraggableNode } from './components/nodes/draggable/draggable-node';
 window.jQuery = window.$ = require('jquery');
 require('jquery.easing');
 
@@ -56,9 +58,15 @@ export class PointlineJS {
     container.bind(DI_LIST.nodeDBState).to(NodeDBState).inSingletonScope();
     container.bind(DI_LIST.jsonConfig).to(JSONconfig).inSingletonScope();
     container.bind(DI_LIST.collapsableNode).to(CollapsableNode);
+    // container.bind(DI_LIST.draggableNode).to(DraggableNode);
+    container.bind<{ new(): DraggableNode }>(DI_LIST.draggableNodeConstructor).toConstructor(DraggableNode);
+    // container.bind<DraggableNodeFactory>(DI_LIST.draggableNodeFactory).toService(DraggableNodeFactory);
+    container.bind(DI_LIST.dragNodeAction).to(DragNodeAction).inSingletonScope();
     container.bind(DI_LIST.collapsableNodesStore).to(CollapsableNodesStore).inSingletonScope();
     container.bind(DI_LIST.tooltip).to(Tooltip).inSingletonScope();
-    container.bind(DI_LIST.treeNode).to(TreeNode);
+    // container.bind<{ new(): User }>("UserConstructor").toConstructor(User);
+    container.bind<{ new(): TreeNode }>(DI_LIST.treeNodeConstructor).toConstructor(TreeNode);
+    // container.bind(DI_LIST.treeNode).to(TreeNode);
     container.bind(DI_LIST.tree).to(Tree);
     container.bind(DI_LIST.treant).to(Treant);
     container.bind(DI_LIST.selection).to(Selection)
@@ -128,8 +136,11 @@ export class PointlineJS {
   async addParentNode(selectedEl: HTMLElement, nodeStructure: Partial<NodeInterface>): Promise<Partial<NodeInterface>> {
     const tree = this.getTree();
     const nodeDb = tree.getNodeDb().db;
-    for (var key in nodeDb) {
-      var nodeTree = nodeDb[key];
+    for (const key in nodeDb) {
+      const nodeTree = nodeDb[key];
+      /**
+       * @todo chanage to compare ids
+       */
       if (nodeTree.text.name == selectedEl.textContent) {
         const addedNode = await tree.addParentForNode(nodeTree, nodeStructure);
         this.reload();
@@ -150,8 +161,11 @@ export class PointlineJS {
   async addChildToNode(selectedEl: HTMLElement, nodeStructure: Partial<NodeInterface>): Promise<Partial<NodeInterface>> {
     const tree = this.getTree();
     const nodeDb = tree.getNodeDb().db;
-    for (var key in nodeDb) {
-      var nodeTree = nodeDb[key];
+    for (const key in nodeDb) {
+      const nodeTree = nodeDb[key];
+      /**
+       * @todo chanage to compare ids
+       */
       if (nodeTree.text.name == selectedEl.textContent) {
         const selectedNodeTree = nodeTree;
         const addedNode = await tree.addChildToNode(selectedNodeTree, nodeStructure);
@@ -166,8 +180,11 @@ export class PointlineJS {
   async removeSelectedNode(selectedEl: HTMLElement): Promise<Partial<NodeInterface>> {
     const tree = this.getTree();
     const nodeDb = tree.getNodeDb().db;
-    for (var key in nodeDb) {
-      var nodeTree = nodeDb[key];
+    for (const key in nodeDb) {
+      const nodeTree = nodeDb[key];
+      /**
+       * @todo chanage to compare ids
+       */
       if (nodeTree.text.name == selectedEl.textContent) {
         const addedNode = await tree.removeNode(nodeTree);
         this.reload();
@@ -190,8 +207,11 @@ export class PointlineJS {
     const selectedEl = this.actions.selectedElement;
     const tree = this.getTree();
     const nodeDb = tree.getNodeDb().db;
-    for (var key in nodeDb) {
-      var nodeTree = nodeDb[key];
+    for (const key in nodeDb) {
+      const nodeTree = nodeDb[key];
+      /**
+       * @todo chanage to compare ids
+       */
       if (nodeTree.text.name == selectedEl.textContent) {
         const selectedNodeTree = nodeTree;
         const updatedNode = await tree.updateNode(selectedNodeTree, data);

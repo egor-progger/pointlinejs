@@ -30,9 +30,9 @@ export class ImageLoader {
    * @returns {ImageLoader}
    */
   processNode(node: TreeNode) {
-    var aImages = node.nodeDOM.getElementsByTagName('img');
+    const aImages = node.nodeDOM.getElementsByTagName('img');
 
-    var i = aImages.length;
+    let i = aImages.length;
     while (i--) {
       this.create(node, aImages[i]);
     }
@@ -43,7 +43,7 @@ export class ImageLoader {
    * @returns {ImageLoader}
    */
   private removeAll(img_src: string) {
-    var i = this.loading.length;
+    let i = this.loading.length;
     while (i--) {
       if (this.loading[i] === img_src) {
         this.loading.splice(i, 1);
@@ -58,11 +58,10 @@ export class ImageLoader {
    * @returns {*}
    */
   private create(node: TreeNode, image: HTMLImageElement) {
-    var self = this,
-      source = image.src;
+    const source = image.src;
 
-    function imgTrigger() {
-      self.removeAll(source);
+    const imgTrigger = () => {
+      this.removeAll(source);
       node.width = node.nodeDOM.offsetWidth;
       node.height = node.nodeDOM.offsetHeight;
     }

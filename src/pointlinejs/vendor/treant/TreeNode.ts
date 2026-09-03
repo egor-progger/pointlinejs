@@ -23,6 +23,9 @@ import {
 import { RaphaelPath } from 'raphael';
 import { Tooltip } from '@pointlinejs/tooltip';
 import { CollapsableNodeCss } from '@pointlinejs/components/nodes/collapsable-node-css';
+// import { DraggableNodeFactory } from '@pointlinejs/components/nodes/draggable/draggable-node';
+// import { DraggableNode } from '@pointlinejs/components/nodes/draggable/draggable-node';
+// import { DI_LIST } from '@pointlinejs/InjectableList';
 
 export type RaphaelPathExtended = RaphaelPath<'SVG' | 'VML'> & {
   hidden?: boolean;
@@ -33,12 +36,8 @@ export type TreeNodeDom = HTMLAnchorElement | HTMLDivElement;
 @injectable()
 export class TreeNode {
   private util: UTIL = new UTIL();
-  private parentId: number;
-  private image: string;
-  private link: NodeLink;
   private nodeInnerHTML: string;
   private nodeHTMLclass: string;
-  private nodeHTMLid: number;
   private lineThroughMe: RaphaelPathExtended;
   private hidden: boolean;
   private CONFIG = {
@@ -46,8 +45,13 @@ export class TreeNode {
   };
   private tooltip: Tooltip;
   private tree: Tree;
+  // private draggableNodeFactory: DraggableNodeFactory = new DraggableNodeFactory();
 
   id: number;
+  parentId: number;
+  nodeHTMLid: number;
+  image: string;
+  link: NodeLink;
   collapsable: boolean;
   collapsed: boolean;
   text: Partial<NodeText>;
@@ -72,6 +76,7 @@ export class TreeNode {
   style: CSSStyleDeclaration;
   treeId: number;
   meta: object;
+  dragInProgress: boolean = false;
 
   constructor() { }
 
@@ -101,6 +106,8 @@ export class TreeNode {
     tree: Tree,
     stackParentId: number | null
   ) {
+    console.log('reset');
+    console.log('tree.CONFIG.node.draggable', tree.CONFIG.node.draggable);
     this.id = id;
     this.parentId = parentId;
     this.treeId = tree.id;
@@ -134,7 +141,10 @@ export class TreeNode {
         nodeStructureValue.collapsable === false
           ? false
           : nodeStructureValue.collapsable || tree.CONFIG.node.collapsable;
-      this.collapsed = nodeStructureValue.collapsed;
+      if (this.collapsable) {
+        console.log('this.collapsed = nodeStructureValue.collapsed');
+        this.collapsed = nodeStructureValue.collapsed;
+      }
 
       this.text = nodeStructureValue.text;
 
@@ -291,7 +301,7 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   rightSibling() {
-    var rightNeighbor = this.rightNeighbor();
+    const rightNeighbor = this.rightNeighbor();
 
     if (rightNeighbor && rightNeighbor.parentId === this.parentId) {
       return rightNeighbor;
@@ -303,7 +313,7 @@ export class TreeNode {
    * @returns {number}
    */
   childrenCenter() {
-    var first = this.firstChild(),
+    const first = this.firstChild(),
       last = this.lastChild();
     return first.prelim + (last.prelim - first.prelim + last.size()) / 2;
   }
@@ -313,7 +323,7 @@ export class TreeNode {
    * @returns {*}
    */
   collapsedParent(): TreeNode | boolean {
-    var parent = this.parent();
+    const parent = this.parent();
     if (!parent) {
       return false;
     }
@@ -337,8 +347,8 @@ export class TreeNode {
       return null;
     }
 
-    for (var i = 0, n = this.childrenCount(); i < n; i++) {
-      var leftmostDescendant = this.childAt(i).leftMost(level + 1, depth);
+    for (let i = 0, n = this.childrenCount(); i < n; i++) {
+      const leftmostDescendant = this.childAt(i).leftMost(level + 1, depth);
       if (leftmostDescendant) {
         return leftmostDescendant;
       }
@@ -390,7 +400,7 @@ export class TreeNode {
    */
   private pathStringThrough() {
     // get the geometry of a path going through the node
-    var startPoint = this.connectorPoint(true),
+    const startPoint = this.connectorPoint(true),
       endPoint = this.connectorPoint(false);
 
     return [
@@ -406,7 +416,7 @@ export class TreeNode {
    */
   drawLineThroughMe(hidePoint?: Coordinate): void {
     // hidepoint se proslijedjuje ako je node sakriven zbog collapsed
-    var pathString = hidePoint
+    const pathString = hidePoint
       ? this.getTree().getPointPathString(hidePoint)
       : this.pathStringThrough();
 
@@ -429,29 +439,40 @@ export class TreeNode {
   }
 
   private addSwitchEvent(nodeSwitch: Element | JQuery) {
-    const self = this;
-    this.util.addEvent(
-      nodeSwitch as Element,
-      'click',
-      (e: Event): void | boolean => {
-        if (
-          self
+    this.util.addEvent.bind(
+      this)(
+        nodeSwitch as Element,
+        'click',
+        (e: Event): void | boolean => {
+          console.log('addSwitchEvent');
+          console.log('this.dragInProgress', this.dragInProgress);
+          // if (!this.dragInProgress) {
+          if (
+            this
+              .getTreeConfig()
+              .callback.onBeforeClickCollapseSwitch &&
+            this
+              .getTreeConfig()
+              .callback.onBeforeClickCollapseSwitch.apply(this, [
+                nodeSwitch,
+                e,
+              ]) === false
+          ) {
+            return false;
+          }
+
+          this.toggleCollapse(this.getTreeConfig().autoFocusForToggleCollapse);
+
+          if (this
             .getTreeConfig()
-            .callback.onBeforeClickCollapseSwitch.apply(self, [
-              nodeSwitch,
-              e,
-            ]) === false
-        ) {
-          return false;
+            .callback.onAfterClickCollapseSwitch) {
+            this
+              .getTreeConfig()
+              .callback.onAfterClickCollapseSwitch.apply(this, [nodeSwitch, e]);
+          }
         }
-
-        self.toggleCollapse(this.getTreeConfig().autoFocusForToggleCollapse);
-
-        self
-          .getTreeConfig()
-          .callback.onAfterClickCollapseSwitch.apply(self, [nodeSwitch, e]);
-      }
-    );
+        // }
+      );
   }
 
   /**
@@ -459,6 +480,7 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   collapse(autoFocus = false) {
+    console.log('collapse');
     if (!this.collapsed) {
       this.toggleCollapse(autoFocus);
     }
@@ -480,6 +502,7 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   toggleCollapse(autoFocus = false) {
+    console.log('toggleCollapse');
     const oTree = this.getTree();
 
     if (!oTree.inAnimation) {
@@ -490,8 +513,6 @@ export class TreeNode {
 
       oTree.positionTree();
 
-      var self = this;
-
       setTimeout(
         (oTree) => {
           // set the flag after the animation
@@ -499,10 +520,12 @@ export class TreeNode {
           if (autoFocus) {
             this.nodeDOM.scrollIntoView();
           }
-          oTree.CONFIG.callback.onToggleCollapseFinished.apply(oTree, [
-            self,
-            self.collapsed,
-          ]);
+          if (oTree.CONFIG.callback.onToggleCollapseFinished) {
+            oTree.CONFIG.callback.onToggleCollapseFinished.apply(oTree, [
+              this,
+              this.collapsed,
+            ]);
+          }
         },
         oTree.CONFIG.animation.nodeSpeed >
           oTree.CONFIG.animation.connectorsSpeed
@@ -515,12 +538,12 @@ export class TreeNode {
   }
 
   hide(collapse_to_point?: Coordinate) {
-    var bCurrentState = this.hidden;
+    const bCurrentState = this.hidden;
     this.hidden = true;
 
     this.nodeDOM.style.overflow = 'hidden';
 
-    var tree = this.getTree(),
+    const tree = this.getTree(),
       config = this.getTreeConfig(),
       oNewState: JQueryCssProperties = {
         opacity: '0',
@@ -565,7 +588,7 @@ export class TreeNode {
 
     // animate the line through node if the line exists
     if (this.lineThroughMe) {
-      var new_path = tree.getPointPathString(collapse_to_point);
+      const new_path = tree.getPointPathString(collapse_to_point);
       if (bCurrentState) {
         // update without animations
         this.lineThroughMe.attr({ path: new_path });
@@ -585,8 +608,8 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   hideConnector() {
-    var oTree = this.getTree();
-    var oPath = oTree.connectionStore[this.id];
+    const oTree = this.getTree();
+    const oPath = oTree.connectionStore[this.id];
     if (oPath) {
       oPath.animate(
         { opacity: 0 },
@@ -602,7 +625,7 @@ export class TreeNode {
 
     this.nodeDOM.style.visibility = 'visible';
 
-    var oNewState = {
+    const oNewState = {
       left: this.X,
       top: this.Y,
       opacity: 1,
@@ -641,8 +664,8 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   showConnector() {
-    var oTree = this.getTree();
-    var oPath = oTree.connectionStore[this.id];
+    const oTree = this.getTree();
+    const oPath = oTree.connectionStore[this.id];
     if (oPath) {
       oPath.animate(
         { opacity: 1 },
@@ -674,7 +697,7 @@ export class TreeNode {
    *
    * @Returns the configured node
    */
-  private buildNodeFromText(node: TreeNodeDom) {
+  private buildNodeFromText(node: TreeNodeDom): TreeNodeDom {
     // IMAGE
     if (this.image) {
       const image = document.createElement('img');
@@ -684,7 +707,7 @@ export class TreeNode {
 
     // TEXT
     if (this.text) {
-      for (var key in this.text) {
+      for (const key in this.text) {
         const keyTyped = key as keyof typeof this.text;
         // adding DATA Attributes to the node
         if (key.startsWith('data-')) {
@@ -703,7 +726,7 @@ export class TreeNode {
             textValue = this.text[keyTyped] as string;
           }
 
-          var textElement = document.createElement(
+          const textElement = document.createElement(
             href ? 'a' : 'p'
           ) as HTMLAnchorElement;
 
@@ -743,7 +766,7 @@ export class TreeNode {
   private buildNodeFromHtml(node: TreeNodeDom) {
     // get some element by ID and clone its structure into a node
     if (this.nodeInnerHTML.charAt(0) === '#') {
-      var elem = document.getElementById(this.nodeInnerHTML.substring(1));
+      const elem = document.getElementById(this.nodeInnerHTML.substring(1));
       if (elem) {
         if (node instanceof HTMLAnchorElement) {
           node = elem.cloneNode(true) as HTMLAnchorElement;
@@ -773,7 +796,7 @@ export class TreeNode {
       return;
     }
 
-    var drawArea = tree.drawArea;
+    const drawArea = tree.drawArea;
     /////////// CREATE NODE //////////////
     let node: TreeNodeDom = document.createElement(
       this.link.href && !this.collapsable ? 'a' : 'div'
@@ -829,7 +852,9 @@ export class TreeNode {
     this.addMouseoverEventForNode(node);
     this.addMouseoutEventForNode(node);
 
-    tree.CONFIG.callback.onCreateNode.apply(tree, [this, node]);
+    if (tree.CONFIG.callback.onCreateNode) {
+      tree.CONFIG.callback.onCreateNode.apply(tree, [this, node]);
+    }
 
     /////////// APPEND all //////////////
     drawArea.appendChild(node);
@@ -837,6 +862,14 @@ export class TreeNode {
     this.height = node.offsetHeight;
 
     this.nodeDOM = node;
+
+    /** init draggable begin */
+    // if (tree.CONFIG.node.draggable) {
+    //   const draggableNode = this.draggableNodeFactory.create(this);
+    //   console.log('draggableNode', draggableNode);
+    // }
+    /** init draggable end */
+
     tree.imageLoader.processNode(this);
   }
 
@@ -858,10 +891,12 @@ export class TreeNode {
     }
     this.addSwitchEvent(nodeEl);
 
-    tree.CONFIG.callback.onCreateNodeCollapseSwitch.apply(tree, [
-      this,
-      nodeEl,
-    ]);
+    if (tree.CONFIG.callback.onCreateNodeCollapseSwitch) {
+      tree.CONFIG.callback.onCreateNodeCollapseSwitch.apply(tree, [
+        this,
+        nodeEl,
+      ]);
+    }
     return nodeEl;
   }
 
@@ -869,14 +904,13 @@ export class TreeNode {
    * @param nodeElement 
    */
   private addClickEventForNode(nodeElement: Element | JQuery): void {
-    const self = this;
     this.util.addEvent(
       nodeElement as Element,
       'click',
       (e: Event): void | boolean => {
-        self
+        this
           .getTreeConfig()
-          .callback.onClickNode?.apply(self, [nodeElement, e]);
+          .callback.onClickNode?.apply(this, [nodeElement, e]);
       }
     );
   }
@@ -885,16 +919,15 @@ export class TreeNode {
    * @param nodeElement 
    */
   private addMouseoverEventForNode(nodeElement: Element | JQuery): void {
-    const self = this;
     this.util.addEvent(
       nodeElement as Element,
       'mouseover',
       (e: Event): void | boolean => {
         e.preventDefault();
 
-        self
+        this
           .getTreeConfig()
-          .callback.onMouseoverNode?.apply(self, [nodeElement, e]);
+          .callback.onMouseoverNode?.apply(this, [nodeElement, e]);
         if (this.tooltip) {
           this.tooltip.show(this.nodeDOM);
         }
@@ -906,14 +939,13 @@ export class TreeNode {
    * @param nodeElement 
    */
   private addMouseoutEventForNode(nodeElement: Element | JQuery): void {
-    const self = this;
     this.util.addEvent(
       nodeElement as Element,
       'mouseout',
       (e: Event): void | boolean => {
         e.preventDefault();
 
-        self
+        this
           .getTreeConfig()
           .callback.onMouseoutNode?.apply(self, [nodeElement, e]);
         if (this.tooltip) {
