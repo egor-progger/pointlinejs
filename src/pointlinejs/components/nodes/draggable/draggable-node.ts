@@ -1,9 +1,7 @@
 import { TreeNode } from "@pointlinejs/vendor/treant/TreeNode";
 import { injectable } from "inversify";
-import { DragNodeAction } from "./drag-node-action";
 // import { DI_LIST } from "@pointlinejs/InjectableList";
-import { IDragNodeData } from "./drag-node-data";
-import { Tree } from "@pointlinejs/vendor/treant/Tree";
+import { IBaseNodeType } from "@pointlinejs/stores/base/base-nodes.store";
 
 
 // @injectable()
@@ -18,16 +16,17 @@ import { Tree } from "@pointlinejs/vendor/treant/Tree";
 // }
 
 @injectable()
-export class DraggableNode {
+export class DraggableNode implements IBaseNodeType {
     private draggable = true;
     private node: TreeNode;
     // private readonly dragNodeAction: DragNodeAction = new DragNodeAction();
     private dropNodeEvent: Promise<{ sourceNodeId: number, destinationNodeId: number }>;
     private dropNodeEventResolve: (value: { sourceNodeId: number, destinationNodeId: number } | PromiseLike<{ sourceNodeId: number, destinationNodeId: number }>) => void;
+    private dropNodeEventOutput: (sourceNodeId: number, destinationNodeId: number) => void;
 
     // constructor(@inject(DI_LIST.dragNodeAction) private readonly dragNodeAction: DragNodeAction) { }
 
-    init(node: TreeNode, dropNodeEventOutput: (sourceNodeId: number, destinationNodeId: number) => void) {
+    initDraggableNode(node: TreeNode, dropNodeEventOutput: (sourceNodeId: number, destinationNodeId: number) => void) {
         console.log('DraggableNode init', node);
         // console.log('dragNodeAction', this.dragNodeAction);
         this.node = node;
@@ -37,15 +36,35 @@ export class DraggableNode {
             this.addDragStartCallback();
             this.allowDragOver();
             this.addDropCallback();
-            this.dropNodeEvent = new Promise<{ sourceNodeId: number, destinationNodeId: number }>((resolve) => {
-                this.dropNodeEventResolve = resolve;
-            });
-            this.dropNodeEvent.then((resolve) => {
-                console.log('dropNodeEvent');
-                dropNodeEventOutput(resolve.sourceNodeId, resolve.destinationNodeId);
-            });
+            this.initDropNodeEvent();
+            if (!this.dropNodeEventOutput) {
+                this.dropNodeEventOutput = dropNodeEventOutput;
+            }
         }
         return this;
+    }
+
+    get nodeId() {
+        return this.node.id;
+    }
+
+    updateDropNodeEventOutput(dropNodeEventOutput: (sourceNodeId: number, destinationNodeId: number) => void) {
+        this.dropNodeEventOutput = dropNodeEventOutput;
+    }
+
+    public initDropNodeEvent() {
+        console.log('initDropNodeEvent');
+        this.dropNodeEvent = new Promise<{ sourceNodeId: number, destinationNodeId: number }>((resolve) => {
+            console.log('inside dropNodeEvent Promise begin', this.node);
+            this.dropNodeEventResolve = resolve;
+            console.log('this.dropNodeEventResolve', this.dropNodeEventResolve);
+            console.log('inside dropNodeEvent Promise end');
+        });
+        this.dropNodeEvent.then((resolve) => {
+            console.log('dropNodeEvent then');
+            this.dropNodeEventOutput(resolve.sourceNodeId, resolve.destinationNodeId);
+            this.initDropNodeEvent();
+        });
     }
 
     private enableDraggable() {
@@ -54,7 +73,9 @@ export class DraggableNode {
 
     private addDragStartCallback() {
         this.node.nodeDOM.addEventListener('dragstart', (event: Event) => {
-            console.log('this.node dragsrart', this.node);
+            console.log('dragstart', 'this.node', this.node);
+            console.log('dragstart', 'this.dropNodeEvent', this.dropNodeEvent);
+            console.log('dragstart', 'this.dropNodeEventResolve', this.dropNodeEventResolve);
             this.node.dragInProgress = true;
             // const nodeData: IDragNodeData = {
             //     id: this.node.id,
@@ -85,15 +106,18 @@ export class DraggableNode {
         this.node.nodeDOM.addEventListener('drop', (event: Event) => {
             event.preventDefault();
             const sourceNodeId = parseInt((event as DragEvent).dataTransfer.getData("text/plain"), 10);
-            console.log('addDropCallback', sourceNodeId);
-            if (sourceNodeId !== null) {
+            console.log('addDropCallback begin', sourceNodeId, this.node.id);
+            if (sourceNodeId !== null && sourceNodeId !== this.node.id) {
                 console.log('source node id', sourceNodeId);
                 console.log('destination node', this.node.id);
                 // this.dragNodeAction.handleDrodNode(sourceNode, this.node);
                 // console.log('destination node', this.node.nodeDOM.innerHTML);
                 // this.dropNodeEvent(true);
+                console.log('dropNodeEventResolve', this.dropNodeEventResolve);
+                console.log('this.dropNodeEvent', this.dropNodeEvent);
                 this.dropNodeEventResolve({ sourceNodeId: sourceNodeId, destinationNodeId: this.node.id });
             }
+            console.log('addDropCallback end');
         });
     }
 
@@ -116,18 +140,5 @@ export class DraggableNode {
     //         nodeDivs[i].addEventListener('drop',drop, false);
     //         nodeDivs[i].addEventListener('dragover', allowDrop, false);
     //     }
-    // }
-
-    // function drag(event) {
-    //     event.dataTransfer.setData("text", event.target.id);
-    // }
-
-    // function drop(event){
-    // 	event.preventDefault();
-    // 	console.log("Drop");
-    // }
-
-    // function  allowDrop(event) {
-    // 	event.preventDefault();
     // }
 }

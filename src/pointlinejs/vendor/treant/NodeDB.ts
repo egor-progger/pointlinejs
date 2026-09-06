@@ -6,6 +6,8 @@ import { NodeInterface } from './Treant';
 import { Tree } from './Tree';
 import { CollapsableNodesStore } from '@pointlinejs/stores/collapsable-nodes/collaplable-nodes.store';
 import { DraggableNode } from '@pointlinejs/components/nodes/draggable/draggable-node';
+import { CollapsableNode } from '@pointlinejs/components/nodes/collapsable-node';
+import { DraggableNodesStore } from '@pointlinejs/stores/draggable-nodes/draggable-nodes.store';
 // import { DraggableNode } from '@pointlinejs/components/nodes/draggable-node';
 
 @injectable()
@@ -25,12 +27,14 @@ export class NodeDB {
   @inject(DI_LIST.treeNodeConstructor) private treeNode: { new(): TreeNode };
   @inject(DI_LIST.draggableNodeConstructor) private draggableNode: { new(): DraggableNode };
   private readonly collapsableNodesStore: CollapsableNodesStore = new CollapsableNodesStore();
+  // private readonly draggableNodesStore: DraggableNodesStore = new DraggableNodesStore();
   protected readonly maxStackedChilren = 1;
   protected util: UTIL = new UTIL();
   public nodeDBState = new NodeDBState();
   public db: TreeNode[] = [];
 
   constructor(
+    @inject(DI_LIST.draggableNodesStore) private readonly draggableNodesStore: DraggableNodesStore
   ) { }
 
   get size(): number {
@@ -127,7 +131,8 @@ export class NodeDB {
       node.createGeometry(tree);
       /** init draggable begin */
       if (tree.CONFIG.node.draggable && tree.CONFIG.callback.onDropNode) {
-        const draggableNode = new this.draggableNode().init(node, tree.CONFIG.callback.onDropNode);
+        const draggableNode = new this.draggableNode().initDraggableNode(node, tree.CONFIG.callback.onDropNode);
+        this.draggableNodesStore.addNode(draggableNode);
         console.log('draggableNode', draggableNode);
       }
       /** init draggable end */
@@ -187,7 +192,7 @@ export class NodeDB {
     }
     if (node.id) {
       if (node.collapsable) {
-        this.collapsableNodesStore.addNode(node);
+        this.collapsableNodesStore.addNode(new CollapsableNode(node));
       }
     }
 

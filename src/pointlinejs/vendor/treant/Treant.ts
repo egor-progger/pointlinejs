@@ -28,6 +28,7 @@ import { Tree } from './Tree';
 import { NodeDB } from './NodeDB';
 import { RaphaelAttributes } from 'raphael';
 import { TreeNode } from './TreeNode';
+import { DraggableNodesStore } from '@pointlinejs/stores/draggable-nodes/draggable-nodes.store';
 
 export type ElementWithSupportIE = Element & {
   currentStyle?: Record<string, string>;
@@ -370,7 +371,8 @@ export class Treant {
   constructor(
     @inject(DI_LIST.jsonConfig) private jsonConfig: JSONconfig,
     @inject(DI_LIST.treeStore) private treeStore: TreeStore,
-    @inject(DI_LIST.nodeDB) private nodeDB: NodeDB
+    @inject(DI_LIST.nodeDB) private nodeDB: NodeDB,
+    @inject(DI_LIST.draggableNodesStore) private draggableNodesStore: DraggableNodesStore
   ) { }
 
   destroy() {
@@ -446,6 +448,7 @@ export class Treant {
     console.log('treant dropNodeHandler', this.positionedTree);
     console.log('sourceNodeId', this.nodeDB.db[sourceNodeId]);
     console.log('destinationNodeId', this.nodeDB.db[destinationNodeId]);
+
     const temp = this.nodeDB.db[sourceNodeId];
     const dragClone = { ...temp };
     const dropClone = { ...this.nodeDB.db[destinationNodeId] };
@@ -468,6 +471,8 @@ export class Treant {
     this.nodeDB.db[sourceNodeId].collapsed = dragClone.collapsed;
     this.nodeDB.db[sourceNodeId].collapsable = dragClone.collapsable;
 
+    // draggedNode.updateDropNodeEventOutput(this.dropNodeHandler.bind(this));
+
     // set dropped node props
     this.nodeDB.db[destinationNodeId].id = dropClone.id;
     this.nodeDB.db[destinationNodeId].nodeDOM.id = dropClone.id.toString();
@@ -482,8 +487,15 @@ export class Treant {
     this.nodeDB.db[destinationNodeId].collapsed = dropClone.collapsed;
     this.nodeDB.db[destinationNodeId].collapsable = dropClone.collapsable;
 
-    console.log('sourceNodeId', this.nodeDB.db[sourceNodeId]);
-    console.log('destinationNodeId', this.nodeDB.db[destinationNodeId]);
+    this.draggableNodesStore.replaceNodes(sourceNodeId, destinationNodeId);
+
+    // const draggedNode = this.draggableNodesStore.findNodeById(dragClone.id);
+    // draggedNode.initDropNodeEvent();
+
+    // const droppedNode = this.draggableNodesStore.findNodeById(dropClone.id);
+    // droppedNode.initDropNodeEvent();
+    // droppedNode.updateDropNodeEventOutput(this.dropNodeHandler.bind(this));
+
 
     this.positionedTree.positionTree();
   }

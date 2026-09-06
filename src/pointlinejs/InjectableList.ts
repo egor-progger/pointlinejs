@@ -21,4 +21,5 @@ export const DI_LIST = {
   tooltip: Symbol.for('Tooltip'),
   pointlineZoom: Symbol.for('pointlineZoom'),
   collapsableNodesStore: Symbol.for('CollapsableNodesStore'),
+  draggableNodesStore: Symbol.for('DraggableNodesStore'),
 };
