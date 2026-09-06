@@ -45,7 +45,6 @@ export class TreeNode {
   };
   private tooltip: Tooltip;
   private tree: Tree;
-  // private draggableNodeFactory: DraggableNodeFactory = new DraggableNodeFactory();
 
   id: number;
   parentId: number;
@@ -862,13 +861,6 @@ export class TreeNode {
     this.height = node.offsetHeight;
 
     this.nodeDOM = node;
-
-    /** init draggable begin */
-    // if (tree.CONFIG.node.draggable) {
-    //   const draggableNode = this.draggableNodeFactory.create(this);
-    //   console.log('draggableNode', draggableNode);
-    // }
-    /** init draggable end */
 
     tree.imageLoader.processNode(this);
   }

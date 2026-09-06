@@ -27,7 +27,6 @@ export class NodeDB {
   @inject(DI_LIST.treeNodeConstructor) private treeNode: { new(): TreeNode };
   @inject(DI_LIST.draggableNodeConstructor) private draggableNode: { new(): DraggableNode };
   private readonly collapsableNodesStore: CollapsableNodesStore = new CollapsableNodesStore();
-  // private readonly draggableNodesStore: DraggableNodesStore = new DraggableNodesStore();
   protected readonly maxStackedChilren = 1;
   protected util: UTIL = new UTIL();
   public nodeDBState = new NodeDBState();
@@ -133,7 +132,6 @@ export class NodeDB {
       if (tree.CONFIG.node.draggable && tree.CONFIG.callback.onDropNode) {
         const draggableNode = new this.draggableNode().initDraggableNode(node, tree.CONFIG.callback.onDropNode);
         this.draggableNodesStore.addNode(draggableNode);
-        console.log('draggableNode', draggableNode);
       }
       /** init draggable end */
       setTimeout(logTimeout, 100, this.get(i), this.nodeDBState);

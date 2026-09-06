@@ -59,18 +59,14 @@ export class PointlineJS {
     container.bind(DI_LIST.nodeDBState).to(NodeDBState).inSingletonScope();
     container.bind(DI_LIST.jsonConfig).to(JSONconfig).inSingletonScope();
     container.bind(DI_LIST.collapsableNode).to(CollapsableNode);
-    // container.bind(DI_LIST.draggableNode).to(DraggableNode);
     container.bind<{ new(): DraggableNode }>(DI_LIST.draggableNodeConstructor).toConstructor(DraggableNode);
-    // container.bind<DraggableNodeFactory>(DI_LIST.draggableNodeFactory).toService(DraggableNodeFactory);
     container.bind(DI_LIST.dragNodeAction).to(DragNodeAction).inSingletonScope();
 
     container.bind(DI_LIST.collapsableNodesStore).to(CollapsableNodesStore).inSingletonScope();
     container.bind(DI_LIST.draggableNodesStore).to(DraggableNodesStore).inSingletonScope();
 
     container.bind(DI_LIST.tooltip).to(Tooltip).inSingletonScope();
-    // container.bind<{ new(): User }>("UserConstructor").toConstructor(User);
     container.bind<{ new(): TreeNode }>(DI_LIST.treeNodeConstructor).toConstructor(TreeNode);
-    // container.bind(DI_LIST.treeNode).to(TreeNode);
     container.bind(DI_LIST.tree).to(Tree);
     container.bind(DI_LIST.treant).to(Treant);
     container.bind(DI_LIST.selection).to(Selection)

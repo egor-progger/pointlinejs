@@ -5,12 +5,8 @@ import { DraggableNode } from "@pointlinejs/components/nodes/draggable/draggable
 @injectable()
 export class DraggableNodesStore extends BaseNodesStore<DraggableNode> {
     replaceNodes(sourceId: number, destinationId: number) {
-        console.log('replaceNodes');
         const sourceIndex = this.findNodeIndexById(sourceId);
         const destinationIndex = this.findNodeIndexById(destinationId);
-
-        console.log('sourceIndex', this.nodes[sourceIndex]);
-        console.log('destinationIndex', this.nodes[destinationIndex]);
 
         this.nodes[sourceIndex].initDropNodeEvent();
         this.nodes[destinationIndex].initDropNodeEvent();
@@ -19,11 +15,5 @@ export class DraggableNodesStore extends BaseNodesStore<DraggableNode> {
 
         this.nodes[sourceIndex] = this.nodes[destinationIndex];
         this.nodes[destinationIndex] = temp;
-
-        console.log('sourceIndex', this.nodes[sourceIndex]);
-        console.log('destinationIndex', this.nodes[destinationIndex]);
-
-        // this.nodes[sourceIndex].initDropNodeEvent.bind(this.nodes[sourceIndex])();
-        // this.nodes[destinationIndex].initDropNodeEvent.bind(this.nodes[destinationIndex])();
     }
 }
