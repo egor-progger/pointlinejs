@@ -23,9 +23,6 @@ import {
 import { RaphaelPath } from 'raphael';
 import { Tooltip } from '@pointlinejs/tooltip';
 import { CollapsableNodeCss } from '@pointlinejs/components/nodes/collapsable-node-css';
-// import { DraggableNodeFactory } from '@pointlinejs/components/nodes/draggable/draggable-node';
-// import { DraggableNode } from '@pointlinejs/components/nodes/draggable/draggable-node';
-// import { DI_LIST } from '@pointlinejs/InjectableList';
 
 export type RaphaelPathExtended = RaphaelPath<'SVG' | 'VML'> & {
   hidden?: boolean;
@@ -105,8 +102,6 @@ export class TreeNode {
     tree: Tree,
     stackParentId: number | null
   ) {
-    console.log('reset');
-    console.log('tree.CONFIG.node.draggable', tree.CONFIG.node.draggable);
     this.id = id;
     this.parentId = parentId;
     this.treeId = tree.id;
@@ -141,7 +136,6 @@ export class TreeNode {
           ? false
           : nodeStructureValue.collapsable || tree.CONFIG.node.collapsable;
       if (this.collapsable) {
-        console.log('this.collapsed = nodeStructureValue.collapsed');
         this.collapsed = nodeStructureValue.collapsed;
       }
 
@@ -443,8 +437,6 @@ export class TreeNode {
         nodeSwitch as Element,
         'click',
         (e: Event): void | boolean => {
-          console.log('addSwitchEvent');
-          console.log('this.dragInProgress', this.dragInProgress);
           // if (!this.dragInProgress) {
           if (
             this
@@ -479,7 +471,6 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   collapse(autoFocus = false) {
-    console.log('collapse');
     if (!this.collapsed) {
       this.toggleCollapse(autoFocus);
     }
@@ -501,7 +492,6 @@ export class TreeNode {
    * @returns {TreeNode}
    */
   toggleCollapse(autoFocus = false) {
-    console.log('toggleCollapse');
     const oTree = this.getTree();
 
     if (!oTree.inAnimation) {

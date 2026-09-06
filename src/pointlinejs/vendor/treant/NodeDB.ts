@@ -8,7 +8,6 @@ import { CollapsableNodesStore } from '@pointlinejs/stores/collapsable-nodes/col
 import { DraggableNode } from '@pointlinejs/components/nodes/draggable/draggable-node';
 import { CollapsableNode } from '@pointlinejs/components/nodes/collapsable-node';
 import { DraggableNodesStore } from '@pointlinejs/stores/draggable-nodes/draggable-nodes.store';
-// import { DraggableNode } from '@pointlinejs/components/nodes/draggable-node';
 
 @injectable()
 export class NodeDBState {
@@ -100,9 +99,7 @@ export class NodeDB {
   private reset(nodeStructure: Partial<NodeInterface>, tree: Tree) {
     this.db = [];
 
-    console.log('tree.CONFIG.node.collapsable', tree.CONFIG.node.collapsable);
     if (tree.CONFIG.animateOnInit && tree.CONFIG.node.collapsable) {
-      console.log('nodeStructure.collapsed = true');
       nodeStructure.collapsed = true;
     }
 
