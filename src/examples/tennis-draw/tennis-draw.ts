@@ -5,7 +5,7 @@ import { PointlineJS } from '@pointlinejs/pointlinejs';
 import './styles/tennis-draw.css';
 import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 
-var tree_structure = {
+const tree_structure = {
   chart: {
     container: '#OrganiseChart6',
     levelSeparation: 20,

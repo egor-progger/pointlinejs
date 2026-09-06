@@ -63,6 +63,10 @@ const entries = [
     name: 'examples/tooltip/tooltip',
     type: entryType.withTypescript,
   },
+  {
+    name: 'examples/draggable-example/draggable-example',
+    type: entryType.withTypescript,
+  },
   { name: 'documentation/documentation', type: entryType.withTypescript },
 ];
 /**

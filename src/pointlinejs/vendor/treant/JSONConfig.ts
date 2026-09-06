@@ -10,8 +10,13 @@ export class JSONconfig {
   private json_id = 1;
   private jsonStructure: ChartStructure;
 
+  /**
+   * @deprecated
+   * @param configArray
+   * @returns 
+   */
   make(configArray: Array<Partial<ChartInterface> | Partial<NodeInterface>>) {
-    var i = configArray.length,
+    let i = configArray.length,
       node;
 
     this.jsonStructure = {
@@ -38,7 +43,7 @@ export class JSONconfig {
   }
 
   private findChildren(nodes: Partial<ChartInterface | NodeInterface>[]) {
-    var parents = [0]; // start with a a root node
+    const parents = [0]; // start with a a root node
 
     while (parents.length) {
       const parentId: number = parents.pop() as number;
@@ -46,7 +51,7 @@ export class JSONconfig {
       const children = [];
 
       for (let i = 0; i < nodes.length; i++) {
-        var node = nodes[i];
+        const node = nodes[i];
         if ((node as Partial<NodeInterface>)['parent']) {
           const nodeValue = node as NodeInterface;
           if (nodeValue.parent && nodeValue.parent.idInNodeDB === parentId) {
@@ -72,7 +77,7 @@ export class JSONconfig {
     node: Partial<NodeInterface>,
     nodeId: number
   ): Partial<NodeInterface> {
-    var childrenLen, found;
+    let childrenLen, found;
 
     if (node.idInNodeDB === nodeId) {
       return node;

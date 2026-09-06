@@ -2,7 +2,7 @@ import './styles/action-buttons.css';
 import { PointlineJS } from '@pointlinejs/pointlinejs';
 import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 
-var chart_config = {
+const chart_config = {
   chart: {
     container: "#action-buttons-example",
 

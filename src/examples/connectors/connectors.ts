@@ -5,7 +5,7 @@ import { PointlineJS } from '@pointlinejs/pointlinejs';
 import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/connectors.css';
 
-var chart_config = {
+const chart_config = {
   chart: {
     container: '#OrganiseChart-big-commpany',
     levelSeparation: 45,

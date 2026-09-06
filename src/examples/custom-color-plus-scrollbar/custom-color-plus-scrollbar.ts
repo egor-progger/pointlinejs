@@ -2,7 +2,7 @@ import { PointlineJS } from '@pointlinejs/pointlinejs';
 import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/custom-color-plus-scrollbar.css';
 
-var config = {
+const config = {
   container: '#OrganiseChart1',
   rootOrientation: 'WEST', // NORTH || EAST || WEST || SOUTH
   // levelSeparation: 30,

@@ -2,7 +2,7 @@ import { PointlineJS } from '@pointlinejs/pointlinejs';
 import { ChartConfigType } from '@pointlinejs/vendor/treant/Treant';
 import './styles/simple-scrollbar.css';
 
-var config = {
+const config = {
   container: '#OrganiseChart1',
   rootOrientation: 'NORTH', // NORTH || EAST || WEST || SOUTH
   scrollbar: 'fancy',

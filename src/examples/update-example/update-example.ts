@@ -2,7 +2,7 @@ import './styles/update-example.css';
 import { PointlineJS } from '@pointlinejs/pointlinejs';
 import { ChartConfigType, ChartInterface } from '@pointlinejs/vendor/treant/Treant';
 
-var config: Partial<ChartInterface> = {
+const config: Partial<ChartInterface> = {
   container: '#update-example',
 
   connectors: {
@@ -128,7 +128,7 @@ console.log('tree');
 console.log(tree);
 pointlinejs.positionToCenterOfTree();
 
-var btn = document.getElementById('update-button');
+const btn = document.getElementById('update-button');
 btn.addEventListener("click", () => pointlinejs.updateSeletedNodeData({
   title: 'test'
 }));

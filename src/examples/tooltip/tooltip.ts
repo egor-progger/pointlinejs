@@ -2,7 +2,7 @@ import './styles/tooltip.css';
 import { PointlineJS } from '@pointlinejs/pointlinejs';
 import { ChartConfigType, ChartInterface } from '@pointlinejs/vendor/treant/Treant';
 
-var config: Partial<ChartInterface> = {
+const config: Partial<ChartInterface> = {
   container: '#tooltip',
 
   connectors: {

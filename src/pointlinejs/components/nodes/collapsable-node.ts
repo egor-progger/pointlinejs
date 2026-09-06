@@ -1,8 +1,9 @@
+import { IBaseNodeType } from "@pointlinejs/stores/base/base-nodes.store";
 import { TreeNode } from "@pointlinejs/vendor/treant/TreeNode";
 import { injectable } from "inversify";
 
 @injectable()
-export class CollapsableNode {
+export class CollapsableNode implements IBaseNodeType {
     private node: TreeNode;
     private readonly collapsableClassElement = 'collapsable';
     private readonly collapsedClass = 'collapsed';
@@ -12,7 +13,7 @@ export class CollapsableNode {
     }
 
     get cssClass() {
-        let cssClass: string[] = [];
+        const cssClass: string[] = [];
         if (this.node.collapsable) {
             cssClass.push(this.collapsableClassElement);
         }
